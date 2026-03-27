@@ -1,0 +1,1953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kare Industrial Suppliers</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=Barlow:wght@300;400;500;600&family=Barlow+Semi+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f4f2ee;
+  --surface: #ffffff;
+  --surface2: #f0ede8;
+  --surface3: #e8e4de;
+  --border: #ddd9d2;
+  --border2: #ccc8c0;
+  --text: #1a1814;
+  --text2: #6b6760;
+  --text3: #a09d98;
+  --accent: #c8411a;
+  --accent-light: rgba(200,65,26,0.08);
+  --accent-mid: rgba(200,65,26,0.15);
+  --success: #1e7a3c;
+  --success-bg: rgba(30,122,60,0.08);
+  --warning: #9a6800;
+  --warning-bg: rgba(154,104,0,0.08);
+  --danger: #c8411a;
+  --danger-bg: rgba(200,65,26,0.08);
+  --info: #1a5c8a;
+  --info-bg: rgba(26,92,138,0.08);
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.1), 0 12px 32px rgba(0,0,0,0.06);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Barlow',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; font-size:15px; }
+
+/* ── LOGIN ── */
+#login-screen {
+  min-height:100vh; display:flex; flex-direction:column;
+  background: linear-gradient(135deg, #1a1814 0%, #2c2720 50%, #1a1814 100%);
+  position:relative; overflow:hidden;
+}
+#login-screen::before {
+  content:''; position:absolute; inset:0;
+  background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.03) 39px, rgba(255,255,255,0.03) 40px),
+                    repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.03) 39px, rgba(255,255,255,0.03) 40px);
+  pointer-events:none;
+}
+.login-header {
+  padding:32px 40px; display:flex; align-items:center; gap:14px; position:relative; z-index:1;
+}
+.login-logo-mark {
+  width:44px; height:44px; background:var(--accent); display:flex; align-items:center; justify-content:center;
+  font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:1.3rem; color:#fff; letter-spacing:-1px;
+}
+.login-brand { font-family:'Barlow Condensed',sans-serif; font-size:1.1rem; font-weight:700; color:rgba(255,255,255,0.9); letter-spacing:1px; text-transform:uppercase; line-height:1.2; }
+.login-brand span { display:block; font-size:0.7rem; font-weight:400; color:rgba(255,255,255,0.4); letter-spacing:2px; }
+
+.login-center {
+  flex:1; display:flex; align-items:center; justify-content:center; padding:20px; position:relative; z-index:1;
+}
+.login-card {
+  background:#fff; border-radius:16px; width:100%; max-width:440px;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.4);
+  overflow:hidden;
+}
+.login-card-header { background:var(--accent); padding:28px 32px; }
+.login-card-header h2 { font-family:'Barlow Condensed',sans-serif; font-size:1.6rem; font-weight:700; color:#fff; letter-spacing:0.5px; }
+.login-card-header p { font-size:0.85rem; color:rgba(255,255,255,0.75); margin-top:4px; }
+.login-card-body { padding:28px 32px; }
+.login-label { font-size:0.75rem; font-weight:600; color:var(--text2); letter-spacing:1.5px; text-transform:uppercase; display:block; margin-bottom:8px; }
+.login-select-wrap { position:relative; margin-bottom:20px; }
+.login-select {
+  width:100%; background:var(--surface2); border:1.5px solid var(--border);
+  color:var(--text); padding:12px 40px 12px 14px; border-radius:var(--radius-sm);
+  font-size:0.95rem; font-family:'Barlow',sans-serif; outline:none; cursor:pointer;
+  appearance:none; transition:border-color 0.15s;
+}
+.login-select:focus { border-color:var(--accent); }
+.login-select-arrow { position:absolute; right:12px; top:50%; transform:translateY(-50%); color:var(--text3); pointer-events:none; }
+.login-divider { display:flex; align-items:center; gap:12px; margin:20px 0; }
+.login-divider::before, .login-divider::after { content:''; flex:1; height:1px; background:var(--border); }
+.login-divider span { font-size:0.78rem; color:var(--text3); }
+.login-accounts { display:flex; flex-direction:column; gap:8px; }
+.login-account-btn {
+  display:flex; align-items:center; gap:12px; padding:12px 14px;
+  background:var(--surface2); border:1.5px solid var(--border);
+  border-radius:var(--radius-sm); cursor:pointer; transition:all 0.15s; text-align:left;
+}
+.login-account-btn:hover { border-color:var(--accent); background:var(--accent-light); }
+.login-account-btn .loc-icon { width:36px; height:36px; background:var(--surface3); border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0; }
+.login-account-btn.admin-btn .loc-icon { background:rgba(200,65,26,0.1); }
+.login-account-btn .loc-info .loc-name { font-weight:600; font-size:0.92rem; }
+.login-account-btn .loc-info .loc-email { font-size:0.78rem; color:var(--text3); font-family:'Barlow Semi Condensed',sans-serif; margin-top:1px; }
+.login-account-btn .loc-role { margin-left:auto; font-size:0.7rem; font-weight:600; letter-spacing:1px; text-transform:uppercase; padding:3px 8px; border-radius:4px; flex-shrink:0; }
+.role-admin { background:var(--accent-light); color:var(--accent); }
+.role-staff { background:var(--info-bg); color:var(--info); }
+
+/* ── APP SHELL ── */
+#app { display:none; min-height:100vh; }
+#app.visible { display:flex; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width:220px; min-height:100vh; background:var(--text); position:fixed;
+  left:0; top:0; bottom:0; z-index:100; display:flex; flex-direction:column;
+  transition:transform 0.3s;
+}
+.sb-header { padding:20px 18px 16px; border-bottom:1px solid rgba(255,255,255,0.08); }
+.sb-logo { display:flex; align-items:center; gap:10px; }
+.sb-logo-mark { width:32px; height:32px; background:var(--accent); display:flex; align-items:center; justify-content:center; font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:1rem; color:#fff; flex-shrink:0; }
+.sb-logo-text { font-family:'Barlow Condensed',sans-serif; font-size:0.95rem; font-weight:700; color:#fff; letter-spacing:0.5px; line-height:1.2; text-transform:uppercase; }
+.sb-logo-text span { display:block; font-size:0.62rem; font-weight:400; color:rgba(255,255,255,0.4); letter-spacing:2px; margin-top:1px; }
+
+.sb-nav { flex:1; padding:12px 10px; overflow-y:auto; }
+.sb-section { font-size:0.62rem; font-weight:600; color:rgba(255,255,255,0.3); letter-spacing:2px; text-transform:uppercase; padding:10px 8px 5px; margin-top:4px; }
+.sb-item {
+  display:flex; align-items:center; gap:9px; padding:9px 10px; border-radius:6px;
+  cursor:pointer; transition:all 0.12s; font-size:0.875rem; color:rgba(255,255,255,0.55);
+  margin-bottom:1px; font-family:'Barlow Semi Condensed',sans-serif; font-weight:500;
+}
+.sb-item:hover { background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.85); }
+.sb-item.active { background:var(--accent); color:#fff; }
+.sb-item .sb-icon { font-size:1rem; width:18px; text-align:center; flex-shrink:0; }
+.sb-badge { margin-left:auto; background:var(--accent); color:#fff; font-size:0.65rem; padding:2px 6px; border-radius:3px; font-weight:600; }
+
+.sb-footer { padding:14px 10px; border-top:1px solid rgba(255,255,255,0.08); }
+.sb-user { display:flex; align-items:center; gap:9px; padding:8px 10px; border-radius:6px; }
+.sb-avatar { width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:700; font-family:'Barlow Condensed',sans-serif; flex-shrink:0; }
+.av-admin { background:var(--accent); color:#fff; }
+.av-staff { background:rgba(255,255,255,0.12); color:#fff; }
+.sb-user-info .sb-uname { font-size:0.82rem; color:#fff; font-weight:600; }
+.sb-user-info .sb-uemail { font-size:0.68rem; color:rgba(255,255,255,0.35); font-family:'Barlow Semi Condensed',sans-serif; }
+.sb-signout { margin-top:6px; width:100%; background:transparent; border:1px solid rgba(255,255,255,0.12); color:rgba(255,255,255,0.4); padding:7px; border-radius:5px; cursor:pointer; font-size:0.78rem; font-family:'Barlow',sans-serif; transition:all 0.15s; }
+.sb-signout:hover { border-color:rgba(255,255,255,0.3); color:rgba(255,255,255,0.7); }
+
+/* ── MAIN ── */
+.main { margin-left:220px; flex:1; min-height:100vh; }
+.topbar {
+  background:var(--surface); border-bottom:1px solid var(--border); padding:0 28px;
+  height:56px; display:flex; align-items:center; justify-content:space-between;
+  position:sticky; top:0; z-index:50;
+}
+.topbar-title { font-family:'Barlow Condensed',sans-serif; font-size:1.25rem; font-weight:700; letter-spacing:0.3px; }
+.topbar-right { display:flex; align-items:center; gap:10px; }
+.topbar-loc { display:flex; align-items:center; gap:6px; background:var(--surface2); border:1px solid var(--border); padding:5px 12px; border-radius:5px; font-size:0.8rem; color:var(--text2); font-family:'Barlow Semi Condensed',sans-serif; }
+.topbar-loc strong { color:var(--text); }
+
+.content { padding:24px 28px; }
+.page { display:none; }
+.page.active { display:block; }
+
+/* ── CARDS & STATS ── */
+.stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-bottom:22px; }
+.stat { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px 20px; box-shadow:var(--shadow); }
+.stat-label { font-size:0.68rem; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--text3); margin-bottom:10px; }
+.stat-val { font-family:'Barlow Condensed',sans-serif; font-size:2rem; font-weight:700; line-height:1; color:var(--text); }
+.stat-sub { font-size:0.78rem; color:var(--text2); margin-top:5px; }
+.stat-sub.up { color:var(--success); }
+.stat-sub.warn { color:var(--warning); }
+.stat-sub.danger { color:var(--danger); }
+
+/* ── TABLE CARD ── */
+.card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); margin-bottom:20px; overflow:hidden; }
+.card-header { padding:14px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+.card-header h3 { font-family:'Barlow Condensed',sans-serif; font-size:1rem; font-weight:700; letter-spacing:0.3px; text-transform:uppercase; }
+.card-body { padding:20px; }
+.search-input {
+  background:var(--surface2); border:1px solid var(--border); color:var(--text);
+  padding:7px 12px; border-radius:var(--radius-sm); font-size:0.85rem;
+  font-family:'Barlow',sans-serif; outline:none; min-width:200px; transition:border-color 0.15s;
+}
+.search-input:focus { border-color:var(--accent); }
+.search-input::placeholder { color:var(--text3); }
+table { width:100%; border-collapse:collapse; }
+th { font-size:0.67rem; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--text3); padding:9px 16px; text-align:left; border-bottom:1px solid var(--border); background:var(--surface2); white-space:nowrap; }
+td { padding:11px 16px; border-bottom:1px solid rgba(0,0,0,0.04); font-size:0.875rem; vertical-align:middle; }
+tr:last-child td { border-bottom:none; }
+tr:hover td { background:rgba(0,0,0,0.015); }
+
+/* ── PILLS ── */
+.pill { display:inline-flex; align-items:center; gap:4px; padding:3px 9px; border-radius:4px; font-size:0.7rem; font-weight:600; letter-spacing:0.5px; text-transform:uppercase; font-family:'Barlow Semi Condensed',sans-serif; }
+.pill::before { content:''; width:5px; height:5px; border-radius:50%; background:currentColor; }
+.pill-green { background:var(--success-bg); color:var(--success); }
+.pill-red { background:var(--danger-bg); color:var(--danger); }
+.pill-orange { background:var(--warning-bg); color:var(--warning); }
+.pill-blue { background:var(--info-bg); color:var(--info); }
+.pill-grey { background:var(--surface3); color:var(--text2); }
+
+/* ── BUTTONS ── */
+.btn { display:inline-flex; align-items:center; gap:6px; padding:8px 16px; border-radius:var(--radius-sm); font-size:0.85rem; font-family:'Barlow Semi Condensed',sans-serif; font-weight:600; cursor:pointer; transition:all 0.15s; border:none; letter-spacing:0.3px; }
+.btn-primary { background:var(--accent); color:#fff; }
+.btn-primary:hover { background:#b33816; }
+.btn-secondary { background:var(--surface2); color:var(--text); border:1px solid var(--border); }
+.btn-secondary:hover { border-color:var(--accent); color:var(--accent); }
+.btn-ghost { background:transparent; color:var(--text2); border:1px solid var(--border); }
+.btn-ghost:hover { background:var(--surface2); color:var(--text); }
+.btn-sm { padding:5px 11px; font-size:0.78rem; }
+.btn-approve { background:var(--success-bg); color:var(--success); border:1px solid rgba(30,122,60,0.2); }
+.btn-approve:hover { background:var(--success); color:#fff; }
+.btn-reject { background:var(--danger-bg); color:var(--danger); border:1px solid rgba(200,65,26,0.2); }
+.btn-reject:hover { background:var(--danger); color:#fff; }
+
+/* ── ALERT BANNER ── */
+.alert { display:flex; align-items:flex-start; gap:10px; padding:12px 16px; border-radius:var(--radius-sm); margin-bottom:18px; font-size:0.875rem; }
+.alert-warn { background:var(--warning-bg); border:1px solid rgba(154,104,0,0.2); color:var(--warning); }
+.alert-danger { background:var(--danger-bg); border:1px solid rgba(200,65,26,0.2); color:var(--danger); }
+.alert-icon { font-size:1rem; flex-shrink:0; }
+
+/* ── CHART BARS ── */
+.bar-chart-wrap { display:flex; align-items:flex-end; gap:10px; height:140px; padding:0 4px; }
+.bar-col { flex:1; display:flex; flex-direction:column; align-items:center; gap:5px; }
+.bar-el { width:100%; border-radius:4px 4px 0 0; transition:height 0.7s cubic-bezier(.34,1.3,.64,1); min-height:3px; }
+.bar-lbl { font-size:0.65rem; color:var(--text3); text-align:center; font-family:'Barlow Semi Condensed',sans-serif; line-height:1.2; }
+.bar-val { font-size:0.72rem; font-weight:600; color:var(--text2); font-family:'Barlow Condensed',sans-serif; }
+
+/* ── GRID LAYOUT ── */
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.two-col-wide { display:grid; grid-template-columns:3fr 2fr; gap:20px; }
+@media(max-width:900px) { .two-col,.two-col-wide { grid-template-columns:1fr; } }
+
+/* ── MOVEMENT FEED ── */
+.movement-item { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--border); }
+.movement-item:last-child { border-bottom:none; }
+.mov-icon { width:34px; height:34px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0; }
+.mov-sale { background:var(--success-bg); }
+.mov-in { background:var(--info-bg); }
+.mov-transfer { background:var(--warning-bg); }
+.mov-adjust { background:var(--surface3); }
+.mov-info { flex:1; min-width:0; }
+.mov-title { font-size:0.875rem; font-weight:500; }
+.mov-meta { font-size:0.75rem; color:var(--text3); margin-top:1px; font-family:'Barlow Semi Condensed',sans-serif; }
+.mov-qty { font-family:'Barlow Condensed',sans-serif; font-size:1rem; font-weight:700; text-align:right; flex-shrink:0; }
+.mov-qty.out { color:var(--danger); }
+.mov-qty.inn { color:var(--success); }
+
+/* ── PRODUCT THUMB ── */
+.prod-thumb { width:38px; height:38px; border-radius:8px; background:var(--surface2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; overflow:hidden; }
+.prod-thumb img { width:100%; height:100%; object-fit:cover; }
+
+/* ── LOCATION CARDS (Admin) ── */
+.location-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; margin-bottom:24px; }
+.loc-card { background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius); padding:20px; cursor:pointer; transition:all 0.15s; box-shadow:var(--shadow); }
+.loc-card:hover { border-color:var(--accent); transform:translateY(-2px); box-shadow:var(--shadow-md); }
+.loc-card.selected { border-color:var(--accent); background:var(--accent-light); }
+.loc-card-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:14px; }
+.loc-card-icon { width:44px; height:44px; background:var(--surface3); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:1.4rem; }
+.loc-card-name { font-family:'Barlow Condensed',sans-serif; font-size:1.1rem; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
+.loc-card-email { font-size:0.75rem; color:var(--text3); margin-top:2px; font-family:'Barlow Semi Condensed',sans-serif; }
+.loc-card-stats { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.lcs { background:var(--surface2); border-radius:6px; padding:8px 10px; }
+.lcs-val { font-family:'Barlow Condensed',sans-serif; font-size:1.2rem; font-weight:700; color:var(--text); }
+.lcs-label { font-size:0.65rem; color:var(--text3); font-weight:600; letter-spacing:1px; text-transform:uppercase; margin-top:1px; }
+
+/* ── INVENTORY LEVEL BAR ── */
+.level-wrap { display:flex; align-items:center; gap:8px; }
+.level-track { flex:1; height:5px; background:var(--surface3); border-radius:100px; overflow:hidden; }
+.level-fill { height:100%; border-radius:100px; }
+.level-qty { font-family:'Barlow Condensed',sans-serif; font-size:0.9rem; font-weight:600; color:var(--text2); min-width:24px; text-align:right; }
+
+/* ── MODAL ── */
+.modal-bg { position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:400; display:none; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(3px); }
+.modal-bg.open { display:flex; }
+.modal { background:var(--surface); border-radius:12px; width:100%; max-width:500px; max-height:90vh; overflow-y:auto; box-shadow:var(--shadow-md); }
+.modal-head { padding:20px 24px 0; display:flex; align-items:center; justify-content:space-between; }
+.modal-head h3 { font-family:'Barlow Condensed',sans-serif; font-size:1.15rem; font-weight:700; text-transform:uppercase; letter-spacing:0.3px; }
+.modal-close { background:var(--surface2); border:1px solid var(--border); color:var(--text2); width:30px; height:30px; border-radius:50%; cursor:pointer; font-size:1rem; display:flex; align-items:center; justify-content:center; transition:all 0.15s; }
+.modal-close:hover { background:var(--danger-bg); border-color:rgba(200,65,26,0.3); color:var(--danger); }
+.modal-body { padding:18px 24px 24px; }
+.form-group { margin-bottom:16px; }
+.form-label { font-size:0.68rem; font-weight:600; color:var(--text2); letter-spacing:1.5px; text-transform:uppercase; display:block; margin-bottom:6px; }
+.form-input, .form-select {
+  width:100%; background:var(--surface2); border:1.5px solid var(--border);
+  color:var(--text); padding:9px 12px; border-radius:var(--radius-sm);
+  font-size:0.875rem; font-family:'Barlow',sans-serif; outline:none; transition:border-color 0.15s;
+}
+.form-input:focus, .form-select:focus { border-color:var(--accent); }
+.form-select option { background:#fff; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.barcode-wrap { position:relative; }
+.barcode-wrap .form-input { padding-right:44px; font-family:'Barlow Condensed',sans-serif; letter-spacing:1.5px; }
+.scan-trigger { position:absolute; right:8px; top:50%; transform:translateY(-50%); background:var(--accent-light); border:1px solid var(--accent-mid); color:var(--accent); width:30px; height:30px; border-radius:5px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:0.95rem; transition:all 0.15s; }
+.scan-trigger:hover { background:var(--accent); color:#fff; }
+.modal-footer { padding:0 24px 20px; display:flex; gap:10px; justify-content:flex-end; }
+
+/* ── SCANNER ── */
+.scanner-bg { position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:500; display:none; flex-direction:column; align-items:center; justify-content:center; gap:20px; }
+.scanner-bg.open { display:flex; }
+.scan-frame { width:260px; height:260px; position:relative; }
+.scan-view { width:100%; height:100%; background:#111; border-radius:10px; overflow:hidden; position:relative; display:flex; align-items:center; justify-content:center; }
+.scan-corner { position:absolute; width:22px; height:22px; }
+.sc-tl { top:10px; left:10px; border-top:2.5px solid var(--accent); border-left:2.5px solid var(--accent); border-radius:3px 0 0 0; }
+.sc-tr { top:10px; right:10px; border-top:2.5px solid var(--accent); border-right:2.5px solid var(--accent); border-radius:0 3px 0 0; }
+.sc-bl { bottom:10px; left:10px; border-bottom:2.5px solid var(--accent); border-left:2.5px solid var(--accent); border-radius:0 0 0 3px; }
+.sc-br { bottom:10px; right:10px; border-bottom:2.5px solid var(--accent); border-right:2.5px solid var(--accent); border-radius:0 0 3px 0; }
+.scan-beam { position:absolute; left:18px; right:18px; height:1.5px; background:linear-gradient(90deg,transparent,var(--accent),transparent); animation:beam 2s ease-in-out infinite; }
+@keyframes beam { 0%,100%{top:18px;opacity:0;} 8%{opacity:1;} 50%{top:235px;} 92%{opacity:1;} }
+.scan-hint { color:rgba(255,255,255,0.5); font-size:0.85rem; }
+.scan-chips { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; max-width:420px; }
+.scan-chip { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); padding:8px 14px; border-radius:6px; cursor:pointer; transition:all 0.15s; text-align:center; }
+.scan-chip:hover { border-color:var(--accent); background:rgba(200,65,26,0.1); }
+.scan-chip .sc-code { font-family:'Barlow Condensed',sans-serif; font-size:0.85rem; color:rgba(255,255,255,0.7); letter-spacing:1px; }
+.scan-chip .sc-name { font-size:0.72rem; color:rgba(255,255,255,0.4); margin-top:2px; }
+
+/* ── TRANSFER CARD ── */
+.trf-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px 18px; margin-bottom:10px; display:flex; align-items:center; gap:14px; box-shadow:var(--shadow); }
+.trf-route { flex:1; }
+.trf-path { display:flex; align-items:center; gap:8px; font-size:0.9rem; font-weight:600; font-family:'Barlow Semi Condensed',sans-serif; }
+.trf-arrow { color:var(--text3); }
+.trf-detail { font-size:0.78rem; color:var(--text2); margin-top:3px; font-family:'Barlow Semi Condensed',sans-serif; }
+.trf-actions { display:flex; gap:6px; flex-shrink:0; }
+
+/* ── TOAST ── */
+#toast { position:fixed; bottom:22px; right:22px; background:var(--text); color:#fff; border-radius:8px; padding:12px 18px; font-size:0.875rem; z-index:9999; transform:translateY(70px); opacity:0; transition:all 0.3s; display:flex; align-items:center; gap:9px; max-width:300px; box-shadow:var(--shadow-md); }
+#toast.show { transform:translateY(0); opacity:1; }
+#toast.t-success { background:var(--success); }
+#toast.t-error { background:var(--danger); }
+
+/* ── RESPONSIVE ── */
+#hamburger { display:none; position:fixed; top:14px; left:14px; z-index:200; background:var(--text); border:none; border-radius:6px; width:38px; height:38px; align-items:center; justify-content:center; cursor:pointer; color:#fff; font-size:1.1rem; }
+#sb-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:99; }
+#sb-overlay.show { display:block; }
+@media(max-width:800px) {
+  .sidebar { transform:translateX(-100%); }
+  .sidebar.open { transform:translateX(0); }
+  .main { margin-left:0; }
+  #hamburger { display:flex; }
+  .topbar { padding-left:60px; }
+  .content { padding:16px; }
+  .stats-grid { grid-template-columns:1fr 1fr; }
+  .form-row { grid-template-columns:1fr; }
+  .location-grid { grid-template-columns:1fr 1fr; }
+}
+@media(max-width:500px) { .location-grid { grid-template-columns:1fr; } .stats-grid { grid-template-columns:1fr 1fr; } }
+
+/* ── EMPTY STATE ── */
+.empty { text-align:center; padding:40px 20px; color:var(--text3); }
+.empty-icon { font-size:2rem; margin-bottom:10px; opacity:0.5; }
+.empty p { font-size:0.875rem; }
+
+/* ── SECTION TITLE ── */
+.section-title { font-family:'Barlow Condensed',sans-serif; font-size:0.8rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--text3); margin-bottom:12px; }
+
+/* REPORT HIGHLIGHT ROW */
+.highlight-row { background:rgba(200,65,26,0.03) !important; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div class="login-header">
+    <div class="login-logo-mark">KI</div>
+    <div class="login-brand">Kare Industrial Suppliers<span>Stock Management System</span></div>
+  </div>
+  <div class="login-center">
+    <div class="login-card">
+      <div class="login-card-header">
+        <h2>Sign In</h2>
+        <p>Select your location account to continue</p>
+      </div>
+      <div class="login-card-body">
+        <label class="login-label">Select Account</label>
+        <div class="login-accounts" id="login-accounts"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<button id="hamburger" onclick="toggleSb()">☰</button>
+<div id="sb-overlay" onclick="toggleSb()"></div>
+<div id="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-header">
+      <div class="sb-logo">
+        <div class="sb-logo-mark">KI</div>
+        <div class="sb-logo-text">Kare Industrial<span>Suppliers</span></div>
+      </div>
+    </div>
+    <nav class="sb-nav" id="sb-nav"></nav>
+    <div class="sb-footer">
+      <div class="sb-user">
+        <div class="sb-avatar" id="sb-av">?</div>
+        <div class="sb-user-info">
+          <div class="sb-uname" id="sb-uname">—</div>
+          <div class="sb-uemail" id="sb-uemail">—</div>
+        </div>
+      </div>
+      <button class="sb-signout" onclick="signOut()">Sign Out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="topbar-title">Dashboard</div>
+      <div class="topbar-right">
+        <div class="topbar-loc" id="topbar-loc"></div>
+      </div>
+    </div>
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <div class="page active" id="page-dashboard">
+        <div id="dash-alerts"></div>
+        <div class="stats-grid" id="dash-stats"></div>
+        <div class="two-col">
+          <div>
+            <div class="card">
+              <div class="card-header"><h3>Stock Movements — Last 7 Days</h3></div>
+              <div class="card-body">
+                <div class="bar-chart-wrap" id="dash-bar-chart"></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h3>Recent Activity</h3></div>
+              <div class="card-body" id="dash-activity" style="padding-top:4px;"></div>
+            </div>
+          </div>
+          <div>
+            <div class="card">
+              <div class="card-header"><h3>Low Stock Items</h3></div>
+              <div class="card-body" id="dash-low-stock" style="padding-top:4px;"></div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h3>Top Movers This Month</h3></div>
+              <div class="card-body" id="dash-top-movers" style="padding-top:4px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- INVENTORY -->
+      <div class="page" id="page-inventory">
+        <div class="card">
+          <div class="card-header">
+            <h3 id="inv-card-title">Inventory</h3>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+              <input class="search-input" placeholder="Search product, SKU, barcode…" oninput="filterInv(this.value)">
+              <button class="btn btn-primary" onclick="openAddStock()">＋ Add Stock</button>
+            </div>
+          </div>
+          <table id="inv-table">
+            <thead><tr>
+              <th>Product</th><th>SKU</th><th>Barcode</th>
+              <th id="inv-loc-th">Location</th>
+              <th>Category</th><th>Qty on Hand</th><th>Status</th><th>Actions</th>
+            </tr></thead>
+            <tbody id="inv-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- RECORD MOVEMENT -->
+      <div class="page" id="page-movement">
+        <div class="two-col-wide">
+          <div>
+            <div class="card">
+              <div class="card-header"><h3>Record Stock Movement</h3></div>
+              <div class="card-body">
+                <div class="form-group">
+                  <label class="form-label">Movement Type</label>
+                  <div style="display:flex;gap:8px;flex-wrap:wrap;" id="mov-type-btns"></div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Barcode</label>
+                  <div class="barcode-wrap">
+                    <input class="form-input" id="mov-barcode" placeholder="Scan or type barcode…" oninput="barcodeSearch(this.value)" style="font-family:'Barlow Condensed',sans-serif;letter-spacing:1.5px;">
+                    <button class="scan-trigger" onclick="openScanner('movement')" title="Scan barcode">📷</button>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Product</label>
+                  <select class="form-select" id="mov-product" onchange="selectMovProduct()">
+                    <option value="">— Select or scan barcode —</option>
+                  </select>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Quantity</label>
+                    <input class="form-input" type="number" id="mov-qty" value="1" min="1">
+                  </div>
+                  <div class="form-group" id="mov-toloc-wrap" style="display:none;">
+                    <label class="form-label">Distribute To Location</label>
+                    <select class="form-select" id="mov-toloc"></select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Notes (optional)</label>
+                  <input class="form-input" id="mov-notes" placeholder="e.g. Job card #, customer name…">
+                </div>
+                <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;" onclick="recordMovement()">✓ Record Movement</button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="card" id="mov-preview-card">
+              <div class="card-header"><h3>Product Preview</h3></div>
+              <div class="card-body" id="mov-preview">
+                <div class="empty"><div class="empty-icon">📦</div><p>Select a product to preview</p></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h3>Today's Movements</h3></div>
+              <div class="card-body" id="today-movements" style="padding-top:4px;max-height:300px;overflow-y:auto;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODUCTS CATALOGUE -->
+      <div class="page" id="page-products">
+        <div class="card">
+          <div class="card-header">
+            <h3>Product Catalogue</h3>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+              <input class="search-input" placeholder="Search name, SKU, barcode, category…" oninput="filterProducts(this.value)">
+              <button class="btn btn-primary" onclick="openAddProduct()">＋ Add Product</button>
+            </div>
+          </div>
+          <table id="prod-table">
+            <thead><tr><th>Product</th><th>SKU</th><th>Barcode</th><th>Category</th><th>Unit</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="prod-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TRANSFERS -->
+      <div class="page" id="page-transfers">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px;">
+          <div><div class="topbar-title" id="trf-page-title">Transfer Requests</div></div>
+          <button class="btn btn-primary" onclick="openTransferModal()">＋ New Transfer Request</button>
+        </div>
+        <div id="trf-list"></div>
+      </div>
+
+      <!-- REPORTS -->
+      <div class="page" id="page-reports">
+        <div class="stats-grid" id="report-stats"></div>
+        <div class="two-col">
+          <div>
+            <div class="card">
+              <div class="card-header">
+                <h3 id="report-chart-title">Movements by Type</h3>
+              </div>
+              <div class="card-body">
+                <div class="bar-chart-wrap" id="report-bar-chart"></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h3>Full Movement Log</h3><input class="search-input" style="min-width:150px;" placeholder="Search…" oninput="filterMovLog(this.value)"></div>
+              <table id="mov-log-table">
+                <thead><tr><th>Date/Time</th><th>Type</th><th>Product</th><th>SKU</th><th>Qty</th><th id="log-loc-th">Location</th><th>Notes</th></tr></thead>
+                <tbody id="mov-log-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+          <div>
+            <div class="card">
+              <div class="card-header"><h3>Top 10 — Most Issued</h3></div>
+              <div class="card-body" id="top-issued" style="padding-top:4px;"></div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h3>Top 10 — Most Received</h3></div>
+              <div class="card-body" id="top-received" style="padding-top:4px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOCATIONS (Admin only) -->
+      <div class="page" id="page-locations">
+        <div class="section-title">All Locations</div>
+        <div class="location-grid" id="loc-grid"></div>
+        <div id="loc-detail" style="display:none;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+            <button class="btn btn-ghost btn-sm" onclick="clearLocDetail()">← Back</button>
+            <div class="topbar-title" id="loc-detail-title">Location Detail</div>
+          </div>
+          <div class="stats-grid" id="loc-detail-stats"></div>
+          <div class="two-col">
+            <div>
+              <div class="card">
+                <div class="card-header"><h3 id="loc-inv-title">Inventory</h3><input class="search-input" placeholder="Search…" oninput="filterLocInv(this.value)"></div>
+                <table>
+                  <thead><tr><th>Product</th><th>SKU</th><th>Category</th><th>Qty</th><th>Status</th></tr></thead>
+                  <tbody id="loc-inv-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+            <div>
+              <div class="card">
+                <div class="card-header"><h3>Recent Movements</h3></div>
+                <div class="card-body" id="loc-movements" style="padding-top:4px;"></div>
+              </div>
+              <div class="card">
+                <div class="card-header"><h3>Top Movers — This Location</h3></div>
+                <div class="card-body" id="loc-top-movers" style="padding-top:4px;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- SCANNER -->
+<div class="scanner-bg" id="scanner-bg">
+  <div class="scan-frame">
+    <div class="scan-view">
+      <div class="scan-corner sc-tl"></div><div class="scan-corner sc-tr"></div>
+      <div class="scan-corner sc-bl"></div><div class="scan-corner sc-br"></div>
+      <div class="scan-beam"></div>
+      <div id="scan-ghost" style="color:rgba(255,255,255,0.3);font-size:0.82rem;">Align barcode in frame</div>
+    </div>
+  </div>
+  <p class="scan-hint">Tap a barcode below to simulate a scan</p>
+  <div class="scan-chips" id="scan-chips"></div>
+  <button class="btn btn-ghost" style="color:rgba(255,255,255,0.5);border-color:rgba(255,255,255,0.15);" onclick="closeScanner()">Cancel</button>
+</div>
+
+<!-- MODALS -->
+<div class="modal-bg" id="modal-add-stock">
+  <div class="modal">
+    <div class="modal-head"><h3>Add Stock</h3><button class="modal-close" onclick="closeModal('modal-add-stock')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Barcode</label>
+        <div class="barcode-wrap">
+          <input class="form-input" id="as-barcode" placeholder="Scan or type barcode…" oninput="asBarcodeLookup(this.value)" style="font-family:'Barlow Condensed',sans-serif;letter-spacing:1.5px;">
+          <button class="scan-trigger" onclick="openScanner('addstock')" title="Scan barcode">📷</button>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">Product</label><select class="form-select" id="as-product" onchange="asProductSelected()"><option value="">— Select product —</option></select></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Quantity to Add</label><input class="form-input" type="number" id="as-qty" value="1" min="1"></div>
+        <div class="form-group" id="as-loc-wrap"><label class="form-label">Location</label><select class="form-select" id="as-loc"></select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Notes</label><input class="form-input" id="as-notes" placeholder="e.g. PO #, delivery note…"></div>
+      <div id="as-preview" style="display:none;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-top:4px;display:none;align-items:center;gap:12px;">
+        <div class="prod-thumb" style="width:44px;height:44px;flex-shrink:0;" id="as-prev-thumb"></div>
+        <div><div style="font-weight:600;font-size:0.9rem;" id="as-prev-name">—</div><div style="font-size:0.75rem;color:var(--text3);font-family:'Barlow Condensed',monospace;letter-spacing:1px;" id="as-prev-sku">—</div></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-add-stock')">Cancel</button>
+      <button class="btn btn-primary" onclick="submitAddStock()">Add Stock</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="modal-add-product">
+  <div class="modal">
+    <div class="modal-head"><h3>Add New Product</h3><button class="modal-close" onclick="closeModal('modal-add-product')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Product Name</label><input class="form-input" id="np-name" placeholder="e.g. M10 Hex Bolt 50mm"></div>
+        <div class="form-group"><label class="form-label">SKU</label><input class="form-input" id="np-sku" placeholder="e.g. BOL-M10-050"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Barcode</label>
+        <div class="barcode-wrap"><input class="form-input" id="np-barcode" placeholder="Scan or enter barcode…" style="font-family:'Barlow Condensed',sans-serif;letter-spacing:1.5px;"><button class="scan-trigger" onclick="openScanner('newprod')" title="Scan">📷</button></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Category</label><select class="form-select" id="np-cat"><option>Fasteners</option><option>Drill Bits</option><option>Abrasives</option><option>Tools &amp; Hardware</option><option>Adhesives &amp; Sealants</option><option>Electrical</option><option>Safety &amp; PPE</option><option>Plumbing</option><option>Bearings</option><option>Other</option></select></div>
+        <div class="form-group"><label class="form-label">Unit of Measure</label><select class="form-select" id="np-uom"><option>Each</option><option>Box</option><option>Bag</option><option>Roll</option><option>Metre</option><option>Litre</option><option>Kg</option><option>Pair</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Low Stock Threshold</label><input class="form-input" type="number" id="np-thresh" value="10" min="1"></div>
+        <div class="form-group"><label class="form-label">Photo (optional)</label><input class="form-input" type="file" accept="image/*" style="padding:6px;"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-add-product')">Cancel</button>
+      <button class="btn btn-primary" onclick="submitNewProduct()">Add Product</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="modal-edit-product">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Edit Product</h3>
+      <button class="modal-close" onclick="closeModal('modal-edit-product')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="ep-id">
+      <!-- Image preview -->
+      <div style="display:flex;align-items:center;gap:14px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-bottom:16px;">
+        <div id="ep-img-preview"></div>
+        <div style="flex:1;min-width:0;">
+          <div class="form-label" style="margin-bottom:6px;">Image URL</div>
+          <input class="form-input" id="ep-imageurl" placeholder="https://…" oninput="updateEpImagePreview(this.value)" style="font-size:0.78rem;">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Product Name</label>
+          <input class="form-input" id="ep-name" placeholder="Product name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">SKU</label>
+          <input class="form-input" id="ep-sku" placeholder="SKU code">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Barcode</label>
+        <div class="barcode-wrap">
+          <input class="form-input" id="ep-barcode" placeholder="Barcode number" style="font-family:'Barlow Condensed',sans-serif;letter-spacing:1.5px;">
+          <button class="scan-trigger" onclick="openScanner('editprod')" title="Scan">📷</button>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select class="form-select" id="ep-cat">
+            <option value="Fasteners">Fasteners</option>
+            <option value="Drill Bits">Drill Bits</option>
+            <option value="Abrasives">Abrasives</option>
+            <option value="Tools &amp; Hardware">Tools &amp; Hardware</option>
+            <option value="Adhesives &amp; Sealants">Adhesives &amp; Sealants</option>
+            <option value="Electrical">Electrical</option>
+            <option value="Safety &amp; PPE">Safety &amp; PPE</option>
+            <option value="Plumbing">Plumbing</option>
+            <option value="Bearings">Bearings</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Unit of Measure</label>
+          <select class="form-select" id="ep-uom">
+            <option>Each</option><option>Box</option><option>Bag</option>
+            <option>Roll</option><option>Metre</option><option>Litre</option>
+            <option>Kg</option><option>Pair</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Low Stock Threshold</label>
+        <input class="form-input" type="number" id="ep-thresh" min="1">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-edit-product')">Cancel</button>
+      <button class="btn btn-primary" onclick="submitEditProduct()">💾 Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="modal-transfer">
+  <div class="modal">
+    <div class="modal-head"><h3>New Transfer Request</h3><button class="modal-close" onclick="closeModal('modal-transfer')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Product</label><select class="form-select" id="tr-product"><option value="">— Select product —</option></select></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">From Location</label><select class="form-select" id="tr-from"></select></div>
+        <div class="form-group"><label class="form-label">To Location</label><select class="form-select" id="tr-to"></select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Quantity</label><input class="form-input" type="number" id="tr-qty" value="1" min="1"></div>
+      <div class="form-group"><label class="form-label">Reason / Notes</label><input class="form-input" id="tr-notes" placeholder="e.g. Stock replenishment for branch"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-transfer')">Cancel</button>
+      <button class="btn btn-primary" onclick="submitTransfer()">Submit Request</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"><span id="toast-icon">✓</span><span id="toast-msg">Done</span></div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════
+const USERS = [
+  {id:'admin',  name:'Admin',           email:'admin@kareindustrial.co.za',    role:'admin', loc:null,    initials:'AD'},
+  {id:'loc1',   name:'Durban Branch',   email:'durban@kareindustrial.co.za',   role:'staff', loc:'LOC1',  initials:'DB'},
+  {id:'loc2',   name:'Johannesburg',    email:'jhb@kareindustrial.co.za',      role:'staff', loc:'LOC2',  initials:'JB'},
+  {id:'loc3',   name:'Cape Town',       email:'cpt@kareindustrial.co.za',      role:'staff', loc:'LOC3',  initials:'CT'},
+  {id:'loc4',   name:'Pretoria',        email:'pta@kareindustrial.co.za',      role:'staff', loc:'LOC4',  initials:'PT'},
+];
+const LOCATIONS = [
+  {id:'LOC1', name:'Durban',         icon:'🏭', address:'12 Umbilo Rd, Durban'},
+  {id:'LOC2', name:'Johannesburg',   icon:'🏗️', address:'44 Main Reef Rd, JHB'},
+  {id:'LOC3', name:'Cape Town',      icon:'⚓', address:'8 Voortrekker Rd, CPT'},
+  {id:'LOC4', name:'Pretoria',       icon:'🔧', address:'102 Church St, PTA'},
+];
+let PRODUCTS = [
+  {id:'PROD000',sku:'SKU-100000',barcode:'1915017861468',name:'SDS Plus Concrete',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/SDSConcrete.png?v=1770194589',emoji:'🔩'},
+  {id:'PROD001',sku:'SKU-100001',barcode:'3945871230049',name:'SDS Plus Concrete',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/SDSConcrete.png?v=1770194589',emoji:'🔩'},
+  {id:'PROD002',sku:'SKU-100002',barcode:'7264431683849',name:'SDS Plus Concrete',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/SDSConcrete.png?v=1770194589',emoji:'🔩'},
+  {id:'PROD003',sku:'SKU-100003',barcode:'3048812725773',name:'SDS Plus Concrete',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/SDSConcrete.png?v=1770194589',emoji:'🔩'},
+  {id:'PROD004',sku:'SKU-100004',barcode:'3101708867943',name:'SDS Plus Concrete',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/SDSConcrete.png?v=1770194589',emoji:'🔩'},
+  {id:'PROD005',sku:'SKU-100005',barcode:'2036041377795',name:'SDS Plus Concrete',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/SDSConcrete.png?v=1770194589',emoji:'🔩'},
+  {id:'PROD006',sku:'SKU-100006',barcode:'7807626557874',name:'SDS Plus Concrete',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/SDSConcrete.png?v=1770194589',emoji:'🔩'},
+  {id:'PROD007',sku:'SKU-100007',barcode:'8525003857325',name:'SDS Plus Concrete',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/SDSConcrete.png?v=1770194589',emoji:'🔩'},
+  {id:'PROD008',sku:'SKU-100008',barcode:'5307922582598',name:'Masonry Concrete Drill Bit',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/masionaryconcrete.png?v=1770194273',emoji:'🔩'},
+  {id:'PROD009',sku:'SKU-100009',barcode:'8616654285717',name:'Masonry Concrete Drill Bit',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/masionaryconcrete.png?v=1770194273',emoji:'🔩'},
+  {id:'PROD010',sku:'SKU-100010',barcode:'2937854594539',name:'Masonry Concrete Drill Bit',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/masionaryconcrete.png?v=1770194273',emoji:'🔩'},
+  {id:'PROD011',sku:'SKU-100011',barcode:'6981350783415',name:'Masonry Concrete Drill Bit',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/masionaryconcrete.png?v=1770194273',emoji:'🔩'},
+  {id:'PROD012',sku:'SKU-100012',barcode:'4048545913866',name:'Masonry Concrete Drill Bit',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/masionaryconcrete.png?v=1770194273',emoji:'🔩'},
+  {id:'PROD013',sku:'SKU-100013',barcode:'6215883785966',name:'Double Ended Fully Ground Drill Bits',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/doubleendedfullyground.png?v=1770193827',emoji:'🔩'},
+  {id:'PROD014',sku:'SKU-100014',barcode:'9485659222840',name:'Double Ended Fully Ground Drill Bits',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/doubleendedfullyground.png?v=1770193827',emoji:'🔩'},
+  {id:'PROD015',sku:'SKU-100015',barcode:'5952097526398',name:'Double Ended Fully Ground Drill Bits',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/doubleendedfullyground.png?v=1770193827',emoji:'🔩'},
+  {id:'PROD016',sku:'SKU-100016',barcode:'9759192752302',name:'Double Ended Fully Ground Drill Bits',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/doubleendedfullyground.png?v=1770193827',emoji:'🔩'},
+  {id:'PROD017',sku:'SKU-100017',barcode:'6917350209242',name:'Ice Drill Bits',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/icedrillbits.png?v=1770193369',emoji:'🔩'},
+  {id:'PROD018',sku:'SKU-100018',barcode:'2688144338339',name:'Ice Drill Bits',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/icedrillbits.png?v=1770193369',emoji:'🔩'},
+  {id:'PROD019',sku:'SKU-100019',barcode:'6355536533602',name:'Ice Drill Bits',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/icedrillbits.png?v=1770193369',emoji:'🔩'},
+  {id:'PROD020',sku:'SKU-100020',barcode:'8602958031464',name:'Ice Drill Bits',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/icedrillbits.png?v=1770193369',emoji:'🔩'},
+  {id:'PROD021',sku:'SKU-100021',barcode:'7279830843102',name:'Ice Drill Bits',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/icedrillbits.png?v=1770193369',emoji:'🔩'},
+  {id:'PROD022',sku:'SKU-100022',barcode:'6430430025014',name:'Ice Drill Bits',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/icedrillbits.png?v=1770193369',emoji:'🔩'},
+  {id:'PROD023',sku:'SKU-100023',barcode:'4003244020668',name:'Ice Drill Bits',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/icedrillbits.png?v=1770193369',emoji:'🔩'},
+  {id:'PROD024',sku:'SKU-100024',barcode:'6533908779652',name:'Fully Ground Drill Bit',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/fullygrounddrillbit.png?v=1770192903',emoji:'🔩'},
+  {id:'PROD025',sku:'SKU-100025',barcode:'2904070576158',name:'Fully Ground Drill Bit',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/fullygrounddrillbit.png?v=1770192903',emoji:'🔩'},
+  {id:'PROD026',sku:'SKU-100026',barcode:'1518450975643',name:'Fully Ground Drill Bit',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/fullygrounddrillbit.png?v=1770192903',emoji:'🔩'},
+  {id:'PROD027',sku:'SKU-100027',barcode:'2673717488550',name:'Fully Ground Drill Bit',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/fullygrounddrillbit.png?v=1770192903',emoji:'🔩'},
+  {id:'PROD028',sku:'SKU-100028',barcode:'2919594197854',name:'Fully Ground Drill Bit',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/fullygrounddrillbit.png?v=1770192903',emoji:'🔩'},
+  {id:'PROD029',sku:'SKU-100029',barcode:'1968428020189',name:'Fully Ground Drill Bit',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/fullygrounddrillbit.png?v=1770192903',emoji:'🔩'},
+  {id:'PROD030',sku:'SKU-100030',barcode:'1572299305168',name:'Fully Ground Drill Bit',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/fullygrounddrillbit.png?v=1770192903',emoji:'🔩'},
+  {id:'PROD031',sku:'SKU-100031',barcode:'5137786381685',name:'Fully Ground Drill Bit',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/fullygrounddrillbit.png?v=1770192903',emoji:'🔩'},
+  {id:'PROD032',sku:'SKU-100032',barcode:'5919872823940',name:'Fully Ground Drill Bit',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/fullygrounddrillbit.png?v=1770192903',emoji:'🔩'},
+  {id:'PROD033',sku:'SKU-100033',barcode:'9963381986209',name:'Fully Ground Drill Bit',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/fullygrounddrillbit.png?v=1770192903',emoji:'🔩'},
+  {id:'PROD034',sku:'SKU-100034',barcode:'5799967339021',name:'Fully Ground Drill Bit',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/fullygrounddrillbit.png?v=1770192903',emoji:'🔩'},
+  {id:'PROD035',sku:'SKU-100035',barcode:'5833488537356',name:'Spring Lock Saddle Washer',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/saddle.png?v=1770030145',emoji:'🔩'},
+  {id:'PROD036',sku:'SKU-100036',barcode:'1231492296077',name:'Spring Lock Saddle Washer',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/saddle.png?v=1770030145',emoji:'🔩'},
+  {id:'PROD037',sku:'SKU-100037',barcode:'4277207463622',name:'Spring Lock Saddle Washer',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/saddle.png?v=1770030145',emoji:'🔩'},
+  {id:'PROD038',sku:'SKU-100038',barcode:'7165733694334',name:'Solar Silicone Dektite',cat:'Adhesives & Sealants',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/gdgiqudd.jpg?v=1770023462',emoji:'🔩'},
+  {id:'PROD039',sku:'SKU-100039',barcode:'6827568821384',name:'Square Silicone Dektite',cat:'Adhesives & Sealants',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/utdx.jpg?v=1770023263',emoji:'🔩'},
+  {id:'PROD040',sku:'SKU-100040',barcode:'7945284532449',name:'Retrofit Silicone Dektite',cat:'Adhesives & Sealants',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/rgfe.jpg?v=1770022198',emoji:'🔩'},
+  {id:'PROD041',sku:'SKU-100041',barcode:'6846479584354',name:'Polycarb Washers',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/1a.png?v=1769942459',emoji:'🔩'},
+  {id:'PROD042',sku:'SKU-100042',barcode:'7125963967310',name:'Polycarb Washers',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/jgchjgc.png?v=1769942459',emoji:'🔩'},
+  {id:'PROD043',sku:'SKU-100043',barcode:'5752067602311',name:'Polycarb Washers',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/938y4t.png?v=1769942459',emoji:'🔩'},
+  {id:'PROD044',sku:'SKU-100044',barcode:'5878094704966',name:'Box of 5000 Staples',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/129192.jpg?v=1769679899',emoji:'🔩'},
+  {id:'PROD045',sku:'SKU-100045',barcode:'1707504020484',name:'M6 x 38mm Roof ZAP Fine Thread Flange and Seal',cat:'Adhesives & Sealants',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/144.jpg?v=1769669841',emoji:'🔩'},
+  {id:'PROD046',sku:'SKU-100046',barcode:'6060516407749',name:'Hex Colour Caps Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/121212.jpg?v=1769500321',emoji:'🔩'},
+  {id:'PROD047',sku:'SKU-100047',barcode:'2931609290213',name:'Hex Colour Caps Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/DG.jpg?v=1769500321',emoji:'🔩'},
+  {id:'PROD048',sku:'SKU-100048',barcode:'6961496146842',name:'Hex Colour Caps Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/FW.jpg?v=1769500321',emoji:'🔩'},
+  {id:'PROD049',sku:'SKU-100049',barcode:'1424082643035',name:'Hex Colour Caps Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/DD.jpg?v=1769500321',emoji:'🔩'},
+  {id:'PROD050',sku:'SKU-100050',barcode:'1750231125625',name:'Hex Colour Caps Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/HR.jpg?v=1769500321',emoji:'🔩'},
+  {id:'PROD051',sku:'SKU-100051',barcode:'3848726361896',name:'Hex Colour Caps Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/TG.jpg?v=1769500321',emoji:'🔩'},
+  {id:'PROD052',sku:'SKU-100052',barcode:'3099693409742',name:'Hex Colour Caps Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/SG.jpg?v=1769500321',emoji:'🔩'},
+  {id:'PROD053',sku:'SKU-100053',barcode:'2459311146489',name:'Timber Screw Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/34334.jpg?v=1769671359',emoji:'🔩'},
+  {id:'PROD054',sku:'SKU-100054',barcode:'5227986639115',name:'Timber Screw Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/t.jpg?v=1769671359',emoji:'🔩'},
+  {id:'PROD055',sku:'SKU-100055',barcode:'5418708422801',name:'Timber Screw Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/zz_0599948e-6a8f-4c9a-acc2-cff52c5d9c90.jpg?v=1769671359',emoji:'🔩'},
+  {id:'PROD056',sku:'SKU-100056',barcode:'3509769102153',name:'Timber Screw Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/r.jpg?v=1769671359',emoji:'🔩'},
+  {id:'PROD057',sku:'SKU-100057',barcode:'1751294208017',name:'Timber Screw Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/12x65tc4.jpg?v=1769671359',emoji:'🔩'},
+  {id:'PROD058',sku:'SKU-100058',barcode:'6255430900619',name:'Timber Screw Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/12x65c3_ca497dfd-9143-4a40-931b-14343a204a97.jpg?v=1769671359',emoji:'🔩'},
+  {id:'PROD059',sku:'SKU-100059',barcode:'6320971321135',name:'Timber Screw Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/zzz_c27cdd67-3205-41a9-8aba-1e1f531eb60f.jpg?v=1769671359',emoji:'🔩'},
+  {id:'PROD060',sku:'SKU-100060',barcode:'2309919565548',name:'Timber Screw Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/i.jpg?v=1769671359',emoji:'🔩'},
+  {id:'PROD061',sku:'SKU-100061',barcode:'5570194129942',name:'Timber Screw Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/ffr.png?v=1769776467',emoji:'🔩'},
+  {id:'PROD062',sku:'SKU-100062',barcode:'7783500501319',name:'Timber Screw Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/10x60.png?v=1769776787',emoji:'🔩'},
+  {id:'PROD063',sku:'SKU-100063',barcode:'8217254053726',name:'Timber Screw Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/50.png?v=1769778507',emoji:'🔩'},
+  {id:'PROD064',sku:'SKU-100064',barcode:'4706810622162',name:'Timber Screw Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/aaa.png?v=1769779256',emoji:'🔩'},
+  {id:'PROD065',sku:'SKU-100065',barcode:'6056867262050',name:'Timber Screw Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/1212.png?v=1769941312',emoji:'🔩'},
+  {id:'PROD066',sku:'SKU-100066',barcode:'1001546292476',name:'Timber Screw Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/jgfugd.png?v=1770029031',emoji:'🔩'},
+  {id:'PROD067',sku:'SKU-100067',barcode:'9556881734880',name:'Timber Screw Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/kdfjhvwf.png?v=1770029544',emoji:'🔩'},
+  {id:'PROD068',sku:'SKU-100068',barcode:'5400233643698',name:'Bonded Washer Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/1111.png?v=1769942150',emoji:'🔩'},
+  {id:'PROD069',sku:'SKU-100069',barcode:'5418470556548',name:'Bonded Washer Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/x.jpg?v=1769942150',emoji:'🔩'},
+  {id:'PROD070',sku:'SKU-100070',barcode:'1221080655158',name:'Bonded Washer Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/xx.jpg?v=1769942150',emoji:'🔩'},
+  {id:'PROD071',sku:'SKU-100071',barcode:'6239231920383',name:'Bonded Washer Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/xxx.jpg?v=1769942150',emoji:'🔩'},
+  {id:'PROD072',sku:'SKU-100072',barcode:'9114127081114',name:'Bonded Washer Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/xxxx.jpg?v=1769942150',emoji:'🔩'},
+  {id:'PROD073',sku:'SKU-100073',barcode:'4496134805529',name:'Bonded Washer Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/xxxxx.jpg?v=1769942150',emoji:'🔩'},
+  {id:'PROD074',sku:'SKU-100074',barcode:'6090512771996',name:'Bonded Washer Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/w.jpg?v=1769942150',emoji:'🔩'},
+  {id:'PROD075',sku:'SKU-100075',barcode:'5676477283423',name:'Bonded Washer Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/ww.jpg?v=1769942150',emoji:'🔩'},
+  {id:'PROD076',sku:'SKU-100076',barcode:'8723032918383',name:'Timber Truss Assembly M6',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/28.png?v=1770797549',emoji:'🔩'},
+  {id:'PROD077',sku:'SKU-100077',barcode:'4232934483929',name:'Timber Truss Assembly M6',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/28.png?v=1770797549',emoji:'🔩'},
+  {id:'PROD078',sku:'SKU-100078',barcode:'7688608380716',name:'Timber Truss Assembly M6',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/28.png?v=1770797549',emoji:'🔩'},
+  {id:'PROD079',sku:'SKU-100079',barcode:'4375807677116',name:'Timber Truss Assembly M6',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/28.png?v=1770797549',emoji:'🔩'},
+  {id:'PROD080',sku:'SKU-100080',barcode:'2076337782416',name:'Timber Truss Assembly M6',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/28.png?v=1770797549',emoji:'🔩'},
+  {id:'PROD081',sku:'SKU-100081',barcode:'5671477498056',name:'Timber Truss Assembly M6',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/28.png?v=1770797549',emoji:'🔩'},
+  {id:'PROD082',sku:'SKU-100082',barcode:'3382308223441',name:'12 (5.5) x 75mm CSK Wing Teks',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/21_784951c5-5999-49a8-b436-0016998b5476.jpg?v=1768823012',emoji:'🔩'},
+  {id:'PROD083',sku:'SKU-100083',barcode:'1072850567239',name:'12 (5.5) x 55mm CSK Wing Teks',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/19_2f17d490-0dc6-4564-a617-33f391714b4c.jpg?v=1768822653',emoji:'🔩'},
+  {id:'PROD084',sku:'SKU-100084',barcode:'2803289978605',name:'12 (5.5) x 45mm CSK Wing Teks',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/20_d885a408-da10-453f-b116-c5d23e139070.jpg?v=1768822823',emoji:'🔩'},
+  {id:'PROD085',sku:'SKU-100085',barcode:'2238251620878',name:'12 (5.5) x 38mm CSK Wing Teks',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/17_e8986c28-1080-442d-adc8-df366ac76abc.jpg?v=1768822032',emoji:'🔩'},
+  {id:'PROD086',sku:'SKU-100086',barcode:'8178885927108',name:'6 x 41mm Dry Wall  Coarse Class 1',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/16_9f0799f6-1ec5-4b99-929d-60c6af96f6d9.jpg?v=1768821765',emoji:'🔩'},
+  {id:'PROD087',sku:'SKU-100087',barcode:'6366136815129',name:'6 x 32mm Dry Wall  Coarse Class 1',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/15_0320e735-7958-42ee-97be-2579678a9618.jpg?v=1768821624',emoji:'🔩'},
+  {id:'PROD088',sku:'SKU-100088',barcode:'4536332391993',name:'6 x 32mm Dry Wall Teks Class 1',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/14_994d10ff-544a-4805-b8fb-540eb9eeee5d.jpg?v=1768821135',emoji:'🔩'},
+  {id:'PROD089',sku:'SKU-100089',barcode:'5508401311223',name:'6 x 41mm Dry Wall Teks Class 1',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/12_844f9649-aea2-4487-8cbd-4371f41afd4c.jpg?v=1768820879',emoji:'🔩'},
+  {id:'PROD090',sku:'SKU-100090',barcode:'3083068840343',name:'8 (4.2) X 13mm Modified Truss Screws Class 1',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/11_43643462-5a08-412f-947b-226ebc2b704d.jpg?v=1768820260',emoji:'🔩'},
+  {id:'PROD091',sku:'SKU-100091',barcode:'6991396435579',name:'Segmented Diamond Blade 115 x 2.0 x 7 x 22.23H',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/3_c18b09dc-4838-4987-b02d-824d8a6ca008.jpg?v=1768452063',emoji:'🔩'},
+  {id:'PROD092',sku:'SKU-100092',barcode:'9552294980932',name:'Segmented Diamond Blade 230 x 2.6 x 7 x 22.23H',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/2_121ef6f2-f8f4-497b-8d94-635b86677f87.jpg?v=1768451983',emoji:'🔩'},
+  {id:'PROD093',sku:'SKU-100093',barcode:'2592524427790',name:'230mm Steel Cutting Disk',cat:'Abrasives',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/1_3953246b-5871-490c-ae8a-6f3d53281782.jpg?v=1768451783',emoji:'🔩'},
+  {id:'PROD094',sku:'SKU-100094',barcode:'5425570932970',name:'115mm Steel Cutting Disk',cat:'Abrasives',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/74.jpg?v=1768451666',emoji:'🔩'},
+  {id:'PROD095',sku:'SKU-100095',barcode:'6907065376675',name:'Metal Screw Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/90909.jpg?v=1769673782',emoji:'🔩'},
+  {id:'PROD096',sku:'SKU-100096',barcode:'2190890041315',name:'Metal Screw Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/8_f0a9415e-48cf-4ffd-b743-dd9c65eeafe8.jpg?v=1769673782',emoji:'🔩'},
+  {id:'PROD097',sku:'SKU-100097',barcode:'4403742165672',name:'Metal Screw Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/z.jpg?v=1769673782',emoji:'🔩'},
+  {id:'PROD098',sku:'SKU-100098',barcode:'1671336075151',name:'Metal Screw Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/zz.jpg?v=1769673782',emoji:'🔩'},
+  {id:'PROD099',sku:'SKU-100099',barcode:'1232719443757',name:'Metal Screw Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/zzz.jpg?v=1769673782',emoji:'🔩'},
+  {id:'PROD100',sku:'SKU-100100',barcode:'3140720091786',name:'Metal Screw Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/zzzz.jpg?v=1769673782',emoji:'🔩'},
+  {id:'PROD101',sku:'SKU-100101',barcode:'3933172608383',name:'Metal Screw Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/zzzzz.jpg?v=1769673782',emoji:'🔩'},
+  {id:'PROD102',sku:'SKU-100102',barcode:'6225700295232',name:'Metal Screw Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/zzzzzz.jpg?v=1769673782',emoji:'🔩'},
+  {id:'PROD103',sku:'SKU-100103',barcode:'2275157058010',name:'Metal Screw Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/ii.jpg?v=1769673782',emoji:'🔩'},
+  {id:'PROD104',sku:'SKU-100104',barcode:'7049888532544',name:'Metal Screw Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/85.png?v=1769778811',emoji:'🔩'},
+  {id:'PROD105',sku:'SKU-100105',barcode:'7979240503421',name:'Metal Screw Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/132.png?v=1769941567',emoji:'🔩'},
+  {id:'PROD106',sku:'SKU-100106',barcode:'2198365577731',name:'Metal Screw Pouches',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/1654.png?v=1769941779',emoji:'🔩'},
+  {id:'PROD107',sku:'SKU-100107',barcode:'4720631787999',name:'Torx T20 x 25mm',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/64.jpg?v=1768406570',emoji:'🔩'},
+  {id:'PROD108',sku:'SKU-100108',barcode:'1611814150368',name:'Pozi No.1 x 25mm',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/63.jpg?v=1768406493',emoji:'🔩'},
+  {id:'PROD109',sku:'SKU-100109',barcode:'1147398743082',name:'Pozi No.3 x 25mm',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/62.jpg?v=1768406419',emoji:'🔩'},
+  {id:'PROD110',sku:'SKU-100110',barcode:'8315080939122',name:'Philips No.1 x 25mm',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/61.jpg?v=1768406318',emoji:'🔩'},
+  {id:'PROD111',sku:'SKU-100111',barcode:'2264708494990',name:'Philips No.3 x 25mm',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/60.jpg?v=1768406217',emoji:'🔩'},
+  {id:'PROD112',sku:'SKU-100112',barcode:'8917944367861',name:'5.1 x 20mm Aluminium Bulb Tite Pop Rivet',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/59.jpg?v=1768406113',emoji:'🔩'},
+  {id:'PROD113',sku:'SKU-100113',barcode:'5911388275803',name:'Nylon Nail Plugs',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/57.jpg?v=1768405695',emoji:'🔩'},
+  {id:'PROD114',sku:'SKU-100114',barcode:'2600133360541',name:'Nylon Nail Plugs',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/57.jpg?v=1768405695',emoji:'🔩'},
+  {id:'PROD115',sku:'SKU-100115',barcode:'6578142635538',name:'Nylon Nail Plugs',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/57.jpg?v=1768405695',emoji:'🔩'},
+  {id:'PROD116',sku:'SKU-100116',barcode:'4770145212157',name:'Nylon Nail Plugs',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/57.jpg?v=1768405695',emoji:'🔩'},
+  {id:'PROD117',sku:'SKU-100117',barcode:'1983422403367',name:'Nylon Nail Plugs',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/57.jpg?v=1768405695',emoji:'🔩'},
+  {id:'PROD118',sku:'SKU-100118',barcode:'2155747161541',name:'Nylon Nail Plugs',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/57.jpg?v=1768405695',emoji:'🔩'},
+  {id:'PROD119',sku:'SKU-100119',barcode:'9169129220239',name:'Nylon Nail Plugs',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/57.jpg?v=1768405695',emoji:'🔩'},
+  {id:'PROD120',sku:'SKU-100120',barcode:'2735864047977',name:'Nylon Nail Plugs',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/57.jpg?v=1768405695',emoji:'🔩'},
+  {id:'PROD121',sku:'SKU-100121',barcode:'1973592122922',name:'Nylon Nail Plugs',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/57.jpg?v=1768405695',emoji:'🔩'},
+  {id:'PROD122',sku:'SKU-100122',barcode:'1916174610351',name:'Nylon Nail Plugs',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/57.jpg?v=1768405695',emoji:'🔩'},
+  {id:'PROD123',sku:'SKU-100123',barcode:'5540860889088',name:'8 x 45mm CSK  With Wings Class 3',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/55.jpg?v=1768405333',emoji:'🔩'},
+  {id:'PROD124',sku:'SKU-100124',barcode:'2403867275295',name:'10 x 45mm Fiber ZAP Class 3',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/10x45_d28e7b92-418b-43f1-ac24-8664f09a2c9a.jpg?v=1768826301',emoji:'🔩'},
+  {id:'PROD125',sku:'SKU-100125',barcode:'6765530757809',name:'10 x 35mm Fiber ZAP Class 3',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/52.jpg?v=1768405092',emoji:'🔩'},
+  {id:'PROD126',sku:'SKU-100126',barcode:'9522858065480',name:'8 x 32mm CSK  With Wings Class 3',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/53.jpg?v=1768404846',emoji:'🔩'},
+  {id:'PROD127',sku:'SKU-100127',barcode:'1229387439543',name:'M6 x 60mm Roof ZAP Fine Thread Flange and Seal',cat:'Adhesives & Sealants',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/51_c8bca2ab-4ce5-4def-8bde-2bcb52ef6d32.jpg?v=1768404429',emoji:'🔩'},
+  {id:'PROD128',sku:'SKU-100128',barcode:'1192507940905',name:'12 (5.5) x 65mm Metal Wafer Head',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/50.jpg?v=1768403907',emoji:'🔩'},
+  {id:'PROD129',sku:'SKU-100129',barcode:'3500668898511',name:'12 (5.5) x 65mm Metal Wafer Head',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/50.jpg?v=1768403907',emoji:'🔩'},
+  {id:'PROD130',sku:'SKU-100130',barcode:'2671544949362',name:'12 (5.5) x 65mm Metal Wafer Head',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/50.jpg?v=1768403907',emoji:'🔩'},
+  {id:'PROD131',sku:'SKU-100131',barcode:'1027681573350',name:'12 (5.5) x 85mm Metal Wafer Head',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/49.jpg?v=1768403670',emoji:'🔩'},
+  {id:'PROD132',sku:'SKU-100132',barcode:'7224716690623',name:'12 (5.5) x 85mm Metal Wafer Head',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/49.jpg?v=1768403670',emoji:'🔩'},
+  {id:'PROD133',sku:'SKU-100133',barcode:'6814160881391',name:'3/8th Magnetic Socket',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/48.jpg?v=1768403291',emoji:'🔩'},
+  {id:'PROD134',sku:'SKU-100134',barcode:'7242388539203',name:'Aluminium Pop Rivets 4.8 x 15mm',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/47.jpg?v=1768402771',emoji:'🔩'},
+  {id:'PROD135',sku:'SKU-100135',barcode:'1907663678393',name:'Aluminium Pop Rivets 4.8 x 15mm',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/47.jpg?v=1768402771',emoji:'🔩'},
+  {id:'PROD136',sku:'SKU-100136',barcode:'6378184236487',name:'Aluminium Pop Rivets 4.8 x 15mm',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/47.jpg?v=1768402771',emoji:'🔩'},
+  {id:'PROD137',sku:'SKU-100137',barcode:'8442784277046',name:'Multiport Dektite',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/45.jpg?v=1768401819',emoji:'🔩'},
+  {id:'PROD138',sku:'SKU-100138',barcode:'7852692652888',name:'12 (5.5) x 25mm Metal Hex Flange And Seal',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/40.jpg?v=1768400663',emoji:'🔩'},
+  {id:'PROD139',sku:'SKU-100139',barcode:'2800522305566',name:'12 (5.5) x 25mm Metal Hex Flange And Seal',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/40.jpg?v=1768400663',emoji:'🔩'},
+  {id:'PROD140',sku:'SKU-100140',barcode:'6820955705181',name:'12 (5.5) x 25mm Metal Hex Flange And Seal',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/40.jpg?v=1768400663',emoji:'🔩'},
+  {id:'PROD141',sku:'SKU-100141',barcode:'1187139914367',name:'12 (5.5) X 75 Metal Hex Flange With Wings Class 4',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/31.jpg?v=1768397338',emoji:'🔩'},
+  {id:'PROD142',sku:'SKU-100142',barcode:'5961613622761',name:'Bostitch Staple Gun',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/28.jpg?v=1768395458',emoji:'🔩'},
+  {id:'PROD143',sku:'SKU-100143',barcode:'8055601777031',name:'Tin Snips',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/82.jpg?v=1768395170',emoji:'🔩'},
+  {id:'PROD144',sku:'SKU-100144',barcode:'3069504033143',name:'Tin Snips',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/83.jpg?v=1768395170',emoji:'🔩'},
+  {id:'PROD145',sku:'SKU-100145',barcode:'9777034430314',name:'Tin Snips',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/84.jpg?v=1768395170',emoji:'🔩'},
+  {id:'PROD146',sku:'SKU-100146',barcode:'6212211638701',name:'14 (6.3) x 125mm Timber Hex Head Class 5',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/26.jpg?v=1768394684',emoji:'🔩'},
+  {id:'PROD147',sku:'SKU-100147',barcode:'5783836039670',name:'14 (6.3) x 125mm Metal Hex Flange With Seal Class 4',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/24.jpg?v=1768393874',emoji:'🔩'},
+  {id:'PROD148',sku:'SKU-100148',barcode:'6772552185391',name:'14 (6.3) x 115mm Metal Hex Flange With Seal Class 4',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/23.jpg?v=1768393470',emoji:'🔩'},
+  {id:'PROD149',sku:'SKU-100149',barcode:'9755682336211',name:'12 (5.5) x 85mm Timber Hex Flange and Washer Levin Drill Point Class 4',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/21_3b871f20-8ffe-420d-8f3f-38fb23ece995.jpg?v=1768392649',emoji:'🔩'},
+  {id:'PROD150',sku:'SKU-100150',barcode:'5235704864557',name:'12 (5.5) x 65mm Timber Hex Flange and Washer Levin Drill Point Class 4',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/22_63b15b89-d65d-4950-a5a8-d66ed0b11abd.jpg?v=1768392685',emoji:'🔩'},
+  {id:'PROD151',sku:'SKU-100151',barcode:'2669759418921',name:'12 (5.5) x 65mm Metal Wafer Head Class 3 T5',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/17.jpg?v=1768391506',emoji:'🔩'},
+  {id:'PROD152',sku:'SKU-100152',barcode:'5028144364560',name:'12 (5.5) x 75mm Metal Hex Flange With Seal Class 3 T5',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/16.jpg?v=1768391318',emoji:'🔩'},
+  {id:'PROD153',sku:'SKU-100153',barcode:'8049710021868',name:'12 (5.5) x 38mm Metal Wafer Head Class 3 T5',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/15.jpg?v=1768391161',emoji:'🔩'},
+  {id:'PROD154',sku:'SKU-100154',barcode:'7924095550516',name:'12 (5.5) x 38mm Metal Hex Flange With Seal Class 3 T5',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/14.jpg?v=1768390913',emoji:'🔩'},
+  {id:'PROD155',sku:'SKU-100155',barcode:'2121189681413',name:'12 (5.5) x 20mm Metal Hex Head Class 2',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/12_ce4e8ca8-afc6-46d4-b55f-1c89feb91371.jpg?v=1768390652',emoji:'🔩'},
+  {id:'PROD156',sku:'SKU-100156',barcode:'8081877629796',name:'12 (5.5) x 25mm Metal Hex Head Class 2',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/11_da6b506c-9b43-4ae3-bfc5-b709b78e5251.jpg?v=1768390595',emoji:'🔩'},
+  {id:'PROD157',sku:'SKU-100157',barcode:'8642773927308',name:'12 (5.5) x 85mm Metal Hex Head Class 2',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/9_eba2a361-5b12-446b-8ef2-4ff1ba1bfc8c.jpg?v=1768389679',emoji:'🔩'},
+  {id:'PROD158',sku:'SKU-100158',barcode:'6680285631125',name:'12 (5.5) x 65mm Metal Hex Head Class 2',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/8_44181319-633a-41c5-83ab-3ffe2b77e737.jpg?v=1768389556',emoji:'🔩'},
+  {id:'PROD159',sku:'SKU-100159',barcode:'6069700233634',name:'12 (5.5) x 38mm Metal Hex Head Class 2',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/7.jpg?v=1768389401',emoji:'🔩'},
+  {id:'PROD160',sku:'SKU-100160',barcode:'9395270257299',name:'Pop Rivets 4.8 x 15mm Sealed Aluminium Charcoal',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/6.jpg?v=1768389031',emoji:'🔩'},
+  {id:'PROD161',sku:'SKU-100161',barcode:'1192901973102',name:'12 (5.5) x 35mm Timber Hex Head Class 2',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/5.jpg?v=1768388669',emoji:'🔩'},
+  {id:'PROD162',sku:'SKU-100162',barcode:'4896015130005',name:'12 (5.5) x 28mm Timber Hex Head Class 2',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/4_7461b0c9-f511-4685-9bd3-3f137f939d24.jpg?v=1768388555',emoji:'🔩'},
+  {id:'PROD163',sku:'SKU-100163',barcode:'2516029265989',name:'Polyflex Silicone Gun',cat:'Adhesives & Sealants',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/3_d2b11b89-21fa-4153-a132-22fee5184b72.jpg?v=1768388008',emoji:'🔩'},
+  {id:'PROD164',sku:'SKU-100164',barcode:'1494527237821',name:'Silicone Gun',cat:'Adhesives & Sealants',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/2_53b80bde-e6fa-4084-9f79-820d772fca09.jpg?v=1768387898',emoji:'🔩'},
+  {id:'PROD165',sku:'SKU-100165',barcode:'6974667820757',name:'Bonded Washer 6 x 25mm',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/1_c06b98c7-ae1a-4933-accd-ccb90d6ae0f7.jpg?v=1768387694',emoji:'🔩'},
+  {id:'PROD166',sku:'SKU-100166',barcode:'4589977630767',name:'Bonded Washer 6 x 25mm',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/1_c06b98c7-ae1a-4933-accd-ccb90d6ae0f7.jpg?v=1768387694',emoji:'🔩'},
+  {id:'PROD167',sku:'SKU-100167',barcode:'5273595032488',name:'Bonded Washer 6 x 25mm',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/1_c06b98c7-ae1a-4933-accd-ccb90d6ae0f7.jpg?v=1768387694',emoji:'🔩'},
+  {id:'PROD168',sku:'SKU-100168',barcode:'6484770442440',name:'Bonded Washer 6 x 19mm',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/4.jpg?v=1768387571',emoji:'🔩'},
+  {id:'PROD169',sku:'SKU-100169',barcode:'8455747126611',name:'Bonded Washer 6 x 19mm',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/4.jpg?v=1768387571',emoji:'🔩'},
+  {id:'PROD170',sku:'SKU-100170',barcode:'6097264208370',name:'Bonded Washer 6 x 19mm',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/4.jpg?v=1768387571',emoji:'🔩'},
+  {id:'PROD171',sku:'SKU-100171',barcode:'3457950603666',name:'Pop Rivets 3.2 x 10mm',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/2.jpg?v=1768385436',emoji:'🔩'},
+  {id:'PROD172',sku:'SKU-100172',barcode:'8223891695770',name:'Pop Rivets 3.2 x 10mm',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/3.jpg?v=1768385642',emoji:'🔩'},
+  {id:'PROD173',sku:'SKU-100173',barcode:'5261073423378',name:'Pop Rivets 3.2 x 10mm',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/3.jpg?v=1768385642',emoji:'🔩'},
+  {id:'PROD174',sku:'SKU-100174',barcode:'2297757315542',name:'Soudal Soudaflex 40FC Cartridge',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/9.jpg?v=1768385140',emoji:'🔩'},
+  {id:'PROD175',sku:'SKU-100175',barcode:'6221982136223',name:'Soudal Soudaflex 40FC Cartridge',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/9.jpg?v=1768385140',emoji:'🔩'},
+  {id:'PROD176',sku:'SKU-100176',barcode:'4939151248903',name:'Soudal Soudaflex 40FC Cartridge',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/9.jpg?v=1768385140',emoji:'🔩'},
+  {id:'PROD177',sku:'SKU-100177',barcode:'1809229000459',name:'Soudal Soudaflex P300-SF',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/99.jpg?v=1768385020',emoji:'🔩'},
+  {id:'PROD178',sku:'SKU-100178',barcode:'8333775906016',name:'Soudal Soudaflex 40FC',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/aa11.jpg?v=1768384616',emoji:'🔩'},
+  {id:'PROD179',sku:'SKU-100179',barcode:'3889317262592',name:'Soudal Soudaflex 40FC',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/aa11.jpg?v=1768384616',emoji:'🔩'},
+  {id:'PROD180',sku:'SKU-100180',barcode:'3130233621253',name:'Soudal Soudaflex 40FC',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/aa11.jpg?v=1768384616',emoji:'🔩'},
+  {id:'PROD181',sku:'SKU-100181',barcode:'8469997435734',name:'Soudel Neutral Silicone Silirub NO5+',cat:'Adhesives & Sealants',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/1112.jpg?v=1768378171',emoji:'🔩'},
+  {id:'PROD182',sku:'SKU-100182',barcode:'4508053389539',name:'Soudel Neutral Silicone Silirub NO5+',cat:'Adhesives & Sealants',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/1112.jpg?v=1768378171',emoji:'🔩'},
+  {id:'PROD183',sku:'SKU-100183',barcode:'9076310978018',name:'Soudel Neutral Silicone Silirub NO5+',cat:'Adhesives & Sealants',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/1112.jpg?v=1768378171',emoji:'🔩'},
+  {id:'PROD184',sku:'SKU-100184',barcode:'9770434927592',name:'Soudel Neutral Silicone Silirub NO5+',cat:'Adhesives & Sealants',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/1112.jpg?v=1768378171',emoji:'🔩'},
+  {id:'PROD185',sku:'SKU-100185',barcode:'4108920327971',name:'Polycarb Washer 6 x 25mm',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/22.jpg?v=1768377715',emoji:'🔩'},
+  {id:'PROD186',sku:'SKU-100186',barcode:'8043841069808',name:'Saf-lok / Klip-lok Saddle Washer',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/1111.jpg?v=1768377503',emoji:'🔩'},
+  {id:'PROD187',sku:'SKU-100187',barcode:'7174389604798',name:'Saf-lok / Klip-lok Saddle Washer',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/1111.jpg?v=1768377503',emoji:'🔩'},
+  {id:'PROD188',sku:'SKU-100188',barcode:'4552206950831',name:'Saf-lok / Klip-lok Saddle Washer',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/1111.jpg?v=1768377503',emoji:'🔩'},
+  {id:'PROD189',sku:'SKU-100189',barcode:'1391149951141',name:'IBR Bonded Washer',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/1212.jpg?v=1768377380',emoji:'🔩'},
+  {id:'PROD190',sku:'SKU-100190',barcode:'1551933064605',name:'IBR Bonded Washer',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/1212.jpg?v=1768377380',emoji:'🔩'},
+  {id:'PROD191',sku:'SKU-100191',barcode:'9275431572912',name:'IBR Bonded Washer',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/1212.jpg?v=1768377380',emoji:'🔩'},
+  {id:'PROD192',sku:'SKU-100192',barcode:'9061498211499',name:'Pop Rivets 4.8 x 15mm Sealed',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/pr.jpg?v=1768376954',emoji:'🔩'},
+  {id:'PROD193',sku:'SKU-100193',barcode:'7908445289035',name:'Timber Truss Assembly M8',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/29.png?v=1770797614',emoji:'🔩'},
+  {id:'PROD194',sku:'SKU-100194',barcode:'6747195649585',name:'Timber Truss Assembly M8',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/29.png?v=1770797614',emoji:'🔩'},
+  {id:'PROD195',sku:'SKU-100195',barcode:'1512072801763',name:'Timber Truss Assembly M8',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/29.png?v=1770797614',emoji:'🔩'},
+  {id:'PROD196',sku:'SKU-100196',barcode:'3058469335993',name:'Timber Truss Assembly M8',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/29.png?v=1770797614',emoji:'🔩'},
+  {id:'PROD197',sku:'SKU-100197',barcode:'4394148804694',name:'Polyflex Silicone Guns',cat:'Adhesives & Sealants',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/aa1.jpg?v=1764324655',emoji:'🔩'},
+  {id:'PROD198',sku:'SKU-100198',barcode:'9471659640567',name:'14 (6.3) x 90mm Metal Hex Blunt Point Class 5',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/14x90c5bp.jpg?v=1764324379',emoji:'🔩'},
+  {id:'PROD199',sku:'SKU-100199',barcode:'8450219913904',name:'14 (6.3) x 65mm Metal Hex Blunt Point Class 5',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/14x65c5.jpg?v=1764324068',emoji:'🔩'},
+  {id:'PROD200',sku:'SKU-100200',barcode:'6412266552010',name:'14 (6.3) x 25mm Metal Hex Sharp Point Class 5',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/14x25.jpg?v=1764320171',emoji:'🔩'},
+  {id:'PROD201',sku:'SKU-100201',barcode:'6310446725157',name:'10 (4.8) x 45mm Metal Wafer Head',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/39.jpg?v=1768400540',emoji:'🔩'},
+  {id:'PROD202',sku:'SKU-100202',barcode:'7811039661231',name:'10 (4.8) x 45mm Metal Wafer Head',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/39.jpg?v=1768400540',emoji:'🔩'},
+  {id:'PROD203',sku:'SKU-100203',barcode:'6662772037772',name:'10 (4.8) x 22mm Metal Wafer Head',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/38.jpg?v=1768400435',emoji:'🔩'},
+  {id:'PROD204',sku:'SKU-100204',barcode:'1593198688430',name:'10 (4.8) x 22mm Metal Wafer Head',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/38.jpg?v=1768400435',emoji:'🔩'},
+  {id:'PROD205',sku:'SKU-100205',barcode:'8836401678477',name:'12 (5.5) x 85mm Metal Hex Flange With Seal',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/12x85.jpg?v=1767613425',emoji:'🔩'},
+  {id:'PROD206',sku:'SKU-100206',barcode:'3814707902283',name:'12 (5.5) x 85mm Metal Hex Flange With Seal Class 4',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/12x85c4_d9aadb0a-0ef0-4b08-9b66-45a57187fd0a.jpg?v=1764069396',emoji:'🔩'},
+  {id:'PROD207',sku:'SKU-100207',barcode:'3866312199966',name:'12 (5.5) x 65mm Metal Hex Flange With Seal',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/12x65.jpg?v=1767613314',emoji:'🔩'},
+  {id:'PROD208',sku:'SKU-100208',barcode:'1667830425475',name:'12 (5.5) x 65mm Metal Hex Flange With Seal',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/12x65.jpg?v=1767613314',emoji:'🔩'},
+  {id:'PROD209',sku:'SKU-100209',barcode:'4462156568936',name:'12 (5.5) x 65mm Metal Hex Flange With Seal',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/12x65.jpg?v=1767613314',emoji:'🔩'},
+  {id:'PROD210',sku:'SKU-100210',barcode:'5656434595628',name:'12 (5.5) x 65mm Metal Hex Flange With Seal Class 4',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/12x65c4_9706920b-75f9-483d-a23b-682749664ff9.jpg?v=1764069237',emoji:'🔩'},
+  {id:'PROD211',sku:'SKU-100211',barcode:'3332391060602',name:'12 (5.5) x 65mm Metal Hex Flange With Seal Class 3',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/12x65c3_9cfb7d99-c2ca-4fd0-a18e-47888fc15049.jpg?v=1764068843',emoji:'🔩'},
+  {id:'PROD212',sku:'SKU-100212',barcode:'1204007764100',name:'12 (5.5) x 50mm Metal Hex Flange With Seal',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/12x50_4f4a29d7-6710-4928-8ff1-f69141e2f859.jpg?v=1767612929',emoji:'🔩'},
+  {id:'PROD213',sku:'SKU-100213',barcode:'2498258812539',name:'12 (5.5) x 50mm Metal Hex Flange With Seal',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/12x50_4f4a29d7-6710-4928-8ff1-f69141e2f859.jpg?v=1767612929',emoji:'🔩'},
+  {id:'PROD214',sku:'SKU-100214',barcode:'7111994783405',name:'12 (5.5) x 50mm Metal Hex Flange With Seal Class 4',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/12x50c4_209924bd-6273-4d7c-a322-0154716296fd.jpg?v=1764068403',emoji:'🔩'},
+  {id:'PROD215',sku:'SKU-100215',barcode:'9975609191314',name:'12 (5.5) x 38mm Metal Hex Flange With Seal Class 4',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/12x38c4_fc87d8b3-2bad-49d8-b3ad-4ceeb86247fb.jpg?v=1764068314',emoji:'🔩'},
+  {id:'PROD216',sku:'SKU-100216',barcode:'1840324919701',name:'12 (5.5) x 25mm Metal Hex Flange With Seal Class 3',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/12x25c3.jpg?v=1764068272',emoji:'🔩'},
+  {id:'PROD217',sku:'SKU-100217',barcode:'4410483476974',name:'12 (5.5) x 25mm Metal Hex Flange With Seal Class 4',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/12x25c4hex.jpg?v=1764067833',emoji:'🔩'},
+  {id:'PROD218',sku:'SKU-100218',barcode:'3392853831433',name:'14 (6.3) x 22mm Metal Hex Flange With Seal',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/1a.jpg?v=1768306044',emoji:'🔩'},
+  {id:'PROD219',sku:'SKU-100219',barcode:'2296824637568',name:'14 (6.3) x 22mm Metal Hex Flange With Seal',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/1a.jpg?v=1768306044',emoji:'🔩'},
+  {id:'PROD220',sku:'SKU-100220',barcode:'6774032143302',name:'14 (6.3) x 22mm Metal Hex Flange With Seal',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/1a.jpg?v=1768306044',emoji:'🔩'},
+  {id:'PROD221',sku:'SKU-100221',barcode:'6168847100671',name:'14 (6.3) x 22mm Metal Hex Flange With Seal Class 4',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/14x22c4.jpg?v=1764067342',emoji:'🔩'},
+  {id:'PROD222',sku:'SKU-100222',barcode:'7829934188765',name:'14 (6.3) x 22mm Metal Hex Flange With Seal Class 3',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/14x22c3.jpg?v=1764067010',emoji:'🔩'},
+  {id:'PROD223',sku:'SKU-100223',barcode:'7136107159465',name:'12 (5.5) x 20mm Metal Hex Head Class 4',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/12x20c4.jpg?v=1764066655',emoji:'🔩'},
+  {id:'PROD224',sku:'SKU-100224',barcode:'8438509927343',name:'12 (5.5) x 85mm Metal Hex Flange And Seal',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/12x85nf.jpg?v=1767614065',emoji:'🔩'},
+  {id:'PROD225',sku:'SKU-100225',barcode:'7310096744830',name:'12 (5.5) x 85mm Metal Hex Flange And Seal',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/12x85nf.jpg?v=1767614065',emoji:'🔩'},
+  {id:'PROD226',sku:'SKU-100226',barcode:'7387192172101',name:'12 (5.5) x 65mm Metal Hex Head',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/37.jpg?v=1768399851',emoji:'🔩'},
+  {id:'PROD227',sku:'SKU-100227',barcode:'2227268373641',name:'12 (5.5) x 65mm Metal Hex Head',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/37.jpg?v=1768399851',emoji:'🔩'},
+  {id:'PROD228',sku:'SKU-100228',barcode:'8897704725772',name:'12 (5.5) x 50mm Metal Hex Head Class 4',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/12x50c4.jpg?v=1764066213',emoji:'🔩'},
+  {id:'PROD229',sku:'SKU-100229',barcode:'5951585221220',name:'12 (5.5) x 38mm Metal Hex Head Class 4',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/12x38c4.jpg?v=1764065859',emoji:'🔩'},
+  {id:'PROD230',sku:'SKU-100230',barcode:'7190697648928',name:'12 (5.5) x 25mm Metal Hex Head',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/42.jpg?v=1768400915',emoji:'🔩'},
+  {id:'PROD231',sku:'SKU-100231',barcode:'5826371563748',name:'12 (5.5) x 25mm Metal Hex Head',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/42.jpg?v=1768400915',emoji:'🔩'},
+  {id:'PROD232',sku:'SKU-100232',barcode:'7658203256926',name:'14 x 22mm Stitching Screw Fine Thread Class 3',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/56.jpg?v=1768405540',emoji:'🔩'},
+  {id:'PROD233',sku:'SKU-100233',barcode:'7310882178546',name:'12 (5.5) x 85mm Timber Flange With Seal',cat:'Adhesives & Sealants',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/12x85t.jpg?v=1767614670',emoji:'🔩'},
+  {id:'PROD234',sku:'SKU-100234',barcode:'1245701208237',name:'12 (5.5) x 85mm Timber Flange With Seal',cat:'Adhesives & Sealants',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/12x85t.jpg?v=1767614670',emoji:'🔩'},
+  {id:'PROD235',sku:'SKU-100235',barcode:'2857684904435',name:'12 (5.5) x 75mm Timber Flange With Seal',cat:'Adhesives & Sealants',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/30.jpg?v=1768396859',emoji:'🔩'},
+  {id:'PROD236',sku:'SKU-100236',barcode:'3977886618918',name:'12 (5.5) x 75mm Timber Flange With Seal',cat:'Adhesives & Sealants',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/30.jpg?v=1768396859',emoji:'🔩'},
+  {id:'PROD237',sku:'SKU-100237',barcode:'4213498921383',name:'12 (5.5) x 65mm Timber Flange With Seal Class 3',cat:'Adhesives & Sealants',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/12x65c3.jpg?v=1764064082',emoji:'🔩'},
+  {id:'PROD238',sku:'SKU-100238',barcode:'3876964207638',name:'12 (5.5) x 65mm Timber Flange With Seal',cat:'Adhesives & Sealants',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/12x65t.jpg?v=1767614461',emoji:'🔩'},
+  {id:'PROD239',sku:'SKU-100239',barcode:'1344566361257',name:'12 (5.5) x 65mm Timber Flange With Seal',cat:'Adhesives & Sealants',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/12x65t.jpg?v=1767614461',emoji:'🔩'},
+  {id:'PROD240',sku:'SKU-100240',barcode:'6356087794628',name:'12 (5.5) x 65mm Timber Flange With Seal',cat:'Adhesives & Sealants',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/12x65t.jpg?v=1767614461',emoji:'🔩'},
+  {id:'PROD241',sku:'SKU-100241',barcode:'3213837494802',name:'12 (5.5) x 35mm Timber Flange With Seal Class 4',cat:'Adhesives & Sealants',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/AB.jpg?v=1763988455',emoji:'🔩'},
+  {id:'PROD242',sku:'SKU-100242',barcode:'6465545870893',name:'12 (5.5) x 50mm Timber Flange With Seal Class 4',cat:'Adhesives & Sealants',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/29.jpg?v=1768396525',emoji:'🔩'},
+  {id:'PROD243',sku:'SKU-100243',barcode:'8255482106825',name:'12 (5.5) x 65mm Timber Flange With Seal Class 4',cat:'Adhesives & Sealants',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/aa.jpg?v=1763988163',emoji:'🔩'},
+  {id:'PROD244',sku:'SKU-100244',barcode:'1752541966270',name:'12 (5.5) x 85mm Timber Flange With Seal Class 4',cat:'Adhesives & Sealants',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/c4hex12x85.jpg?v=1763988079',emoji:'🔩'},
+  {id:'PROD245',sku:'SKU-100245',barcode:'3530365985025',name:'14 (6.3) x 125mm Timber Flange With Seal Class 4',cat:'Adhesives & Sealants',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/44.jpg?v=1768401203',emoji:'🔩'},
+  {id:'PROD246',sku:'SKU-100246',barcode:'5778028565088',name:'12 (5.5) X 75 Timber Hex Flange With Wings Class 4',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/polycarb.jpg?v=1763987061',emoji:'🔩'},
+  {id:'PROD247',sku:'SKU-100247',barcode:'2652780070881',name:'10 x 40 Square Drive Timber Decking Class 4',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/10x40cskc4.jpg?v=1763986644',emoji:'🔩'},
+  {id:'PROD248',sku:'SKU-100248',barcode:'4783807921826',name:'10 (4.8) x 40mm CSK Timber Decking',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/33.jpg?v=1768398192',emoji:'🔩'},
+  {id:'PROD249',sku:'SKU-100249',barcode:'3720904664572',name:'10 (4.8) x 40mm CSK Timber Decking',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/33.jpg?v=1768398192',emoji:'🔩'},
+  {id:'PROD250',sku:'SKU-100250',barcode:'5774802476021',name:'10 (4.8) x 75mm CSK Timber Decking',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/Screenshot2026-01-15at08.08.21.png?v=1768457308',emoji:'🔩'},
+  {id:'PROD251',sku:'SKU-100251',barcode:'8511366322460',name:'10 (4.8) x 75mm CSK Timber Decking',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/Screenshot2026-01-15at08.08.21.png?v=1768457308',emoji:'🔩'},
+  {id:'PROD252',sku:'SKU-100252',barcode:'4005276748530',name:'10 (4.8) x 60mm CSK Timber Decking',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/35.jpg?v=1768398563',emoji:'🔩'},
+  {id:'PROD253',sku:'SKU-100253',barcode:'6091018602263',name:'10 (4.8) x 60mm CSK Timber Decking',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/35.jpg?v=1768398563',emoji:'🔩'},
+  {id:'PROD254',sku:'SKU-100254',barcode:'7597343682451',name:'10 (4.8) x 50mm CSK Timber Decking',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/36.jpg?v=1768398702',emoji:'🔩'},
+  {id:'PROD255',sku:'SKU-100255',barcode:'3459394993915',name:'10 (4.8) x 50mm CSK Timber Decking',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/36.jpg?v=1768398702',emoji:'🔩'},
+  {id:'PROD256',sku:'SKU-100256',barcode:'1197266642186',name:'10 x 50 Square Drive Timber Decking Class 4',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/10x50c4csk.jpg?v=1763983236',emoji:'🔩'},
+  {id:'PROD257',sku:'SKU-100257',barcode:'4104345111768',name:'10 x 60 Square Drive Timber Decking Class 4',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/10x60c4csk_3b08823d-1b75-49f8-8059-570317ad32c2.jpg?v=1763983448',emoji:'🔩'},
+  {id:'PROD258',sku:'SKU-100258',barcode:'6316849762855',name:'10 x 70 Square Drive Timber Decking Class 4',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/10x70c4csk.jpg?v=1763983578',emoji:'🔩'},
+  {id:'PROD259',sku:'SKU-100259',barcode:'4044441481435',name:'10 x 45mm Wafer Head Timber',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/41.jpg?v=1768400803',emoji:'🔩'},
+  {id:'PROD260',sku:'SKU-100260',barcode:'3301351901799',name:'10 x 45mm Wafer Head Timber',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/41.jpg?v=1768400803',emoji:'🔩'},
+  {id:'PROD261',sku:'SKU-100261',barcode:'4260002213082',name:'Colour Screw Caps',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/2_9a1470b3-c92a-4b6b-a911-94ea02b5cc2c.png?v=1761809023',emoji:'🔩'},
+  {id:'PROD262',sku:'SKU-100262',barcode:'1443409706292',name:'Colour Screw Caps',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/3_ce3e7d35-4816-4cde-995a-fcdfbd86129b.png?v=1761809023',emoji:'🔩'},
+  {id:'PROD263',sku:'SKU-100263',barcode:'2088883301296',name:'Colour Screw Caps',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/1_9bc17de4-0986-44c0-9509-67dee1fdc442.png?v=1761809023',emoji:'🔩'},
+  {id:'PROD264',sku:'SKU-100264',barcode:'7917345377166',name:'Colour Screw Caps',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/6.png?v=1761809023',emoji:'🔩'},
+  {id:'PROD265',sku:'SKU-100265',barcode:'9761240824579',name:'Colour Screw Caps',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/4_bb32b5fa-342f-4989-b1bd-ad40db8d0346.png?v=1761809023',emoji:'🔩'},
+  {id:'PROD266',sku:'SKU-100266',barcode:'4286342221177',name:'Colour Screw Caps',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/5_7265bb73-ae31-4e79-8802-6393aa6e5dd0.png?v=1761809023',emoji:'🔩'},
+  {id:'PROD267',sku:'SKU-100267',barcode:'5110810391829',name:'S2 S2 Sqaure',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/5.png?v=1761806781',emoji:'🔩'},
+  {id:'PROD268',sku:'SKU-100268',barcode:'3061822589015',name:'S2 T30 Hex',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/4.png?v=1761806756',emoji:'🔩'},
+  {id:'PROD269',sku:'SKU-100269',barcode:'6368460419046',name:'S2 T40 Hex',cat:'Fasteners',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/3.png?v=1761806708',emoji:'🔩'},
+  {id:'PROD270',sku:'SKU-100270',barcode:'6565851406722',name:'Bit Holder 1/4 x 60mm Magnetic',cat:'Drill Bits',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/2.png?v=1761806655',emoji:'🔩'},
+  {id:'PROD271',sku:'SKU-100271',barcode:'5795742904443',name:'5/16 Socket',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/1.png?v=1761806544',emoji:'🔩'},
+  {id:'PROD272',sku:'SKU-100272',barcode:'3935362285359',name:'Retrofit Dektite',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/Screenshot2025-10-12at19.49.35_c16d2c94-b943-4ea5-9a75-4a3dedad9d2f.png?v=1760291988',emoji:'🔩'},
+  {id:'PROD273',sku:'SKU-100273',barcode:'8793702081616',name:'Retrofit Dektite',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/Screenshot2025-10-12at19.49.35_c16d2c94-b943-4ea5-9a75-4a3dedad9d2f.png?v=1760291988',emoji:'🔩'},
+  {id:'PROD274',sku:'SKU-100274',barcode:'1505318951703',name:'Retrofit Dektite',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/Screenshot2025-10-12at19.49.35_c16d2c94-b943-4ea5-9a75-4a3dedad9d2f.png?v=1760291988',emoji:'🔩'},
+  {id:'PROD275',sku:'SKU-100275',barcode:'3496641419035',name:'Square Dektite (Black)',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/Screenshot_2025-10-12_at_19.49.26.png?v=1760295496',emoji:'🔩'},
+  {id:'PROD276',sku:'SKU-100276',barcode:'4320499262613',name:'Square Dektite (Black)',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/Screenshot_2025-10-12_at_19.49.26.png?v=1760295496',emoji:'🔩'},
+  {id:'PROD277',sku:'SKU-100277',barcode:'4167013949013',name:'Square Dektite (Black)',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/Screenshot_2025-10-12_at_19.49.26.png?v=1760295496',emoji:'🔩'},
+  {id:'PROD278',sku:'SKU-100278',barcode:'2386575955629',name:'Square Dektite (Black)',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/Screenshot_2025-10-12_at_19.49.26.png?v=1760295496',emoji:'🔩'},
+  {id:'PROD279',sku:'SKU-100279',barcode:'7249334146110',name:'Square Dektite (Black)',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/Screenshot_2025-10-12_at_19.49.26.png?v=1760295496',emoji:'🔩'},
+  {id:'PROD280',sku:'SKU-100280',barcode:'8326969859969',name:'Square Dektite (Black)',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/Screenshot_2025-10-12_at_19.49.26.png?v=1760295496',emoji:'🔩'},
+  {id:'PROD281',sku:'SKU-100281',barcode:'1151498721736',name:'Square Dektite (Black)',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/Screenshot_2025-10-12_at_19.49.26.png?v=1760295496',emoji:'🔩'},
+  {id:'PROD282',sku:'SKU-100282',barcode:'2696472737034',name:'Solar Dektite Flashings',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/15te.jpg?v=1770023521',emoji:'🔩'},
+  {id:'PROD283',sku:'SKU-100283',barcode:'2166012637674',name:'Solar Dektite Flashings',cat:'Tools & Hardware',uom:'Each',thresh:10,imageUrl:'https://cdn.shopify.com/s/files/1/0780/0818/9181/files/15te.jpg?v=1770023521',emoji:'🔩'},
+];
+let INVENTORY = [];
+let MOVEMENTS = [];
+let TRANSFERS = [];
+let movNextId = 16, trfNextId = 4, prodNextId = 15, invNextId = 22;
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+let currentUser = null;
+let currentMovType = {label:'Sale',dir:'out'};
+let scanTarget = 'movement';
+let selectedLocId = null;
+
+// ═══════════════════════════════════════════════════════
+// LOGIN
+// ═══════════════════════════════════════════════════════
+function buildLogin(){
+  const el = document.getElementById('login-accounts');
+  el.innerHTML = USERS.map(u=>`
+    <div class="login-account-btn ${u.role==='admin'?'admin-btn':''}" onclick="login('${u.id}')">
+      <div class="loc-icon">${u.role==='admin'?'🔑': LOCATIONS.find(l=>l.id===u.loc)?.icon||'🏭'}</div>
+      <div class="loc-info">
+        <div class="loc-name">${u.name}</div>
+        <div class="loc-email">${u.email}</div>
+      </div>
+      <span class="loc-role ${u.role==='admin'?'role-admin':'role-staff'}">${u.role==='admin'?'Admin':'Staff'}</span>
+    </div>`).join('');
+}
+function login(uid){
+  currentUser = USERS.find(u=>u.id===uid);
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('app').classList.add('visible');
+  buildSidebar();
+  renderPage('dashboard');
+}
+function signOut(){
+  currentUser = null;
+  document.getElementById('app').classList.remove('visible');
+  document.getElementById('login-screen').style.display='flex';
+  closeSbMobile();
+}
+
+// ═══════════════════════════════════════════════════════
+// SIDEBAR
+// ═══════════════════════════════════════════════════════
+function buildSidebar(){
+  const u = currentUser;
+  const isAdmin = u.role==='admin';
+  document.getElementById('sb-uname').textContent = u.name;
+  document.getElementById('sb-uemail').textContent = u.email;
+  const av = document.getElementById('sb-av');
+  av.textContent = u.initials;
+  av.className = 'sb-avatar ' + (isAdmin?'av-admin':'av-staff');
+
+  const pendingTrf = TRANSFERS.filter(t=>t.status==='Pending').length;
+  const myLoc = u.loc;
+  const lowCount = getLowStock(myLoc).length;
+
+  const loc = myLoc ? LOCATIONS.find(l=>l.id===myLoc) : null;
+  document.getElementById('topbar-loc').innerHTML = isAdmin
+    ? `<strong>Admin</strong>&nbsp;· All Locations`
+    : `${loc?.icon||''}&nbsp;<strong>${loc?.name||''}</strong>`;
+
+  const adminLinks = `
+    <div class="sb-section">Overview</div>
+    <div class="sb-item active" data-page="dashboard" onclick="renderPage('dashboard')"><span class="sb-icon">📊</span>Dashboard ${lowCount>0?`<span class="sb-badge">${lowCount}</span>`:''}</div>
+    <div class="sb-section">Stock</div>
+    <div class="sb-item" data-page="inventory" onclick="renderPage('inventory')"><span class="sb-icon">📦</span>All Inventory</div>
+    <div class="sb-item" data-page="movement" onclick="renderPage('movement')"><span class="sb-icon">↕️</span>Record Movement</div>
+    <div class="sb-item" data-page="products" onclick="renderPage('products')"><span class="sb-icon">🏷️</span>Product Catalogue</div>
+    <div class="sb-item" data-page="transfers" onclick="renderPage('transfers')"><span class="sb-icon">↔️</span>Transfers ${pendingTrf>0?`<span class="sb-badge">${pendingTrf}</span>`:''}</div>
+    <div class="sb-section">Admin</div>
+    <div class="sb-item" data-page="locations" onclick="renderPage('locations')"><span class="sb-icon">📍</span>Locations</div>
+    <div class="sb-item" data-page="reports" onclick="renderPage('reports')"><span class="sb-icon">📈</span>Reports</div>
+  `;
+  const staffLinks = `
+    <div class="sb-section">My Store</div>
+    <div class="sb-item active" data-page="dashboard" onclick="renderPage('dashboard')"><span class="sb-icon">📊</span>Dashboard ${lowCount>0?`<span class="sb-badge">${lowCount}</span>`:''}</div>
+    <div class="sb-item" data-page="inventory" onclick="renderPage('inventory')"><span class="sb-icon">📦</span>My Inventory</div>
+    <div class="sb-item" data-page="movement" onclick="renderPage('movement')"><span class="sb-icon">↕️</span>Record Movement</div>
+    <div class="sb-section">Catalogue</div>
+    <div class="sb-item" data-page="products" onclick="renderPage('products')"><span class="sb-icon">🏷️</span>Product Catalogue</div>
+    <div class="sb-item" data-page="reports" onclick="renderPage('reports')"><span class="sb-icon">📈</span>My Reports</div>
+  `;
+  document.getElementById('sb-nav').innerHTML = isAdmin ? adminLinks : staffLinks;
+}
+
+function renderPage(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.toggle('active',i.dataset.page===page));
+  document.getElementById('topbar-title').textContent = {
+    dashboard:'Dashboard', inventory:'Inventory', movement:'Record Stock Movement',
+    products:'Product Catalogue', transfers:'Transfer Requests',
+    locations:'Locations', reports:'Reports'
+  }[page]||page;
+  closeSbMobile();
+  if(page==='dashboard') renderDashboard();
+  if(page==='inventory') renderInventory();
+  if(page==='movement')  renderMovementPage();
+  if(page==='products')  renderProducts();
+  if(page==='transfers') renderTransfers();
+  if(page==='locations') renderLocations();
+  if(page==='reports')   renderReports();
+}
+
+// ═══════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════
+const getProd = id => PRODUCTS.find(p=>p.id===id);
+const getLoc  = id => LOCATIONS.find(l=>l.id===id);
+const getInv  = (prod,loc) => INVENTORY.find(i=>i.prod===prod&&i.loc===loc);
+function getLowStock(locId){
+  return (locId ? INVENTORY.filter(i=>i.loc===locId) : INVENTORY).filter(i=>i.qty<=i.thresh);
+}
+function getLocInv(locId){ return locId ? INVENTORY.filter(i=>i.loc===locId) : INVENTORY; }
+function getLocMovements(locId){ return locId ? MOVEMENTS.filter(m=>m.loc===locId) : MOVEMENTS; }
+function fmtDate(d){ return d.split(' ')[0]; }
+function fmtTime(d){ return (d.split(' ')[1]||'').substring(0,5); }
+function statusPill(s){ const m={Pending:'pill-orange',Approved:'pill-blue',Completed:'pill-green',Rejected:'pill-red'}; return `<span class="pill ${m[s]||'pill-grey'}">${s}</span>`; }
+function movPill(t){ const m={'Sale':'pill-red','Stock Out':'pill-red','Stock In':'pill-green','Transfer':'pill-blue','Distribute':'pill-blue','Adjustment':'pill-grey'}; return `<span class="pill ${m[t]||'pill-grey'}">${t}</span>`; }
+function qtyColor(dir){ return dir==='out'?'var(--danger)':dir==='in'?'var(--success)':'var(--info)'; }
+function qtySign(dir){ return dir==='out'?'−':dir==='in'?'+':'↔'; }
+function levelColor(qty,thresh){ return qty<=thresh?'var(--danger)':qty<=thresh*1.5?'var(--warning)':'var(--success)'; }
+function levelPct(qty,thresh){ return Math.min(100,Math.max(4,(qty/(thresh*4))*100)); }
+
+function movIcon(dir){
+  if(dir==='out') return '<div class="mov-icon mov-sale">🛍️</div>';
+  if(dir==='in')  return '<div class="mov-icon mov-in">📥</div>';
+  if(dir==='transfer') return '<div class="mov-icon mov-transfer">↔️</div>';
+  return '<div class="mov-icon mov-adjust">⚖️</div>';
+}
+function movItemHTML(m){
+  const p=getProd(m.prod); const loc=getLoc(m.loc);
+  return `<div class="movement-item">
+    ${movIcon(m.dir)}
+    <div class="mov-info">
+      <div class="mov-title">${p?.emoji||'📦'} ${p?.name||m.prod}</div>
+      <div class="mov-meta">${m.type} · ${m.date} · ${loc?.name||m.loc}${m.notes?' · '+m.notes:''}</div>
+    </div>
+    <div class="mov-qty ${m.dir==='out'?'out':'inn'}">${qtySign(m.dir)}${m.qty}</div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════════════
+function renderDashboard(){
+  const locId = currentUser.loc;
+  const inv = getLocInv(locId);
+  const movs = getLocMovements(locId);
+  const low = getLowStock(locId);
+  const totalUnits = inv.reduce((a,i)=>a+i.qty,0);
+  const todayMovs = movs.filter(m=>m.date.startsWith('2025-03-27'));
+  const issuedToday = todayMovs.filter(m=>m.dir==='out').reduce((a,m)=>a+m.qty,0);
+  const receivedToday = todayMovs.filter(m=>m.dir==='in').reduce((a,m)=>a+m.qty,0);
+
+  // Alerts
+  const alertEl = document.getElementById('dash-alerts');
+  alertEl.innerHTML = low.length>0
+    ? `<div class="alert alert-danger"><span class="alert-icon">⚠️</span><div><strong>Low Stock Alert:</strong> ${low.length} item${low.length>1?'s':''} at or below reorder level — ${low.map(i=>getProd(i.prod)?.name||i.prod).join(', ')}</div></div>`
+    : '';
+
+  // Stats
+  document.getElementById('dash-stats').innerHTML = [
+    {label:'Products in Stock', val:inv.length, sub:'SKUs tracked', cls:''},
+    {label:'Total Units', val:totalUnits.toLocaleString(), sub:'Across all items', cls:''},
+    {label:'Issued Today', val:issuedToday, sub:'Units out', cls:'danger'},
+    {label:'Received Today', val:receivedToday, sub:'Units in', cls:'up'},
+    {label:'Low Stock', val:low.length, sub:'Need replenishment', cls:low.length>0?'danger':'up'},
+    {label:'Locations'+(currentUser.role==='admin'?' Monitored':''), val:currentUser.role==='admin'?LOCATIONS.length:1, sub:currentUser.role==='admin'?'All branches':'Your branch', cls:''},
+  ].map(s=>`<div class="stat"><div class="stat-label">${s.label}</div><div class="stat-val">${s.val}</div><div class="stat-sub ${s.cls}">${s.sub}</div></div>`).join('');
+
+  // Bar chart — last 7 days movements
+  const days = [];
+  for(let i=6;i>=0;i--){
+    const d = new Date('2025-03-27'); d.setDate(d.getDate()-i);
+    const ds = d.toISOString().slice(0,10);
+    const dayMovs = movs.filter(m=>m.date.startsWith(ds));
+    days.push({label:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()], out:dayMovs.filter(m=>m.dir==='out').reduce((a,m)=>a+m.qty,0), inn:dayMovs.filter(m=>m.dir==='in').reduce((a,m)=>a+m.qty,0)});
+  }
+  const maxVal = Math.max(1,...days.map(d=>Math.max(d.out,d.inn)));
+  document.getElementById('dash-bar-chart').innerHTML = days.map(d=>`
+    <div class="bar-col">
+      <div class="bar-val">${d.out>0?d.out:''}</div>
+      <div style="display:flex;gap:3px;align-items:flex-end;height:110px;">
+        <div class="bar-el" style="height:${Math.max(3,d.inn/maxVal*110)}px;background:var(--success);width:50%;opacity:0.7;border-radius:3px 3px 0 0;"></div>
+        <div class="bar-el" style="height:${Math.max(3,d.out/maxVal*110)}px;background:var(--danger);width:50%;opacity:0.8;border-radius:3px 3px 0 0;"></div>
+      </div>
+      <div class="bar-lbl">${d.label}</div>
+    </div>`).join('')
+    + `<div style="margin-left:8px;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;padding-bottom:18px;"><div style="display:flex;align-items:center;gap:5px;font-size:0.72rem;color:var(--text2);"><span style="width:10px;height:10px;background:var(--success);border-radius:2px;opacity:0.7;"></span>In</div><div style="display:flex;align-items:center;gap:5px;font-size:0.72rem;color:var(--text2);"><span style="width:10px;height:10px;background:var(--danger);border-radius:2px;opacity:0.8;"></span>Out</div></div>`;
+
+  // Recent activity
+  document.getElementById('dash-activity').innerHTML = movs.slice(0,6).map(movItemHTML).join('') || '<div class="empty"><div class="empty-icon">📋</div><p>No movements recorded yet</p></div>';
+
+  // Low stock list
+  document.getElementById('dash-low-stock').innerHTML = low.length>0
+    ? low.map(i=>{ const p=getProd(i.prod); return `<div class="movement-item"><div class="mov-icon mov-sale">${p?.emoji||'📦'}</div><div class="mov-info"><div class="mov-title">${p?.name||i.prod}</div><div class="mov-meta">${p?.sku||''} · Threshold: ${i.thresh}</div></div><div class="mov-qty out">${i.qty}</div></div>`; }).join('')
+    : '<div class="empty"><div class="empty-icon">✅</div><p>All stock levels healthy</p></div>';
+
+  // Top movers
+  const topMovers = topIssuedItems(locId,5);
+  document.getElementById('dash-top-movers').innerHTML = topMovers.length>0
+    ? topMovers.map((t,i)=>{ const p=getProd(t.prod); return `<div class="movement-item"><div style="width:22px;height:22px;border-radius:4px;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;font-family:'Barlow Condensed',sans-serif;color:var(--text2);flex-shrink:0;">${i+1}</div><div class="mov-icon mov-sale" style="width:30px;height:30px;font-size:0.9rem;">${p?.emoji||'📦'}</div><div class="mov-info"><div class="mov-title" style="font-size:0.82rem;">${p?.name||t.prod}</div><div class="mov-meta">${p?.sku||''}</div></div><div class="mov-qty out" style="font-size:0.9rem;">${t.total} issued</div></div>`; }).join('')
+    : '<div class="empty"><div class="empty-icon">📊</div><p>No movement data yet</p></div>';
+}
+
+function topIssuedItems(locId,limit=10){
+  const movs = getLocMovements(locId).filter(m=>m.dir==='out');
+  const agg = {};
+  movs.forEach(m=>{ agg[m.prod]=(agg[m.prod]||0)+m.qty; });
+  return Object.entries(agg).sort((a,b)=>b[1]-a[1]).slice(0,limit).map(([prod,total])=>({prod,total}));
+}
+function topReceivedItems(locId,limit=10){
+  const movs = getLocMovements(locId).filter(m=>m.dir==='in');
+  const agg = {};
+  movs.forEach(m=>{ agg[m.prod]=(agg[m.prod]||0)+m.qty; });
+  return Object.entries(agg).sort((a,b)=>b[1]-a[1]).slice(0,limit).map(([prod,total])=>({prod,total}));
+}
+
+// ═══════════════════════════════════════════════════════
+// INVENTORY
+// ═══════════════════════════════════════════════════════
+function renderInventory(locId){
+  const lid = locId || currentUser.loc;
+  const isAdmin = currentUser.role==='admin';
+  document.getElementById('inv-card-title').textContent = lid ? `Inventory — ${getLoc(lid)?.name}` : 'All Inventory';
+  document.getElementById('inv-loc-th').style.display = (isAdmin&&!lid)?'':'none';
+  const items = lid ? INVENTORY.filter(i=>i.loc===lid) : INVENTORY;
+  const tbody = document.getElementById('inv-tbody');
+  if(!items.length){ tbody.innerHTML=`<tr><td colspan="8"><div class="empty"><div class="empty-icon">📦</div><p>No inventory items</p></div></td></tr>`; return; }
+  tbody.innerHTML = items.map(inv=>{
+    const p=getProd(inv.prod); const loc=getLoc(inv.loc);
+    const isLow=inv.qty<=inv.thresh;
+    const pct=levelPct(inv.qty,inv.thresh);
+    const col=levelColor(inv.qty,inv.thresh);
+    return `<tr>
+      <td style="display:flex;align-items:center;gap:10px;" class="inv-name">
+        <div class="prod-thumb">${p?.imageUrl?`<img src="${p.imageUrl}" onerror="this.style.display='none'" style="width:100%;height:100%;object-fit:contain;border-radius:6px;">`:`<span>${p?.emoji||'📦'}</span>`}</div>
+        <div><div style="font-weight:500;">${p?.name||inv.prod}</div><div style="font-size:0.72rem;color:var(--text3);">${p?.uom||'Each'}</div></div>
+      </td>
+      <td class="inv-sku" style="font-family:'Barlow Condensed',monospace;color:var(--text3);font-size:0.82rem;letter-spacing:0.5px;">${p?.sku||'—'}</td>
+      <td class="inv-bc" style="font-family:'Barlow Condensed',monospace;font-size:0.78rem;color:var(--text3);letter-spacing:1px;">${p?.barcode||'—'}</td>
+      <td class="inv-loc" style="display:${(isAdmin&&!lid)?'':'none'};"><span style="font-size:0.82rem;">${loc?.icon||''} ${loc?.name||inv.loc}</span></td>
+      <td class="inv-cat"><span style="font-size:0.8rem;color:var(--text2);">${p?.cat||'—'}</span></td>
+      <td>
+        <div class="level-wrap">
+          <div class="level-track"><div class="level-fill" style="width:${pct}%;background:${col};"></div></div>
+          <span class="level-qty" style="color:${col};">${inv.qty}</span>
+        </div>
+      </td>
+      <td>${isLow?'<span class="pill pill-red">Low Stock</span>':'<span class="pill pill-green">In Stock</span>'}</td>
+      <td><button class="btn btn-ghost btn-sm" onclick="quickAdjust('${inv.id}')">Adjust</button></td>
+    </tr>`;
+  }).join('');
+}
+function filterInv(val){
+  document.querySelectorAll('#inv-tbody tr').forEach(row=>{
+    const t = (row.querySelector('.inv-name')?.textContent||'')+(row.querySelector('.inv-sku')?.textContent||'')+(row.querySelector('.inv-bc')?.textContent||'')+(row.querySelector('.inv-cat')?.textContent||'');
+    row.style.display = t.toLowerCase().includes(val.toLowerCase()) ? '' : 'none';
+  });
+}
+function quickAdjust(invId){
+  const inv = INVENTORY.find(i=>i.id===invId);
+  const p = getProd(inv?.prod);
+  const newQty = prompt(`Adjust quantity for ${p?.name||'item'}\nCurrent: ${inv?.qty}\n\nEnter new quantity:`);
+  if(newQty===null) return;
+  const q = parseInt(newQty);
+  if(isNaN(q)||q<0){ showToast('Invalid quantity','error'); return; }
+  const diff = q - inv.qty;
+  inv.qty = q;
+  MOVEMENTS.push({id:'M'+String(movNextId++).padStart(3,'0'),date:new Date().toISOString().slice(0,16).replace('T',' '),type:'Adjustment',dir:diff>=0?'in':'out',prod:inv.prod,loc:inv.loc,qty:Math.abs(diff),notes:'Manual adjustment'});
+  showToast(`${p?.name} adjusted to ${q}`,'success');
+  renderInventory(currentUser.loc);
+}
+
+// ═══════════════════════════════════════════════════════
+// MOVEMENT PAGE
+// ═══════════════════════════════════════════════════════
+function renderMovementPage(){
+  const isAdmin = currentUser.role==='admin';
+  const locId = currentUser.loc;
+
+  // Build movement type buttons based on role
+  const btnEl = document.getElementById('mov-type-btns');
+  if(isAdmin){
+    btnEl.innerHTML = `
+      <button class="btn btn-primary"   onclick="setMovType('Stock Out','out')">📤 Stock Out</button>
+      <button class="btn btn-secondary" onclick="setMovType('Stock In','in')">📥 Stock In</button>
+      <button class="btn btn-secondary" onclick="setMovType('Adjustment','in')">⚖️ Adjustment</button>
+      <button class="btn btn-secondary" onclick="setMovType('Distribute','distribute')">🏭 Distribute to Location</button>
+    `;
+  } else {
+    btnEl.innerHTML = `
+      <button class="btn btn-primary"   onclick="setMovType('Stock Out','out')">📤 Stock Out</button>
+      <button class="btn btn-secondary" onclick="setMovType('Stock In','in')">📥 Stock In</button>
+    `;
+  }
+  // Default selection — Stock Out
+  currentMovType = {label:'Stock Out', dir:'out'};
+
+  // Populate distribute-to location dropdown (all locations for admin)
+  const tl = document.getElementById('mov-toloc');
+  tl.innerHTML = LOCATIONS.map(l=>`<option value="${l.id}">${l.icon} ${l.name}</option>`).join('');
+
+  document.getElementById('mov-toloc-wrap').style.display='none';
+
+  // Populate product dropdown for default type (Stock Out)
+  populateMovProduct('out');
+  renderTodayMovements();
+}
+
+function populateMovProduct(dir){
+  const isAdmin = currentUser.role==='admin';
+  const locId = currentUser.loc;
+  const sel = document.getElementById('mov-product');
+  sel.innerHTML = '<option value="">— Select or scan barcode —</option>';
+
+  if(isAdmin){
+    // Admin always sees all products with total qty
+    const prodTotals = {};
+    INVENTORY.forEach(i=>{ prodTotals[i.prod]=(prodTotals[i.prod]||0)+i.qty; });
+    sel.innerHTML += PRODUCTS.map(p=>
+      `<option value="${p.id}" data-barcode="${p.barcode}">${p.name} (${p.sku}) — ${prodTotals[p.id]||0} in stock</option>`
+    ).join('');
+  } else if(dir==='out'){
+    // Stock Out — only show products this location actually has in stock (qty > 0)
+    const locStock = INVENTORY.filter(i=>i.loc===locId && i.qty>0);
+    if(locStock.length===0){
+      sel.innerHTML = '<option value="" disabled>— No stock on hand to issue —</option>';
+    } else {
+      sel.innerHTML = '<option value="">— Select product to issue —</option>' +
+        locStock.map(inv=>{
+          const p = getProd(inv.prod);
+          return p ? `<option value="${p.id}" data-barcode="${p.barcode}">${p.name} (${p.sku}) — ${inv.qty} on hand</option>` : '';
+        }).join('');
+    }
+  } else {
+    // Stock In — show all products (receiving anything)
+    sel.innerHTML = '<option value="">— Select product to receive —</option>' +
+      PRODUCTS.map(p=>{
+        const inv = INVENTORY.find(i=>i.prod===p.id && i.loc===locId);
+        return `<option value="${p.id}" data-barcode="${p.barcode}">${p.name} (${p.sku})${inv?' — '+inv.qty+' on hand':''}</option>`;
+      }).join('');
+  }
+  // Reset preview
+  document.getElementById('mov-preview').innerHTML='<div class="empty"><div class="empty-icon">📦</div><p>Select a product to preview</p></div>';
+}
+
+function setMovType(label,dir){
+  currentMovType = {label,dir};
+  document.querySelectorAll('#mov-type-btns .btn').forEach(b=>{ b.className='btn btn-secondary'; });
+  event.target.className='btn btn-primary';
+  document.getElementById('mov-toloc-wrap').style.display = dir==='distribute'?'':'none';
+  // Refresh product dropdown to match the new movement type
+  populateMovProduct(dir);
+}
+function selectMovProduct(){
+  const prodId = document.getElementById('mov-product').value;
+  if(!prodId){ document.getElementById('mov-preview').innerHTML='<div class="empty"><div class="empty-icon">📦</div><p>Select a product to preview</p></div>'; return; }
+  showMovPreview(prodId);
+}
+function showMovPreview(prodId){
+  const p = getProd(prodId);
+  const locId = currentUser.loc||null;
+  const inv = locId ? getInv(prodId,locId) : INVENTORY.find(i=>i.prod===prodId);
+  if(!p){ return; }
+  const isLow = inv&&inv.qty<=inv.thresh;
+  document.getElementById('mov-preview').innerHTML = `
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+      <div class="prod-thumb" style="width:50px;height:50px;">${p.imageUrl?`<img src="${p.imageUrl}" style="width:100%;height:100%;object-fit:contain;border-radius:6px;">`:`<span style="font-size:1.5rem;">${p.emoji}</span>`}</div>
+      <div><div style="font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:700;">${p.name}</div><div style="font-size:0.78rem;color:var(--text3);font-family:'Barlow Condensed',monospace;letter-spacing:1px;">${p.sku}</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+      <div class="lcs"><div class="lcs-val" style="color:${isLow?'var(--danger)':'var(--text)'};">${inv?inv.qty:'—'}</div><div class="lcs-label">On Hand</div></div>
+      <div class="lcs"><div class="lcs-val">${p.thresh}</div><div class="lcs-label">Reorder Level</div></div>
+      <div class="lcs"><div class="lcs-val" style="font-size:0.9rem;">${p.cat}</div><div class="lcs-label">Category</div></div>
+      <div class="lcs"><div class="lcs-val" style="font-size:0.9rem;">${p.uom}</div><div class="lcs-label">Unit</div></div>
+    </div>
+    <div style="font-size:0.75rem;font-family:'Barlow Condensed',monospace;color:var(--text3);letter-spacing:1px;">${p.barcode}</div>
+    ${isLow?'<div class="alert alert-danger" style="margin-top:10px;"><span class="alert-icon">⚠️</span>Stock is at or below reorder level</div>':''}
+  `;
+}
+function barcodeSearch(val){
+  const p = PRODUCTS.find(x=>x.barcode===val.trim());
+  if(!p) return;
+  const {dir} = currentMovType;
+  const locId = currentUser.loc;
+  const isAdmin = currentUser.role==='admin';
+
+  // For staff Stock Out, verify the product is actually in stock here
+  if(!isAdmin && dir==='out'){
+    const inv = INVENTORY.find(i=>i.prod===p.id && i.loc===locId);
+    if(!inv || inv.qty===0){
+      showToast(`${p.name} is not in stock at this location`,'error');
+      return;
+    }
+  }
+  const sel = document.getElementById('mov-product');
+  for(let i=0;i<sel.options.length;i++){ if(sel.options[i].value===p.id){sel.selectedIndex=i;break;} }
+  showMovPreview(p.id);
+}
+function recordMovement(){
+  const prodId = document.getElementById('mov-product').value;
+  if(!prodId){ showToast('Please select a product','error'); return; }
+  const qty = parseInt(document.getElementById('mov-qty').value)||1;
+  const notes = document.getElementById('mov-notes').value;
+  const {label,dir} = currentMovType;
+  const now = new Date().toISOString().slice(0,16).replace('T',' ');
+
+  if(dir==='distribute'){
+    // Admin distributes stock TO a location — adds to that location's inventory
+    const toLoc = document.getElementById('mov-toloc').value;
+    if(!toLoc){ showToast('Select a location to distribute to','error'); return; }
+    let toInv = getInv(prodId, toLoc);
+    if(toInv) toInv.qty += qty;
+    else INVENTORY.push({id:'I'+String(invNextId++).padStart(3,'0'),prod:prodId,loc:toLoc,qty,thresh:getProd(prodId)?.thresh||10});
+    MOVEMENTS.unshift({id:'M'+String(movNextId++).padStart(3,'0'),date:now,type:'Distribute',dir:'in',prod:prodId,loc:toLoc,qty,notes:`Distributed from admin${notes?' — '+notes:''}`});
+    showToast(`${qty} unit${qty>1?'s':''} distributed to ${getLoc(toLoc)?.name}`,'success');
+  } else {
+    // Standard in/out/adjustment — always against current user's location (or first loc for admin non-distribute)
+    const locId = currentUser.loc || 'LOC1';
+    const inv = getInv(prodId, locId);
+    if(dir==='out' && (!inv || inv.qty < qty)){ showToast('Insufficient stock at this location','error'); return; }
+    if(inv){
+      if(dir==='out') inv.qty = Math.max(0, inv.qty - qty);
+      else inv.qty += qty;
+    } else if(dir==='in'){
+      INVENTORY.push({id:'I'+String(invNextId++).padStart(3,'0'),prod:prodId,loc:locId,qty,thresh:getProd(prodId)?.thresh||10});
+    }
+    MOVEMENTS.unshift({id:'M'+String(movNextId++).padStart(3,'0'),date:now,type:label,dir:dir==='out'?'out':'in',prod:prodId,loc:locId,qty,notes});
+    showToast(`${label} recorded — ${qty} unit${qty>1?'s':''}`, 'success');
+  }
+
+  document.getElementById('mov-product').selectedIndex=0;
+  document.getElementById('mov-barcode').value='';
+  document.getElementById('mov-qty').value='1';
+  document.getElementById('mov-notes').value='';
+  document.getElementById('mov-preview').innerHTML='<div class="empty"><div class="empty-icon">📦</div><p>Select a product to preview</p></div>';
+  renderTodayMovements();
+}
+function renderTodayMovements(){
+  const locId = currentUser.loc;
+  const today = new Date().toISOString().slice(0,10);
+  // Use today's demo date if no real movements yet
+  const checkDate = MOVEMENTS.some(m=>m.date.startsWith(today)) ? today : '2025-03-27';
+  const allM = locId ? MOVEMENTS.filter(m=>m.loc===locId) : MOVEMENTS;
+  const todayM = allM.filter(m=>m.date.startsWith(checkDate));
+  const el = document.getElementById('today-movements');
+  el.innerHTML = todayM.length>0 ? todayM.map(movItemHTML).join('') : '<div class="empty" style="padding:20px 0;"><div class="empty-icon">📋</div><p>No movements yet today</p></div>';
+}
+
+// ═══════════════════════════════════════════════════════
+// PRODUCTS
+// ═══════════════════════════════════════════════════════
+function renderProducts(){
+  const isAdmin = currentUser.role==='admin';
+  const tbody = document.getElementById('prod-tbody');
+  tbody.innerHTML = PRODUCTS.map(p=>`<tr>
+    <td style="display:flex;align-items:center;gap:10px;" class="prod-name">
+      <div class="prod-thumb">${p.imageUrl?`<img src="${p.imageUrl}" onerror="this.style.display='none';this.nextSibling.style.display='flex'" style="width:100%;height:100%;object-fit:contain;border-radius:6px;"><span style="display:none;width:100%;height:100%;align-items:center;justify-content:center;">${p.emoji}</span>`:`<span>${p.emoji}</span>`}</div>
+      <div><div style="font-weight:500;">${p.name}</div></div>
+    </td>
+    <td class="prod-sku" style="font-family:'Barlow Condensed',monospace;color:var(--text3);font-size:0.82rem;letter-spacing:0.5px;">${p.sku}</td>
+    <td class="prod-bc" style="font-family:'Barlow Condensed',monospace;font-size:0.78rem;color:var(--text3);letter-spacing:1px;">${p.barcode}</td>
+    <td class="prod-cat"><span style="font-size:0.82rem;color:var(--text2);">${p.cat}</span></td>
+    <td style="font-size:0.82rem;color:var(--text2);">${p.uom}</td>
+    <td><span class="pill pill-green">Active</span></td>
+    <td>${isAdmin?`<button class="btn btn-ghost btn-sm" onclick="openEditProduct('${p.id}')">✏️ Edit</button>`:''}</td>
+  </tr>`).join('');
+}
+function filterProducts(val){
+  document.querySelectorAll('#prod-tbody tr').forEach(row=>{
+    const t=['.prod-name','.prod-sku','.prod-bc','.prod-cat'].map(c=>row.querySelector(c)?.textContent||'').join(' ');
+    row.style.display=t.toLowerCase().includes(val.toLowerCase())?'':'none';
+  });
+}
+function openAddProduct(){
+  // Clear form fields for new product
+  ['np-name','np-sku','np-barcode'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('np-thresh').value='10';
+  openModal('modal-add-product');
+}
+function submitNewProduct(){
+  const name=document.getElementById('np-name').value.trim();
+  const sku=document.getElementById('np-sku').value.trim();
+  if(!name||!sku){ showToast('Name and SKU are required','error'); return; }
+  PRODUCTS.push({id:'PROD'+String(prodNextId++).padStart(3,'0'),sku,barcode:document.getElementById('np-barcode').value||'',name,cat:document.getElementById('np-cat').value,uom:document.getElementById('np-uom').value,thresh:parseInt(document.getElementById('np-thresh').value)||10,imageUrl:'',emoji:'📦'});
+  closeModal('modal-add-product');
+  showToast(`${name} added to catalogue`,'success');
+  renderProducts();
+}
+
+function openEditProduct(prodId){
+  const p = getProd(prodId);
+  if(!p) return;
+  // Store which product we're editing
+  document.getElementById('ep-id').value = prodId;
+  document.getElementById('ep-name').value = p.name;
+  document.getElementById('ep-sku').value = p.sku;
+  document.getElementById('ep-barcode').value = p.barcode || '';
+  document.getElementById('ep-thresh').value = p.thresh || 10;
+  document.getElementById('ep-uom').value = p.uom || 'Each';
+  document.getElementById('ep-imageurl').value = p.imageUrl || '';
+  // Set category select
+  const catSel = document.getElementById('ep-cat');
+  for(let i=0;i<catSel.options.length;i++){
+    if(catSel.options[i].value===p.cat){ catSel.selectedIndex=i; break; }
+  }
+  // Show current image preview
+  updateEpImagePreview(p.imageUrl);
+  openModal('modal-edit-product');
+}
+function updateEpImagePreview(url){
+  const prev = document.getElementById('ep-img-preview');
+  if(url){
+    prev.innerHTML=`<img src="${url}" style="width:60px;height:60px;object-fit:contain;border-radius:8px;border:1px solid var(--border);" onerror="this.parentElement.innerHTML='<span style=color:var(--text3);font-size:0.78rem;>Image not found</span>'">`;
+  } else {
+    prev.innerHTML='<span style="color:var(--text3);font-size:0.78rem;">No image</span>';
+  }
+}
+function submitEditProduct(){
+  const prodId = document.getElementById('ep-id').value;
+  const p = getProd(prodId);
+  if(!p) return;
+  const name = document.getElementById('ep-name').value.trim();
+  const sku  = document.getElementById('ep-sku').value.trim();
+  if(!name||!sku){ showToast('Name and SKU are required','error'); return; }
+  // Apply all changes directly to the product object
+  p.name     = name;
+  p.sku      = sku;
+  p.barcode  = document.getElementById('ep-barcode').value.trim();
+  p.cat      = document.getElementById('ep-cat').value;
+  p.uom      = document.getElementById('ep-uom').value;
+  p.thresh   = parseInt(document.getElementById('ep-thresh').value)||10;
+  p.imageUrl = document.getElementById('ep-imageurl').value.trim();
+  // Also update the low-stock threshold in any inventory rows for this product
+  INVENTORY.filter(i=>i.prod===prodId).forEach(i=>{ i.thresh=p.thresh; });
+  closeModal('modal-edit-product');
+  showToast(`${name} updated successfully`,'success');
+  renderProducts();
+}
+
+// ═══════════════════════════════════════════════════════
+// ADD STOCK MODAL
+// ═══════════════════════════════════════════════════════
+function openAddStock(){
+  // Reset fields
+  document.getElementById('as-barcode').value='';
+  document.getElementById('as-qty').value='1';
+  document.getElementById('as-notes').value='';
+  document.getElementById('as-preview').style.display='none';
+
+  const sel=document.getElementById('as-product');
+  sel.innerHTML='<option value="">— Select product —</option>'+PRODUCTS.map(p=>`<option value="${p.id}">${p.name} (${p.sku})</option>`).join('');
+  const lw=document.getElementById('as-loc-wrap');
+  const ls=document.getElementById('as-loc');
+  if(currentUser.role==='admin'){
+    lw.style.display=''; ls.innerHTML=LOCATIONS.map(l=>`<option value="${l.id}">${l.icon} ${l.name}</option>`).join('');
+  } else { lw.style.display='none'; }
+  openModal('modal-add-stock');
+}
+function asBarcodeLookup(val){
+  const p=PRODUCTS.find(x=>x.barcode===val.trim());
+  if(p){
+    const sel=document.getElementById('as-product');
+    for(let i=0;i<sel.options.length;i++){ if(sel.options[i].value===p.id){sel.selectedIndex=i;break;} }
+    asShowPreview(p);
+  }
+}
+function asProductSelected(){
+  const prodId=document.getElementById('as-product').value;
+  const p=getProd(prodId);
+  if(p){ asShowPreview(p); document.getElementById('as-barcode').value=p.barcode||''; }
+  else { document.getElementById('as-preview').style.display='none'; }
+}
+function asShowPreview(p){
+  const thumb=document.getElementById('as-prev-thumb');
+  thumb.innerHTML=p.imageUrl
+    ?`<img src="${p.imageUrl}" style="width:100%;height:100%;object-fit:contain;border-radius:6px;">`
+    :`<span style="font-size:1.2rem;">${p.emoji}</span>`;
+  document.getElementById('as-prev-name').textContent=p.name;
+  document.getElementById('as-prev-sku').textContent=p.sku+' · '+p.barcode;
+  document.getElementById('as-preview').style.display='flex';
+}
+function submitAddStock(){
+  const prodId=document.getElementById('as-product').value;
+  if(!prodId){showToast('Select a product','error');return;}
+  const qty=parseInt(document.getElementById('as-qty').value)||1;
+  const locId=currentUser.loc||document.getElementById('as-loc').value;
+  const notes=document.getElementById('as-notes').value;
+  let inv=getInv(prodId,locId);
+  if(inv) inv.qty+=qty;
+  else { INVENTORY.push({id:'I'+String(invNextId++).padStart(3,'0'),prod:prodId,loc:locId,qty,thresh:getProd(prodId)?.thresh||10}); }
+  MOVEMENTS.unshift({id:'M'+String(movNextId++).padStart(3,'0'),date:new Date().toISOString().slice(0,16).replace('T',' '),type:'Stock In',dir:'in',prod:prodId,loc:locId,qty,notes});
+  closeModal('modal-add-stock');
+  showToast(`${qty} units added to stock`,'success');
+  renderInventory(currentUser.loc);
+}
+
+// ═══════════════════════════════════════════════════════
+// TRANSFERS
+// ═══════════════════════════════════════════════════════
+function renderTransfers(){
+  const locId=currentUser.loc;
+  const isAdmin=currentUser.role==='admin';
+  document.getElementById('trf-page-title').textContent=isAdmin?'All Transfer Requests':'My Transfer Requests';
+  let list=locId?TRANSFERS.filter(t=>t.from===locId||t.to===locId):TRANSFERS;
+  const el=document.getElementById('trf-list');
+  if(!list.length){el.innerHTML='<div class="empty"><div class="empty-icon">↔️</div><p>No transfer requests</p></div>';return;}
+  const sPill={Pending:'pill-orange',Approved:'pill-blue',Completed:'pill-green',Rejected:'pill-red'};
+  el.innerHTML=list.map(t=>{
+    const p=getProd(t.prod);const fl=getLoc(t.from);const tl=getLoc(t.to);
+    const isPending=t.status==='Pending'&&isAdmin;
+    return `<div class="trf-card">
+      <div style="font-size:1.4rem;">${p?.emoji||'📦'}</div>
+      <div class="trf-route">
+        <div class="trf-path">${fl?.icon||''} ${fl?.name||t.from}<span class="trf-arrow">→</span>${tl?.icon||''} ${tl?.name||t.to}</div>
+        <div class="trf-detail">${p?.name||t.prod} · Qty: ${t.qty} · ${t.date}${t.notes?' · '+t.notes:''}</div>
+      </div>
+      <span class="pill ${sPill[t.status]||'pill-grey'}">${t.status}</span>
+      ${isPending?`<div class="trf-actions"><button class="btn btn-approve btn-sm" onclick="approveTransfer('${t.id}')">✓ Approve</button><button class="btn btn-reject btn-sm" onclick="rejectTransfer('${t.id}')">✗ Reject</button></div>`:''}
+    </div>`;
+  }).join('');
+}
+function openTransferModal(){
+  const sel=document.getElementById('tr-product');
+  sel.innerHTML='<option value="">— Select product —</option>'+PRODUCTS.map(p=>`<option value="${p.id}">${p.emoji} ${p.name} (${p.sku})</option>`).join('');
+  const tf=document.getElementById('tr-from');const tt=document.getElementById('tr-to');
+  tf.innerHTML=tt.innerHTML=LOCATIONS.map(l=>`<option value="${l.id}">${l.icon} ${l.name}</option>`).join('');
+  if(currentUser.loc) tf.value=currentUser.loc;
+  openModal('modal-transfer');
+}
+function submitTransfer(){
+  const prod=document.getElementById('tr-product').value;
+  const from=document.getElementById('tr-from').value;
+  const to=document.getElementById('tr-to').value;
+  const qty=parseInt(document.getElementById('tr-qty').value)||1;
+  const notes=document.getElementById('tr-notes').value;
+  if(!prod||from===to){showToast('Check all fields — from/to must differ','error');return;}
+  TRANSFERS.unshift({id:'T'+String(trfNextId++).padStart(3,'0'),date:new Date().toISOString().slice(0,10),from,to,prod,qty,status:'Pending',by:currentUser.email,notes});
+  closeModal('modal-transfer');
+  showToast('Transfer request submitted','success');
+  renderTransfers();
+}
+function approveTransfer(id){
+  const t=TRANSFERS.find(x=>x.id===id);
+  if(!t)return;
+  t.status='Approved';
+  const fi=getInv(t.prod,t.from);
+  let ti=getInv(t.prod,t.to);
+  if(fi)fi.qty=Math.max(0,fi.qty-t.qty);
+  if(!ti){INVENTORY.push({id:'I'+String(invNextId++).padStart(3,'0'),prod:t.prod,loc:t.to,qty:t.qty,thresh:getProd(t.prod)?.thresh||10});}
+  else ti.qty+=t.qty;
+  showToast('Transfer approved — inventory updated','success');
+  renderTransfers();
+}
+function rejectTransfer(id){
+  const t=TRANSFERS.find(x=>x.id===id);
+  if(t)t.status='Rejected';
+  showToast('Transfer rejected','error');
+  renderTransfers();
+}
+
+// ═══════════════════════════════════════════════════════
+// LOCATIONS (Admin)
+// ═══════════════════════════════════════════════════════
+function renderLocations(){
+  selectedLocId=null;
+  document.getElementById('loc-detail').style.display='none';
+  const grid=document.getElementById('loc-grid');
+  grid.style.display='';
+  grid.innerHTML=LOCATIONS.map(loc=>{
+    const inv=INVENTORY.filter(i=>i.loc===loc.id);
+    const low=inv.filter(i=>i.qty<=i.thresh).length;
+    const total=inv.reduce((a,i)=>a+i.qty,0);
+    const movs=MOVEMENTS.filter(m=>m.loc===loc.id);
+    return `<div class="loc-card" onclick="selectLocation('${loc.id}')">
+      <div class="loc-card-top">
+        <div class="loc-card-icon">${loc.icon}</div>
+        ${low>0?`<span class="pill pill-red">${low} low</span>`:'<span class="pill pill-green">Healthy</span>'}
+      </div>
+      <div class="loc-card-name">${loc.name}</div>
+      <div class="loc-card-email">${USERS.find(u=>u.loc===loc.id)?.email||'—'}</div>
+      <div class="loc-card-stats" style="margin-top:14px;">
+        <div class="lcs"><div class="lcs-val">${inv.length}</div><div class="lcs-label">SKUs</div></div>
+        <div class="lcs"><div class="lcs-val">${total}</div><div class="lcs-label">Total Units</div></div>
+        <div class="lcs"><div class="lcs-val">${movs.length}</div><div class="lcs-label">Movements</div></div>
+        <div class="lcs"><div class="lcs-val" style="color:${low>0?'var(--danger)':'var(--success)'};">${low}</div><div class="lcs-label">Low Stock</div></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function selectLocation(locId){
+  selectedLocId=locId;
+  const loc=getLoc(locId);
+  document.getElementById('loc-grid').style.display='none';
+  const detail=document.getElementById('loc-detail');
+  detail.style.display='';
+  document.getElementById('loc-detail-title').textContent=`${loc.icon} ${loc.name} — Detail`;
+  document.getElementById('loc-inv-title').textContent=`Inventory — ${loc.name}`;
+
+  // Stats
+  const inv=INVENTORY.filter(i=>i.loc===locId);
+  const low=inv.filter(i=>i.qty<=i.thresh);
+  const movs=MOVEMENTS.filter(m=>m.loc===locId);
+  document.getElementById('loc-detail-stats').innerHTML=[
+    {label:'Total SKUs',val:inv.length,sub:'',cls:''},
+    {label:'Total Units',val:inv.reduce((a,i)=>a+i.qty,0),sub:'',cls:''},
+    {label:'Low Stock Items',val:low.length,sub:'',cls:low.length>0?'danger':'up'},
+    {label:'Total Movements',val:movs.length,sub:'All time',cls:''},
+  ].map(s=>`<div class="stat"><div class="stat-label">${s.label}</div><div class="stat-val">${s.val}</div><div class="stat-sub ${s.cls}">${s.sub}</div></div>`).join('');
+
+  // Inventory table
+  renderLocInvTable(locId);
+
+  // Recent movements
+  document.getElementById('loc-movements').innerHTML=movs.slice(0,8).map(movItemHTML).join('')||'<div class="empty"><div class="empty-icon">📋</div><p>No movements</p></div>';
+
+  // Top movers
+  const top=topIssuedItems(locId,6);
+  document.getElementById('loc-top-movers').innerHTML=top.length>0
+    ?top.map((t,i)=>{const p=getProd(t.prod);return `<div class="movement-item"><div style="width:22px;height:22px;border-radius:4px;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;font-family:'Barlow Condensed',sans-serif;color:var(--text2);flex-shrink:0;">${i+1}</div><div class="mov-icon mov-sale" style="width:30px;height:30px;font-size:0.9rem;">${p?.emoji||'📦'}</div><div class="mov-info"><div class="mov-title" style="font-size:0.82rem;">${p?.name||t.prod}</div><div class="mov-meta">${p?.sku||''}</div></div><div class="mov-qty out" style="font-size:0.9rem;">${t.total}</div></div>`;}).join('')
+    :'<div class="empty"><div class="empty-icon">📊</div><p>No movement data</p></div>';
+}
+function renderLocInvTable(locId){
+  const inv=INVENTORY.filter(i=>i.loc===locId);
+  document.getElementById('loc-inv-tbody').innerHTML=inv.map(i=>{
+    const p=getProd(i.prod);const isLow=i.qty<=i.thresh;
+    const col=levelColor(i.qty,i.thresh);
+    return `<tr>
+      <td style="display:flex;align-items:center;gap:8px;" class="linv-name"><div class="prod-thumb" style="width:30px;height:30px;font-size:0.9rem;">${p?.emoji||'📦'}</div><span style="font-size:0.875rem;font-weight:500;">${p?.name||i.prod}</span></td>
+      <td class="linv-sku" style="font-family:'Barlow Condensed',monospace;font-size:0.78rem;color:var(--text3);">${p?.sku||'—'}</td>
+      <td class="linv-cat" style="font-size:0.8rem;color:var(--text2);">${p?.cat||'—'}</td>
+      <td><div class="level-wrap"><div class="level-track"><div class="level-fill" style="width:${levelPct(i.qty,i.thresh)}%;background:${col};"></div></div><span class="level-qty" style="color:${col};">${i.qty}</span></div></td>
+      <td>${isLow?'<span class="pill pill-red">Low</span>':'<span class="pill pill-green">OK</span>'}</td>
+    </tr>`;
+  }).join('')||'<tr><td colspan="5"><div class="empty"><div class="empty-icon">📦</div><p>No inventory</p></div></td></tr>';
+}
+function filterLocInv(val){
+  document.querySelectorAll('#loc-inv-tbody tr').forEach(row=>{
+    const t=['.linv-name','.linv-sku','.linv-cat'].map(c=>row.querySelector(c)?.textContent||'').join(' ');
+    row.style.display=t.toLowerCase().includes(val.toLowerCase())?'':'none';
+  });
+}
+function clearLocDetail(){
+  document.getElementById('loc-detail').style.display='none';
+  document.getElementById('loc-grid').style.display='';
+}
+
+// ═══════════════════════════════════════════════════════
+// REPORTS
+// ═══════════════════════════════════════════════════════
+function renderReports(){
+  const locId=currentUser.loc;
+  const isAdmin=currentUser.role==='admin';
+  const movs=getLocMovements(locId);
+  const inv=getLocInv(locId);
+
+  // Stats
+  const totalOut=movs.filter(m=>m.dir==='out').reduce((a,m)=>a+m.qty,0);
+  const totalIn=movs.filter(m=>m.dir==='in').reduce((a,m)=>a+m.qty,0);
+  const totalAdj=movs.filter(m=>m.type==='Adjustment').length;
+  document.getElementById('report-stats').innerHTML=[
+    {label:'Total Units Issued',val:totalOut,sub:'All time',cls:'danger'},
+    {label:'Total Units Received',val:totalIn,sub:'All time',cls:'up'},
+    {label:'Stock Adjustments',val:totalAdj,sub:'Manual corrections',cls:''},
+    {label:'Total Movements',val:movs.length,sub:'Transactions logged',cls:''},
+  ].map(s=>`<div class="stat"><div class="stat-label">${s.label}</div><div class="stat-val">${s.val}</div><div class="stat-sub ${s.cls}">${s.sub}</div></div>`).join('');
+
+  // Chart — by type
+  document.getElementById('report-chart-title').textContent=isAdmin?'Movements by Type — All Locations':'Movements by Type — My Location';
+  const types=['Sale','Stock In','Transfer','Adjustment'];
+  const typeVals=types.map(t=>movs.filter(m=>m.type===t).reduce((a,m)=>a+m.qty,0));
+  const maxT=Math.max(1,...typeVals);
+  const colors=['var(--danger)','var(--success)','var(--info)','var(--text3)'];
+  document.getElementById('report-bar-chart').innerHTML=types.map((t,i)=>`
+    <div class="bar-col">
+      <div class="bar-val">${typeVals[i]}</div>
+      <div class="bar-el" style="height:${Math.max(4,typeVals[i]/maxT*120)}px;background:${colors[i]};width:100%;"></div>
+      <div class="bar-lbl">${t}</div>
+    </div>`).join('');
+
+  // Movement log
+  document.getElementById('log-loc-th').style.display=isAdmin?'':'none';
+  document.getElementById('mov-log-tbody').innerHTML=movs.map(m=>{
+    const p=getProd(m.prod);const loc=getLoc(m.loc);
+    return `<tr>
+      <td style="font-size:0.78rem;color:var(--text2);font-family:'Barlow Condensed',monospace;white-space:nowrap;">${m.date}</td>
+      <td>${movPill(m.type)}</td>
+      <td style="font-size:0.85rem;">${p?.emoji||'📦'} ${p?.name||m.prod}</td>
+      <td style="font-family:'Barlow Condensed',monospace;font-size:0.78rem;color:var(--text3);">${p?.sku||'—'}</td>
+      <td style="font-family:'Barlow Condensed',sans-serif;font-weight:700;color:${qtyColor(m.dir)};">${qtySign(m.dir)}${m.qty}</td>
+      <td style="display:${isAdmin?'':'none'};font-size:0.82rem;">${loc?.icon||''} ${loc?.name||m.loc}</td>
+      <td style="font-size:0.8rem;color:var(--text2);">${m.notes||'—'}</td>
+    </tr>`;
+  }).join('')||`<tr><td colspan="7"><div class="empty"><div class="empty-icon">📋</div><p>No movements recorded</p></div></td></tr>`;
+
+  // Top issued
+  const ti=topIssuedItems(locId,10);
+  document.getElementById('top-issued').innerHTML=ti.length>0
+    ?ti.map((t,i)=>{const p=getProd(t.prod);return `<div class="movement-item"><div style="width:22px;height:22px;border-radius:4px;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;font-family:'Barlow Condensed',sans-serif;color:var(--text2);flex-shrink:0;">${i+1}</div><div class="mov-icon mov-sale" style="width:30px;height:30px;font-size:0.9rem;">${p?.emoji||'📦'}</div><div class="mov-info"><div class="mov-title" style="font-size:0.82rem;">${p?.name||t.prod}</div><div class="mov-meta">${p?.sku||'—'} ${isAdmin?'· All locations':''}</div></div><div class="mov-qty out" style="font-size:0.9rem;">${t.total} units</div></div>`;}).join('')
+    :'<div class="empty"><div class="empty-icon">📊</div><p>No issue data yet</p></div>';
+
+  const tr=topReceivedItems(locId,10);
+  document.getElementById('top-received').innerHTML=tr.length>0
+    ?tr.map((t,i)=>{const p=getProd(t.prod);return `<div class="movement-item"><div style="width:22px;height:22px;border-radius:4px;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;font-family:'Barlow Condensed',sans-serif;color:var(--text2);flex-shrink:0;">${i+1}</div><div class="mov-icon mov-in" style="width:30px;height:30px;font-size:0.9rem;">${p?.emoji||'📦'}</div><div class="mov-info"><div class="mov-title" style="font-size:0.82rem;">${p?.name||t.prod}</div><div class="mov-meta">${p?.sku||'—'}</div></div><div class="mov-qty inn" style="font-size:0.9rem;">${t.total} units</div></div>`;}).join('')
+    :'<div class="empty"><div class="empty-icon">📊</div><p>No receipt data yet</p></div>';
+}
+function filterMovLog(val){
+  document.querySelectorAll('#mov-log-tbody tr').forEach(row=>{
+    row.style.display=row.textContent.toLowerCase().includes(val.toLowerCase())?'':'none';
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// SCANNER
+// ═══════════════════════════════════════════════════════
+function openScanner(target){
+  scanTarget=target;
+  document.getElementById('scanner-bg').classList.add('open');
+  document.getElementById('scan-chips').innerHTML=PRODUCTS.map(p=>`
+    <div class="scan-chip" onclick="doScan('${p.barcode}','${p.name}','${p.id}')">
+      <div class="sc-code">${p.barcode}</div>
+      <div class="sc-name">${p.emoji} ${p.name}</div>
+    </div>`).join('');
+}
+function closeScanner(){ document.getElementById('scanner-bg').classList.remove('open'); }
+function doScan(barcode,name,prodId){
+  document.getElementById('scan-ghost').textContent='✓ Scanned!';
+  setTimeout(()=>{
+    closeScanner();
+    if(scanTarget==='movement'){
+      document.getElementById('mov-barcode').value=barcode;
+      barcodeSearch(barcode);
+      showToast(`📷 Scanned: ${name}`,'success');
+    } else if(scanTarget==='addstock'){
+      document.getElementById('as-barcode').value=barcode;
+      asBarcodeLookup(barcode);
+      showToast(`📷 Scanned: ${name}`,'success');
+    } else if(scanTarget==='editprod'){
+      document.getElementById('ep-barcode').value=barcode;
+      showToast(`📷 Barcode captured`,'success');
+    } else if(scanTarget==='newprod'){
+      document.getElementById('np-barcode').value=barcode;
+      showToast(`📷 Barcode captured`,'success');
+    }
+  },600);
+}
+
+// ═══════════════════════════════════════════════════════
+// MODALS / UTILS
+// ═══════════════════════════════════════════════════════
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-bg').forEach(el=>el.addEventListener('click',e=>{if(e.target===el)el.classList.remove('open');}));
+
+let toastT;
+function showToast(msg,type=''){
+  const el=document.getElementById('toast');
+  document.getElementById('toast-msg').textContent=msg;
+  document.getElementById('toast-icon').textContent=type==='success'?'✓':type==='error'?'✕':'ℹ';
+  el.className='show'+(type?' t-'+type:'');
+  clearTimeout(toastT);
+  toastT=setTimeout(()=>el.classList.remove('show'),3000);
+}
+function toggleSb(){ document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sb-overlay').classList.toggle('show'); }
+function closeSbMobile(){ if(window.innerWidth<=800){ document.getElementById('sidebar').classList.remove('open'); document.getElementById('sb-overlay').classList.remove('show'); } }
+
+// ═══════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════
+buildLogin();
+</script>
+</body>
+</html>

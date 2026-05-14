@@ -1723,7 +1723,7 @@ async function renderAdminUsers(){
     const branch=BRANCHES.find(b=>b.id===u.branch_id);
     const metaParts=[u.role,branch?branch.icon+' '+branch.name:null,loc?loc.name:'No location'].filter(Boolean);
     const isSelf=u.id===currentUser.id;
-    const removeBtn=isSelf?'':`<button class="btn btn-ghost btn-sm" onclick="removeUser('${u.id}','${(u.name||'User').replace(/'/g,"\\'")}')  " style="color:var(--danger);border-color:rgba(200,65,26,0.3);font-size:0.75rem;min-height:30px;">🗑️ Remove</button>`;
+    const removeBtn=isSelf?'':`<button class="btn btn-ghost btn-sm" onclick="removeUser('${u.id}')" style="color:var(--danger);border-color:rgba(200,65,26,0.3);font-size:0.75rem;min-height:30px;">🗑️ Remove</button>`;
     return `<div class="movement-item"><div class="mov-icon mov-in-ic" style="font-size:1rem;">👤</div><div class="mov-info"><div class="mov-title">${u.name||'Unnamed'}${isSelf?' <span style="font-size:0.65rem;background:var(--surface3);padding:1px 6px;border-radius:3px;color:var(--text2);font-weight:600;">YOU</span>':''}</div><div class="mov-meta">${metaParts.join(' · ')}</div></div><div style="display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;">
       <select class="form-select" style="font-size:0.78rem;padding:4px 8px;" onchange="updateUserRole('${u.id}',this.value)"><option value="staff" ${u.role==='staff'?'selected':''}>Staff</option><option value="admin" ${u.role==='admin'?'selected':''}>Admin</option></select>
       <select class="form-select" style="font-size:0.78rem;padding:4px 8px;" onchange="updateUserBranch('${u.id}',this.value)"><option value="">No Branch</option>${BRANCHES.map(b=>`<option value="${b.id}" ${u.branch_id===b.id?'selected':''}>${b.icon} ${b.name}</option>`).join('')}</select>
@@ -1735,11 +1735,11 @@ async function renderAdminUsers(){
 async function updateUserRole(uid,role){await sb.from('user_profiles').update({role}).eq('id',uid);showToast('Role updated','success');}
 async function updateUserBranch(uid,bid){await sb.from('user_profiles').update({branch_id:bid||null}).eq('id',uid);showToast('Branch updated','success');}
 async function updateUserLoc(uid,loc){await sb.from('user_profiles').update({location_id:loc||null}).eq('id',uid);showToast('Location updated','success');}
-async function removeUser(uid,name){
-  if(!confirm('Remove "'+name+'" from the system?\n\nThis deletes their profile. They will lose their role, branch, and location assignment.'))return;
+async function removeUser(uid){
+  if(!confirm('Remove this user from the system?\n\nThis deletes their profile. They will lose their role, branch, and location assignment.'))return;
   const {error}=await sb.from('user_profiles').delete().eq('id',uid);
   if(error){showToast('Error: '+error.message,'error');return;}
-  showToast(name+' removed','success');
+  showToast('User removed','success');
   renderAdminUsers();
 }
 function openInviteModal(){document.getElementById('invite-email').value='';document.getElementById('invite-loc').innerHTML='<option value="">— No Location —</option>'+LOCATIONS.map(l=>`<option value="${l.id}">${l.icon||''} ${l.name}</option>`).join('');openModal('modal-invite');}

@@ -789,6 +789,7 @@ tr:hover td{background:rgba(0,0,0,0.015);}
   <div class="modal-head"><h3 id="loc-modal-title">Add Location</h3><button class="modal-close" onclick="closeModal('modal-add-location')">✕</button></div>
   <div class="modal-body">
     <input type="hidden" id="loc-edit-id">
+    <div id="loc-branch-info" style="display:none;background:var(--accent-light);border:1px solid rgba(200,65,26,0.2);border-radius:var(--radius-sm);padding:9px 13px;margin-bottom:14px;font-size:0.82rem;color:var(--accent);font-weight:600;font-family:'Barlow Semi Condensed',sans-serif;"></div>
     <div class="form-group">
       <label class="form-label">Location Name</label>
       <input class="form-input" id="loc-name-input" placeholder="e.g. Johannesburg Branch">
@@ -1700,23 +1701,47 @@ function clearLocDetail(){document.getElementById('loc-detail').style.display='n
 
 // ── USERS ─────────────────────────────────────────────
 async function renderAdminUsers(){
-  const {data:profiles}=await sb.from('user_profiles').select('*');
   const el=document.getElementById('users-list');
+  // Staff: only show their own profile + sign out
+  if(!isAdmin()){
+    const branch=BRANCHES.find(b=>b.id===currentProfile?.branch_id);
+    const loc=getLoc(currentProfile?.location_id);
+    el.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:4px 0;">
+      <div>
+        <div style="font-weight:600;font-size:0.95rem;">${currentProfile?.name||currentUser?.email?.split('@')[0]||'—'}</div>
+        <div style="font-size:0.78rem;color:var(--text3);margin-top:2px;">${currentUser?.email||'—'}</div>
+        <div style="font-size:0.72rem;color:var(--accent);font-weight:600;margin-top:4px;text-transform:uppercase;letter-spacing:0.5px;">Staff${branch?' · '+branch.icon+' '+branch.name:''}${loc?' · '+loc.name:''}</div>
+      </div>
+      <button class="btn btn-primary" onclick="signOut()">Sign Out</button>
+    </div>`;
+    return;
+  }
+  const {data:profiles}=await sb.from('user_profiles').select('*');
   if(!profiles?.length){el.innerHTML='<div class="empty"><div class="empty-icon">👤</div><p>No users yet.</p></div>';return;}
   el.innerHTML=profiles.map(u=>{
     const loc=getLoc(u.location_id);
     const branch=BRANCHES.find(b=>b.id===u.branch_id);
     const metaParts=[u.role,branch?branch.icon+' '+branch.name:null,loc?loc.name:'No location'].filter(Boolean);
-    return `<div class="movement-item"><div class="mov-icon mov-in-ic" style="font-size:1rem;">👤</div><div class="mov-info"><div class="mov-title">${u.name||'Unnamed'}</div><div class="mov-meta">${metaParts.join(' · ')}</div></div><div style="display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;">
+    const isSelf=u.id===currentUser.id;
+    const removeBtn=isSelf?'':`<button class="btn btn-ghost btn-sm" onclick="removeUser('${u.id}','${(u.name||'User').replace(/'/g,"\\'")}')}" style="color:var(--danger);border-color:rgba(200,65,26,0.3);font-size:0.75rem;min-height:30px;">🗑️ Remove</button>`;
+    return `<div class="movement-item"><div class="mov-icon mov-in-ic" style="font-size:1rem;">👤</div><div class="mov-info"><div class="mov-title">${u.name||'Unnamed'}${isSelf?' <span style="font-size:0.65rem;background:var(--surface3);padding:1px 6px;border-radius:3px;color:var(--text2);font-weight:600;">YOU</span>':''}</div><div class="mov-meta">${metaParts.join(' · ')}</div></div><div style="display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;">
       <select class="form-select" style="font-size:0.78rem;padding:4px 8px;" onchange="updateUserRole('${u.id}',this.value)"><option value="staff" ${u.role==='staff'?'selected':''}>Staff</option><option value="admin" ${u.role==='admin'?'selected':''}>Admin</option></select>
       <select class="form-select" style="font-size:0.78rem;padding:4px 8px;" onchange="updateUserBranch('${u.id}',this.value)"><option value="">No Branch</option>${BRANCHES.map(b=>`<option value="${b.id}" ${u.branch_id===b.id?'selected':''}>${b.icon} ${b.name}</option>`).join('')}</select>
       <select class="form-select" style="font-size:0.78rem;padding:4px 8px;" onchange="updateUserLoc('${u.id}',this.value)"><option value="">No Location</option>${LOCATIONS.map(l=>`<option value="${l.id}" ${u.location_id===l.id?'selected':''}>${l.name}</option>`).join('')}</select>
+      ${removeBtn}
     </div></div>`;
   }).join('');
 }
 async function updateUserRole(uid,role){await sb.from('user_profiles').update({role}).eq('id',uid);showToast('Role updated','success');}
 async function updateUserBranch(uid,bid){await sb.from('user_profiles').update({branch_id:bid||null}).eq('id',uid);showToast('Branch updated','success');}
 async function updateUserLoc(uid,loc){await sb.from('user_profiles').update({location_id:loc||null}).eq('id',uid);showToast('Location updated','success');}
+async function removeUser(uid,name){
+  if(!confirm('Remove "'+name+'" from the system?\n\nThis deletes their profile. They will lose their role, branch, and location assignment.'))return;
+  const {error}=await sb.from('user_profiles').delete().eq('id',uid);
+  if(error){showToast('Error: '+error.message,'error');return;}
+  showToast(name+' removed','success');
+  renderAdminUsers();
+}
 function openInviteModal(){document.getElementById('invite-email').value='';document.getElementById('invite-loc').innerHTML='<option value="">— No Location —</option>'+LOCATIONS.map(l=>`<option value="${l.id}">${l.icon||''} ${l.name}</option>`).join('');openModal('modal-invite');}
 
 // ── LIGHTBOX ──────────────────────────────────────────
@@ -1863,6 +1888,9 @@ function openAddLocationModal(){
   document.getElementById('loc-name-input').value='';
   document.getElementById('loc-icon-input').value='📍';
   document.getElementById('loc-save-btn').textContent='Add Location';
+  const bi=document.getElementById('loc-branch-info');
+  if(currentBranch){bi.style.display='';bi.textContent=currentBranch.icon+' Will be added to: '+currentBranch.name+' ('+currentBranch.fullName+')';}
+  else bi.style.display='none';
   openModal('modal-add-location');
 }
 function openEditLocationModal(locId){
@@ -1872,6 +1900,7 @@ function openEditLocationModal(locId){
   document.getElementById('loc-name-input').value=loc.name||'';
   document.getElementById('loc-icon-input').value=loc.icon||'📍';
   document.getElementById('loc-save-btn').textContent='Save Changes';
+  document.getElementById('loc-branch-info').style.display='none';
   openModal('modal-add-location');
 }
 async function submitLocation(){
@@ -1888,7 +1917,7 @@ async function submitLocation(){
     closeModal('modal-add-location');showToast(`${name} updated`,'success');
   } else {
     const newLocId=crypto.randomUUID();
-    const {data,error}=await sb.from('locations').insert({id:newLocId,name,icon}).select().single();
+    const {data,error}=await sb.from('locations').insert({id:newLocId,name,icon,branch_id:currentBranch?.id||null}).select().single();
     if(error){showToast('Error: '+error.message,'error');btn.textContent='Add Location';btn.disabled=false;return;}
     LOCATIONS.push(data);
     closeModal('modal-add-location');showToast(`${name} added`,'success');
@@ -1975,15 +2004,21 @@ function openMoreSheet(){
     {page:'products',icon:'🏷️',label:'Product Catalogue'},
     {page:'locations',icon:'📍',label:'Locations'},
     {page:'admin',icon:'👤',label:'Users & Account'},
+    {action:'switchBranch()',icon:'🏢',label:currentBranch?'Switch Branch · '+currentBranch.name:'Switch Branch'},
   ]:[
     {page:'products',icon:'🏷️',label:'Product Catalogue'},
     {page:'admin',icon:'👤',label:'My Account & Sign Out'},
   ];
   document.getElementById('more-sheet-items').innerHTML=items.map(item=>
-    `<div class="more-sheet-item" onclick="closeMoreSheet();renderPage('${item.page}');setMobNav('more')">
-      <span class="more-sheet-icon">${item.icon}</span>
-      <span>${item.label}</span>
-    </div>`
+    item.action
+      ?`<div class="more-sheet-item" onclick="closeMoreSheet();${item.action}">
+          <span class="more-sheet-icon">${item.icon}</span>
+          <span>${item.label}</span>
+        </div>`
+      :`<div class="more-sheet-item" onclick="closeMoreSheet();renderPage('${item.page}');setMobNav('more')">
+          <span class="more-sheet-icon">${item.icon}</span>
+          <span>${item.label}</span>
+        </div>`
   ).join('');
   const bg=document.getElementById('more-sheet-bg');
   const sheet=document.getElementById('more-sheet');

@@ -292,7 +292,8 @@ tr:hover td{background:rgba(0,0,0,0.015);}
   #sb-overlay.show{display:block;}
   .main{margin-left:0!important;padding-bottom:88px!important;overflow-x:hidden!important;max-width:100vw!important;}
   .topbar{padding-left:14px;height:48px;}
-  .topbar-loc{display:none;}
+  .topbar-loc{display:flex;padding:3px 8px;font-size:0.72rem;max-width:160px;overflow:hidden;white-space:nowrap;}
+  .topbar-loc button{display:none!important;}
   .topbar-right{gap:6px;}
 
   /* ── CONTENT ── */
@@ -462,11 +463,9 @@ tr:hover td{background:rgba(0,0,0,0.015);}
   <div class="auth-center"><div class="auth-card">
     <div class="auth-card-header"><h2 id="auth-heading">Sign In</h2><p id="auth-subheading">Enter your credentials to access your location</p></div>
     <div class="auth-card-body">
-      <div class="auth-tabs"><div class="auth-tab active" id="tab-signin" onclick="switchTab('signin')">Sign In</div><div class="auth-tab" id="tab-signup" onclick="switchTab('signup')">Create Account</div></div>
       <div class="auth-error" id="auth-error"></div>
       <div class="form-group"><label class="form-label">Email Address</label><input class="form-input" type="email" id="auth-email" placeholder="yourname@kareindustrial.co.za" autocomplete="email"></div>
       <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" id="auth-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')submitAuth()"></div>
-      <div class="form-group" id="signup-name-wrap" style="display:none;"><label class="form-label">Your Name</label><input class="form-input" type="text" id="auth-fullname" placeholder="e.g. Thandi Mthembu"></div>
       <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;margin-top:4px;" onclick="submitAuth()" id="auth-submit-btn">Sign In</button>
       <button class="forgot-pw-link" id="forgot-pw-btn" onclick="showForgotPassword()">Forgot your password?</button>
       <p style="font-size:0.75rem;color:var(--text3);text-align:center;margin-top:10px;line-height:1.5;">Access is restricted to authorised staff only.<br>Contact your administrator if you need access.</p>
@@ -487,6 +486,22 @@ tr:hover td{background:rgba(0,0,0,0.015);}
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:2.2rem;font-weight:800;color:#fff;margin-bottom:6px;letter-spacing:2px;">SELECT BRANCH</div>
     <div style="font-size:0.85rem;color:rgba(255,255,255,0.35);margin-bottom:40px;font-family:'Barlow Semi Condensed',sans-serif;letter-spacing:1px;">Choose a Kare location to manage</div>
     <div id="branch-picker-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;justify-content:center;width:100%;max-width:740px;"></div>
+  </div>
+</div>
+
+<div id="no-access-screen" style="display:none;min-height:100vh;flex-direction:column;background:linear-gradient(135deg,#1a1814 0%,#2c2720 50%,#1a1814 100%);position:relative;overflow:hidden;">
+  <div style="position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.03) 39px,rgba(255,255,255,0.03) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.03) 39px,rgba(255,255,255,0.03) 40px);pointer-events:none;"></div>
+  <div style="padding:24px 32px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="login-logo-mark">KI</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;color:rgba(255,255,255,0.9);letter-spacing:1px;text-transform:uppercase;line-height:1.2;">Kare Industrial<span style="display:block;font-size:0.68rem;font-weight:400;color:rgba(255,255,255,0.4);letter-spacing:2px;margin-top:1px;">Suppliers</span></div>
+    </div>
+    <button class="btn" style="background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.55);border:1px solid rgba(255,255,255,0.12);font-size:0.8rem;" onclick="signOut()">Sign Out</button>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;position:relative;z-index:1;text-align:center;">
+    <div style="font-size:3rem;margin-bottom:20px;">🔒</div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:800;color:#fff;margin-bottom:12px;letter-spacing:2px;">ACCESS PENDING</div>
+    <div style="font-size:0.95rem;color:rgba(255,255,255,0.5);max-width:360px;line-height:1.6;font-family:'Barlow Semi Condensed',sans-serif;">Your account hasn't been assigned to a branch yet. Please contact your administrator to be assigned to the correct location.</div>
   </div>
 </div>
 
@@ -602,7 +617,8 @@ tr:hover td{background:rgba(0,0,0,0.015);}
       <!-- PRODUCTS -->
       <div class="page" id="page-products">
         <div class="card">
-          <div class="card-header"><h3>Product Catalogue</h3><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;"><input class="search-input" placeholder="Search name, SKU, barcode, category…" oninput="filterProducts(this.value)"><button class="btn btn-primary" id="add-product-btn" onclick="openAddProduct()" style="display:none;">＋ Add Product</button></div></div>
+          <div class="card-header"><h3>Product Catalogue</h3><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;"><input class="search-input" placeholder="Search name, SKU, barcode, category…" id="prod-search-input" oninput="renderProducts()"><select class="form-select" id="prod-sort-select" style="font-size:0.82rem;padding:5px 10px;" onchange="renderProducts()"><option value="name-az">Name A–Z</option><option value="name-za">Name Z–A</option><option value="cat">Category</option></select><button class="btn btn-primary" id="add-product-btn" onclick="openAddProduct()" style="display:none;">＋ Add Product</button></div></div>
+          <div id="prod-cat-filter" style="display:flex;gap:6px;flex-wrap:wrap;padding:10px 20px 2px;"></div>
           <div class="table-scroll-wrap"><table><thead><tr><th>Product</th><th>SKU</th><th>Barcode</th><th>Category</th><th>Unit</th><th>Status</th><th id="prod-actions-th"></th></tr></thead><tbody id="prod-tbody"></tbody></table></div>
         </div>
       </div>
@@ -648,7 +664,7 @@ tr:hover td{background:rgba(0,0,0,0.015);}
               </div>
               <div class="card">
                 <div class="card-header"><h3>Full Movement Log</h3><input class="search-input" style="min-width:150px;" placeholder="Search…" oninput="filterMovLog(this.value)"></div>
-                <div class="table-scroll-wrap"><table><thead><tr><th>Date</th><th>Type</th><th>Product</th><th class="log-sku-col">SKU</th><th>Qty</th><th class="log-notes-col">Notes</th></tr></thead><tbody id="mov-log-tbody"></tbody></table></div>
+                <div class="table-scroll-wrap"><table><thead><tr><th>Date</th><th>Type</th><th>Product</th><th class="log-sku-col">SKU</th><th>Qty</th><th class="log-notes-col">Notes</th><th></th></tr></thead><tbody id="mov-log-tbody"></tbody></table></div>
               </div>
             </div>
             <div>
@@ -833,6 +849,42 @@ tr:hover td{background:rgba(0,0,0,0.015);}
   </div>
 </div></div>
 
+<!-- ADJUST QUANTITY MODAL -->
+<div class="modal-bg" id="modal-adjust-qty"><div class="modal">
+  <div class="modal-head"><h3>Adjust Quantity</h3><button class="modal-close" onclick="closeModal('modal-adjust-qty')">✕</button></div>
+  <div class="modal-body">
+    <div id="aq-product-name" style="font-weight:600;font-size:1rem;margin-bottom:4px;"></div>
+    <div id="aq-location-name" style="font-size:0.8rem;color:var(--text2);margin-bottom:18px;"></div>
+    <div class="form-group">
+      <label class="form-label">New Quantity</label>
+      <input class="form-input" type="number" id="aq-qty" min="0" placeholder="Enter quantity" style="font-size:1.1rem;">
+      <div id="aq-current" style="font-size:0.78rem;color:var(--text3);margin-top:6px;"></div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-secondary" onclick="closeModal('modal-adjust-qty')">Cancel</button>
+    <button class="btn btn-primary" id="aq-submit-btn" onclick="submitAdjustQty()">Save</button>
+  </div>
+</div></div>
+
+<!-- EDIT THRESHOLD MODAL -->
+<div class="modal-bg" id="modal-edit-thresh"><div class="modal">
+  <div class="modal-head"><h3>Set Minimum Stock Level</h3><button class="modal-close" onclick="closeModal('modal-edit-thresh')">✕</button></div>
+  <div class="modal-body">
+    <div id="et-product-name" style="font-weight:600;font-size:1rem;margin-bottom:4px;"></div>
+    <div id="et-location-name" style="font-size:0.8rem;color:var(--text2);margin-bottom:18px;"></div>
+    <div class="form-group">
+      <label class="form-label">Minimum Stock Level</label>
+      <input class="form-input" type="number" id="et-thresh" min="0" placeholder="Enter minimum">
+      <div id="et-current" style="font-size:0.78rem;color:var(--text3);margin-top:6px;"></div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-secondary" onclick="closeModal('modal-edit-thresh')">Cancel</button>
+    <button class="btn btn-primary" onclick="submitEditThresh()">Save</button>
+  </div>
+</div></div>
+
 <!-- MORE BOTTOM SHEET -->
 <div id="more-sheet-bg" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:400;" onclick="closeMoreSheet()"></div>
 <div id="more-sheet" style="display:none;position:fixed;bottom:80px;left:0;right:0;background:#1a1814;border-radius:16px 16px 0 0;z-index:401;padding:8px 0 8px;transform:translateY(100%);transition:transform 0.25s cubic-bezier(.32,1,.23,1);">
@@ -902,7 +954,7 @@ async function loadAppData(){
   const [lr,ir,mr,pr]=await Promise.all([
     sb.from('locations').select('*').order('name'),
     sb.from('inventory').select('*'),
-    sb.from('movements').select('*').order('created_at',{ascending:false}).limit(2000),
+    sb.from('movements').select('*').order('created_at',{ascending:false}),
     sb.from('products').select('*').order('name')
   ]);
   LOCATIONS=lr.data||[];
@@ -916,12 +968,21 @@ function showAuth(){hideLoading();document.getElementById('auth-screen').classLi
 function showApp(){
   hideLoading();
   document.getElementById('auth-screen').classList.remove('visible');
-  if(isAdmin()){
+  const role=currentProfile?.role;
+  if(role==='super_admin'){
     showBranchScreen();
+  } else if(role==='admin'){
+    const bid=currentProfile?.branch_id||null;
+    if(bid){
+      currentBranch=BRANCHES.find(b=>b.id===bid)||null;
+      launchApp();
+    } else {
+      showBranchScreen();
+    }
   } else {
-    // Derive branch from profile or from the location's branch_id
     const locBranch=currentProfile?.location_id?LOCATIONS.find(l=>l.id===currentProfile.location_id)?.branch_id:null;
     const bid=currentProfile?.branch_id||locBranch||null;
+    if(!bid){showNoAccessScreen();return;}
     currentBranch=bid?BRANCHES.find(b=>b.id===bid)||null:null;
     launchApp();
   }
@@ -930,7 +991,12 @@ function launchApp(){
   document.getElementById('branch-screen').style.display='none';
   document.getElementById('app').classList.add('visible');
   buildSidebar();renderPage('dashboard');
-  sb.channel('kare').on('postgres_changes',{event:'*',schema:'public',table:'inventory'},()=>refreshInventory()).on('postgres_changes',{event:'*',schema:'public',table:'movements'},()=>refreshMovements()).subscribe();
+  sb.channel('kare')
+    .on('postgres_changes',{event:'*',schema:'public',table:'inventory'},()=>refreshInventory())
+    .on('postgres_changes',{event:'*',schema:'public',table:'movements'},()=>refreshMovements())
+    .on('postgres_changes',{event:'*',schema:'public',table:'products'},()=>refreshProducts())
+    .on('postgres_changes',{event:'*',schema:'public',table:'locations'},()=>refreshLocations())
+    .subscribe();
 }
 function showBranchScreen(){
   document.getElementById('app').classList.remove('visible');
@@ -960,6 +1026,11 @@ function selectBranch(branchId){
   currentBranch=BRANCHES.find(b=>b.id===branchId)||null;
   launchApp();
 }
+function showNoAccessScreen(){
+  document.getElementById('branch-screen').style.display='none';
+  document.getElementById('app').classList.remove('visible');
+  document.getElementById('no-access-screen').style.display='flex';
+}
 function switchBranch(){
   if(!isAdmin())return;
   currentBranch=null;
@@ -982,11 +1053,28 @@ async function refreshInventory(){
   }
 }
 async function refreshMovements(){
-  const {data}=await sb.from('movements').select('*').order('created_at',{ascending:false}).limit(2000);
+  const {data}=await sb.from('movements').select('*').order('created_at',{ascending:false});
   MOVEMENTS=(data||[]).map(m=>({...m,prod:m.product_id,loc:m.location_id,date:m.created_at?.slice(0,10),dir:m.dir||'in'}));
   renderTodayMovements();
   const pg=document.querySelector('.page.active')?.id;
   if(pg==='page-dashboard')renderDashboard();if(pg==='page-reports')renderReportMain();
+}
+
+async function refreshProducts(){
+  const {data}=await sb.from('products').select('*').order('name');
+  PRODUCTS=(data||[]).map(p=>({...p,imageUrl:p.image_url,emoji:'🔩'}));
+  const pg=document.querySelector('.page.active')?.id;
+  if(pg==='page-products')renderProducts();
+  if(pg==='page-inventory')renderInventoryPage();
+}
+async function refreshLocations(){
+  const {data}=await sb.from('locations').select('*').order('name');
+  LOCATIONS=data||[];
+  const pg=document.querySelector('.page.active')?.id;
+  if(pg==='page-locations')renderLocations();
+  if(pg==='page-inventory')renderInventoryPage();
+  if(pg==='page-dashboard')renderDashboard();
+  buildSidebar();
 }
 
 // ── AUTH ────────────────────────────────────────────
@@ -1031,7 +1119,8 @@ async function signOut(){
 const getProd=id=>PRODUCTS.find(p=>p.id===id);
 const getLoc=id=>LOCATIONS.find(l=>l.id===id);
 const getInv=(prod,loc)=>INVENTORY.find(i=>i.prod===prod&&i.loc===loc);
-const isAdmin=()=>currentProfile?.role==='admin';
+const isSuperAdmin=()=>currentProfile?.role==='super_admin';
+const isAdmin=()=>currentProfile?.role==='admin'||currentProfile?.role==='super_admin';
 const myLoc=()=>currentProfile?.location_id;
 function getActiveLocs(){if(!currentBranch)return LOCATIONS;return LOCATIONS.filter(l=>l.branch_id===currentBranch.id);}
 function getLowStock(locId){const inv=locId?INVENTORY.filter(i=>i.loc===locId):INVENTORY.filter(i=>getActiveLocs().some(l=>l.id===i.loc));return inv.filter(i=>i.qty<=i.thresh);}
@@ -1098,8 +1187,9 @@ function buildSidebar(){
   document.getElementById('sb-uname').textContent=currentProfile?.name||currentUser?.email?.split('@')[0]||'—';
   document.getElementById('sb-uemail').textContent=currentUser?.email||'—';
   const av=document.getElementById('sb-av');av.textContent=(currentProfile?.name||'?').charAt(0).toUpperCase();av.className='sb-avatar '+(admin?'av-admin':'av-staff');
+  const superAdmin=isSuperAdmin();
   document.getElementById('topbar-loc').innerHTML=admin
-    ?`${currentBranch?currentBranch.icon+' ':''}<strong>${currentBranch?currentBranch.name:'All Branches'}</strong>&nbsp;· Admin&nbsp;<button onclick="switchBranch()" style="background:var(--accent);color:#fff;border:none;padding:3px 9px;border-radius:4px;font-size:0.72rem;font-family:'Barlow Semi Condensed',sans-serif;font-weight:600;cursor:pointer;margin-left:4px;">Switch</button>`
+    ?`${currentBranch?currentBranch.icon+' ':''}<strong>${currentBranch?currentBranch.name:'All Branches'}</strong>&nbsp;· ${superAdmin?'Super Admin':'Admin'}${superAdmin?`&nbsp;<button onclick="switchBranch()" style="background:var(--accent);color:#fff;border:none;padding:3px 9px;border-radius:4px;font-size:0.72rem;font-family:'Barlow Semi Condensed',sans-serif;font-weight:600;cursor:pointer;margin-left:4px;">Switch</button>`:''}`
     :`${loc?.icon||''} <strong>${loc?.name||'No Location'}</strong>${currentBranch?' · '+currentBranch.name:''}`;
   // Populate mobile account card
   const mobName=document.getElementById('mob-account-name');
@@ -1292,21 +1382,44 @@ function renderInvTable(locId){
 }
 
 function filterInv(val){document.querySelectorAll('#inv-tbody tr').forEach(row=>{const t=(row.querySelector('.inv-name')?.textContent||'')+(row.querySelector('.inv-sku')?.textContent||'')+(row.querySelector('.inv-bc')?.textContent||'')+(row.querySelector('.inv-cat')?.textContent||'');row.style.display=t.toLowerCase().includes(val.toLowerCase())?'':'none';});}
-async function editThresh(invId){
+let _adjustInvId=null;
+function editThresh(invId){
   const inv=INVENTORY.find(i=>i.id===invId);const p=getProd(inv?.prod);
-  const newT=prompt(`Set minimum stock level for:\n${p?.name||'item'} at ${getLoc(inv?.loc)?.name||'this location'}\n\nCurrent minimum: ${inv?.thresh}\n\nEnter new minimum:`);
-  if(newT===null)return;const t=parseInt(newT);if(isNaN(t)||t<0){showToast('Invalid number','error');return;}
-  await sb.from('inventory').update({thresh:t}).eq('id',invId);
-  const idx=INVENTORY.findIndex(i=>i.id===invId);if(idx>-1)INVENTORY[idx].thresh=t;
-  const el=document.getElementById('tv-'+invId);if(el)el.textContent=t;
-  showToast(`Minimum level set to ${t}`,'success');
+  _adjustInvId=invId;
+  document.getElementById('et-product-name').textContent=p?.name||'Item';
+  document.getElementById('et-location-name').textContent=getLoc(inv?.loc)?.name||'';
+  document.getElementById('et-current').textContent='Current minimum: '+inv?.thresh;
+  document.getElementById('et-thresh').value=inv?.thresh??'';
+  openModal('modal-edit-thresh');
+  setTimeout(()=>document.getElementById('et-thresh').focus(),100);
 }
-async function quickAdjust(invId){
+async function submitEditThresh(){
+  const t=parseInt(document.getElementById('et-thresh').value);
+  if(isNaN(t)||t<0){showToast('Invalid number','error');return;}
+  await sb.from('inventory').update({thresh:t}).eq('id',_adjustInvId);
+  const idx=INVENTORY.findIndex(i=>i.id===_adjustInvId);if(idx>-1)INVENTORY[idx].thresh=t;
+  const el=document.getElementById('tv-'+_adjustInvId);if(el)el.textContent=t;
+  closeModal('modal-edit-thresh');showToast(`Minimum level set to ${t}`,'success');
+}
+function quickAdjust(invId){
   const inv=INVENTORY.find(i=>i.id===invId);const p=getProd(inv?.prod);
-  const newQty=prompt(`Adjust quantity for ${p?.name||'item'}\nCurrent: ${inv?.qty}\n\nEnter new quantity:`);
-  if(newQty===null)return;const q=parseInt(newQty);if(isNaN(q)||q<0){showToast('Invalid quantity','error');return;}
-  const diff=q-inv.qty;await sb.from('inventory').update({qty:q}).eq('id',invId);
+  _adjustInvId=invId;
+  document.getElementById('aq-product-name').textContent=p?.name||'Item';
+  document.getElementById('aq-location-name').textContent=getLoc(inv?.loc)?.name||'';
+  document.getElementById('aq-current').textContent='Current quantity: '+inv?.qty;
+  document.getElementById('aq-qty').value=inv?.qty??'';
+  openModal('modal-adjust-qty');
+  setTimeout(()=>document.getElementById('aq-qty').focus(),100);
+}
+async function submitAdjustQty(){
+  const inv=INVENTORY.find(i=>i.id===_adjustInvId);
+  const q=parseInt(document.getElementById('aq-qty').value);
+  if(isNaN(q)||q<0){showToast('Invalid quantity','error');return;}
+  const diff=q-(inv?.qty||0);
+  const btn=document.getElementById('aq-submit-btn');btn.textContent='Saving...';btn.disabled=true;
+  await sb.from('inventory').update({qty:q}).eq('id',_adjustInvId);
   if(diff!==0)await sb.from('movements').insert({type:'Adjustment',dir:diff>=0?'in':'out',product_id:inv.prod,location_id:inv.loc,qty:Math.abs(diff),notes:'Manual adjustment',recorded_by:currentUser.id});
+  closeModal('modal-adjust-qty');btn.textContent='Save';btn.disabled=false;
   showToast(`Adjusted to ${q}`,'success');
 }
 
@@ -1427,15 +1540,31 @@ function renderTodayMovements(){
 function renderProducts(){
   const admin=isAdmin();
   if(admin){document.getElementById('add-product-btn').style.display='';document.getElementById('prod-actions-th').textContent='Actions';}
+  // Build category chips
+  const cats=[...new Set(PRODUCTS.map(p=>p.cat).filter(Boolean))].sort();
+  const catBar=document.getElementById('prod-cat-filter');
+  if(catBar){
+    catBar.innerHTML=cats.map(c=>`<span onclick="setProdCatFilter('${c.replace(/'/g,"\\'")}')" style="display:inline-block;padding:4px 12px;border-radius:20px;font-size:0.75rem;font-weight:600;cursor:pointer;border:1px solid ${_prodCatFilter===c?'var(--accent)':'var(--border)'};background:${_prodCatFilter===c?'var(--accent)':'var(--surface2)'};color:${_prodCatFilter===c?'#fff':'var(--text2)'};font-family:'Barlow Semi Condensed',sans-serif;transition:all 0.12s;">${c}</span>`).join('');
+  }
+  // Apply search + category filter
+  const q=(document.getElementById('prod-search-input')?.value||'').toLowerCase();
+  const sort=document.getElementById('prod-sort-select')?.value||'name-az';
+  let list=PRODUCTS.filter(p=>{
+    const matchSearch=!q||[p.name,p.sku,p.barcode,p.cat].some(v=>v?.toLowerCase().includes(q));
+    const matchCat=!_prodCatFilter||p.cat===_prodCatFilter;
+    return matchSearch&&matchCat;
+  });
+  if(sort==='name-az')list.sort((a,b)=>(a.name||'').localeCompare(b.name||''));
+  else if(sort==='name-za')list.sort((a,b)=>(b.name||'').localeCompare(a.name||''));
+  else if(sort==='cat')list.sort((a,b)=>(a.cat||'').localeCompare(b.cat||'')||(a.name||'').localeCompare(b.name||''));
   const isMob=window.innerWidth<=800;
   if(isMob){
-    // Mobile: card grid layout
     const tbody=document.getElementById('prod-tbody');
-    // Hide the standard table header
     document.querySelector('#page-products thead').style.display='none';
+    if(!list.length){tbody.innerHTML='<tr><td><div class="empty"><div class="empty-icon">🏷️</div><p>No products match.</p></div></td></tr>';return;}
     tbody.innerHTML='<tr><td colspan="7" style="padding:0;border:none;">'
       +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px;">'
-      +PRODUCTS.map(p=>{
+      +list.map(p=>{
         const imgClick=p.imageUrl?'openLightbox(\''+p.imageUrl+'\',\''+((p.name||'').replace(/'/g,"\\'"))+'\')':'';
         return '<div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:var(--shadow);">'
           +'<div style="height:110px;background:var(--surface2);display:flex;align-items:center;justify-content:center;cursor:'+(p.imageUrl?'pointer':'default')+'" onclick="'+imgClick+'">'
@@ -1457,7 +1586,8 @@ function renderProducts(){
   }
   // Desktop: standard table
   document.querySelector('#page-products thead').style.display='';
-  document.getElementById('prod-tbody').innerHTML=PRODUCTS.map(p=>{
+  if(!list.length){document.getElementById('prod-tbody').innerHTML='<tr><td colspan="7"><div class="empty"><div class="empty-icon">🏷️</div><p>No products match.</p></div></td></tr>';return;}
+  document.getElementById('prod-tbody').innerHTML=list.map(p=>{
     const imgClick=p.imageUrl?('openLightbox(\''+p.imageUrl+'\',\''+((p.name||'').replace(/'/g,"\\'"))+'\''+')'):'';
     return '<tr>'
       +'<td style="display:flex;align-items:center;gap:10px;" class="prod-name">'
@@ -1474,7 +1604,11 @@ function renderProducts(){
   }).join('');
 }
 
-function filterProducts(val){document.querySelectorAll('#prod-tbody tr').forEach(row=>{const t=['.prod-name','.prod-sku','.prod-bc','.prod-cat'].map(c=>row.querySelector(c)?.textContent||'').join(' ');row.style.display=t.toLowerCase().includes(val.toLowerCase())?'':'none';});}
+let _prodCatFilter='';
+function setProdCatFilter(cat){
+  _prodCatFilter=(_prodCatFilter===cat)?'':cat;
+  renderProducts();
+}
 function openAddProduct(){['np-name','np-sku','np-barcode','np-imageurl'].forEach(id=>document.getElementById(id).value='');document.getElementById('np-thresh').value='10';openModal('modal-add-product');}
 async function submitNewProduct(){
   const name=document.getElementById('np-name').value.trim();const sku=document.getElementById('np-sku').value.trim();
@@ -1582,12 +1716,21 @@ function renderReportMain(){
   buildChart('report-chart-container','report-y-axis',bars,maxV);
 
   // Movement log
-  document.getElementById('mov-log-tbody').innerHTML=movs.map(m=>{const p=getProd(m.prod);return `<tr><td style="font-size:0.78rem;color:var(--text2);font-family:'Barlow Condensed',monospace;white-space:nowrap;">${m.date||'—'}</td><td>${movPill(m.type)}</td><td style="font-size:0.85rem;"><div>${p?.emoji||'📦'} ${p?.name||m.prod}</div>${m.notes?`<div class="log-notes">${m.notes}</div>`:''}</td><td class="log-sku-col" style="font-family:'Barlow Condensed',monospace;font-size:0.78rem;color:var(--text3);">${p?.sku||'—'}</td><td style="font-family:'Barlow Condensed',sans-serif;font-weight:700;color:${m.dir==='out'?'var(--danger)':'var(--success)'}">${qtySign(m.dir)}${m.qty}</td><td class="log-notes-col" style="font-size:0.8rem;color:var(--text2);">${m.notes||'—'}</td></tr>`;}).join('')||`<tr><td colspan="6"><div class="empty"><div class="empty-icon">📋</div><p>No movements in this period</p></div></td></tr>`;
+  const admin=isAdmin();
+  document.getElementById('mov-log-tbody').innerHTML=movs.map(m=>{const p=getProd(m.prod);const delBtn=admin?`<td><button class="btn btn-ghost btn-sm" onclick="deleteMovement('${m.id}')" style="color:var(--danger);border-color:rgba(200,65,26,0.3);font-size:0.72rem;min-height:28px;padding:3px 7px;" title="Delete movement (does not reverse stock)">🗑️</button></td>`:'<td></td>';return `<tr><td style="font-size:0.78rem;color:var(--text2);font-family:'Barlow Condensed',monospace;white-space:nowrap;">${m.date||'—'}</td><td>${movPill(m.type)}</td><td style="font-size:0.85rem;"><div>${p?.emoji||'📦'} ${p?.name||m.prod}</div>${m.notes?`<div class="log-notes">${m.notes}</div>`:''}</td><td class="log-sku-col" style="font-family:'Barlow Condensed',monospace;font-size:0.78rem;color:var(--text3);">${p?.sku||'—'}</td><td style="font-family:'Barlow Condensed',sans-serif;font-weight:700;color:${m.dir==='out'?'var(--danger)':'var(--success)'}">${qtySign(m.dir)}${m.qty}</td><td class="log-notes-col" style="font-size:0.8rem;color:var(--text2);">${m.notes||'—'}</td>${delBtn}</tr>`;}).join('')||`<tr><td colspan="7"><div class="empty"><div class="empty-icon">📋</div><p>No movements in this period</p></div></td></tr>`;
 
   const ti=topIssued(movs,10);document.getElementById('top-issued').innerHTML=ti.length>0?ti.map((t,i)=>rankRow(i,t,'out')).join(''):'<div class="empty"><div class="empty-icon">📊</div><p>No issue data</p></div>';
   const tr=topReceived(movs,10);document.getElementById('top-received').innerHTML=tr.length>0?tr.map((t,i)=>rankRow(i,t,'inn')).join(''):'<div class="empty"><div class="empty-icon">📊</div><p>No receipt data</p></div>';
 }
 function filterMovLog(val){document.querySelectorAll('#mov-log-tbody tr').forEach(row=>{row.style.display=row.textContent.toLowerCase().includes(val.toLowerCase())?'':'none';});}
+async function deleteMovement(id){
+  if(!confirm('Delete this movement record?\n\nNote: this only removes the log entry — it does not reverse the current stock quantity.'))return;
+  const {error}=await sb.from('movements').delete().eq('id',id);
+  if(error){showToast('Error: '+error.message,'error');return;}
+  MOVEMENTS=MOVEMENTS.filter(m=>m.id!==id);
+  showToast('Movement deleted','success');
+  renderReportMain();
+}
 
 function exportFullCSV(){
   const movs=filterByDate(getLocMovs(reportLocId),reportRange.from,reportRange.to);
@@ -1702,6 +1845,7 @@ function clearLocDetail(){document.getElementById('loc-detail').style.display='n
 // ── USERS ─────────────────────────────────────────────
 async function renderAdminUsers(){
   const el=document.getElementById('users-list');
+  const superAdmin=isSuperAdmin();
   // Staff: only show their own profile + sign out
   if(!isAdmin()){
     const branch=BRANCHES.find(b=>b.id===currentProfile?.branch_id);
@@ -1716,18 +1860,31 @@ async function renderAdminUsers(){
     </div>`;
     return;
   }
-  const {data:profiles}=await sb.from('user_profiles').select('*');
-  if(!profiles?.length){el.innerHTML='<div class="empty"><div class="empty-icon">👤</div><p>No users yet.</p></div>';return;}
+  const {data:allProfiles}=await sb.from('user_profiles').select('*');
+  if(!allProfiles?.length){el.innerHTML='<div class="empty"><div class="empty-icon">👤</div><p>No users yet.</p></div>';return;}
+  // Branch admin: scope to their branch only; super_admin: all users
+  const profiles=superAdmin
+    ?allProfiles
+    :allProfiles.filter(u=>u.branch_id===currentProfile?.branch_id||u.id===currentUser.id);
+  if(!profiles.length){el.innerHTML='<div class="empty"><div class="empty-icon">👤</div><p>No users in your branch yet.</p></div>';return;}
   el.innerHTML=profiles.map(u=>{
     const loc=getLoc(u.location_id);
     const branch=BRANCHES.find(b=>b.id===u.branch_id);
-    const metaParts=[u.role,branch?branch.icon+' '+branch.name:null,loc?loc.name:'No location'].filter(Boolean);
+    const roleLabel=u.role==='super_admin'?'Super Admin':u.role==='admin'?'Admin':'Staff';
+    const metaParts=[roleLabel,branch?branch.icon+' '+branch.name:null,loc?loc.name:'No location'].filter(Boolean);
     const isSelf=u.id===currentUser.id;
     const removeBtn=isSelf?'':`<button class="btn btn-ghost btn-sm" onclick="removeUser('${u.id}')" style="color:var(--danger);border-color:rgba(200,65,26,0.3);font-size:0.75rem;min-height:30px;">🗑️ Remove</button>`;
+    const roleSelect=superAdmin
+      ?`<select class="form-select" style="font-size:0.78rem;padding:4px 8px;" onchange="updateUserRole('${u.id}',this.value)"><option value="staff" ${u.role==='staff'?'selected':''}>Staff</option><option value="admin" ${u.role==='admin'?'selected':''}>Admin</option><option value="super_admin" ${u.role==='super_admin'?'selected':''}>Super Admin</option></select>`
+      :`<select class="form-select" style="font-size:0.78rem;padding:4px 8px;" onchange="updateUserRole('${u.id}',this.value)"><option value="staff" ${u.role==='staff'?'selected':''}>Staff</option><option value="admin" ${u.role==='admin'?'selected':''}>Admin</option></select>`;
+    const branchSelect=superAdmin
+      ?`<select class="form-select" style="font-size:0.78rem;padding:4px 8px;" onchange="updateUserBranch('${u.id}',this.value)"><option value="">No Branch</option>${BRANCHES.map(b=>`<option value="${b.id}" ${u.branch_id===b.id?'selected':''}>${b.icon} ${b.name}</option>`).join('')}</select>`
+      :'';
+    const locOptions=superAdmin?LOCATIONS:LOCATIONS.filter(l=>l.branch_id===currentProfile?.branch_id);
     return `<div class="movement-item"><div class="mov-icon mov-in-ic" style="font-size:1rem;">👤</div><div class="mov-info"><div class="mov-title">${u.name||'Unnamed'}${isSelf?' <span style="font-size:0.65rem;background:var(--surface3);padding:1px 6px;border-radius:3px;color:var(--text2);font-weight:600;">YOU</span>':''}</div><div class="mov-meta">${metaParts.join(' · ')}</div></div><div style="display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;">
-      <select class="form-select" style="font-size:0.78rem;padding:4px 8px;" onchange="updateUserRole('${u.id}',this.value)"><option value="staff" ${u.role==='staff'?'selected':''}>Staff</option><option value="admin" ${u.role==='admin'?'selected':''}>Admin</option></select>
-      <select class="form-select" style="font-size:0.78rem;padding:4px 8px;" onchange="updateUserBranch('${u.id}',this.value)"><option value="">No Branch</option>${BRANCHES.map(b=>`<option value="${b.id}" ${u.branch_id===b.id?'selected':''}>${b.icon} ${b.name}</option>`).join('')}</select>
-      <select class="form-select" style="font-size:0.78rem;padding:4px 8px;" onchange="updateUserLoc('${u.id}',this.value)"><option value="">No Location</option>${LOCATIONS.map(l=>`<option value="${l.id}" ${u.location_id===l.id?'selected':''}>${l.name}</option>`).join('')}</select>
+      ${roleSelect}
+      ${branchSelect}
+      <select class="form-select" style="font-size:0.78rem;padding:4px 8px;" onchange="updateUserLoc('${u.id}',this.value)"><option value="">No Location</option>${locOptions.map(l=>`<option value="${l.id}" ${u.location_id===l.id?'selected':''}>${l.name}</option>`).join('')}</select>
       ${removeBtn}
     </div></div>`;
   }).join('');
@@ -1999,12 +2156,12 @@ async function deleteLocation(locId){
 
 // ── MORE BOTTOM SHEET ─────────────────────────────────────────────────
 function openMoreSheet(){
-  const admin=isAdmin();
+  const admin=isAdmin();const superAdmin=isSuperAdmin();
   const items=admin?[
     {page:'products',icon:'🏷️',label:'Product Catalogue'},
     {page:'locations',icon:'📍',label:'Locations'},
     {page:'admin',icon:'👤',label:'Users & Account'},
-    {action:'switchBranch()',icon:'🏢',label:currentBranch?'Switch Branch · '+currentBranch.name:'Switch Branch'},
+    ...(superAdmin?[{action:'switchBranch()',icon:'🏢',label:currentBranch?'Switch Branch · '+currentBranch.name:'Switch Branch'}]:[]),
   ]:[
     {page:'products',icon:'🏷️',label:'Product Catalogue'},
     {page:'admin',icon:'👤',label:'My Account & Sign Out'},

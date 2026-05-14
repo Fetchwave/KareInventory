@@ -707,7 +707,7 @@ tr:hover td{background:rgba(0,0,0,0.015);}
       </div>
     </div>
   </div>
-  <div class="card" id="user-mgmt-card"><div class="card-header"><h3>User Management</h3><button class="btn btn-primary btn-sm" id="invite-user-btn" onclick="openInviteModal()" style="display:none;">＋ Invite User</button></div><div id="users-list" style="padding:0;"></div></div>
+  <div class="card" id="user-mgmt-card"><div class="card-header"><h3>User Management</h3></div><div id="users-list" style="padding:0;"></div></div>
 </div>
 
     </div>
@@ -790,15 +790,6 @@ tr:hover td{background:rgba(0,0,0,0.015);}
 </div></div>
 
 <!-- INVITE MODAL -->
-<div class="modal-bg" id="modal-invite"><div class="modal">
-  <div class="modal-head"><h3>Invite User</h3><button class="modal-close" onclick="closeModal('modal-invite')">✕</button></div>
-  <div class="modal-body">
-    <p style="font-size:0.85rem;color:var(--text2);margin-bottom:16px;line-height:1.6;">Ask the staff member to create an account at the app URL. Once they do, assign their role and location below.</p>
-    <div class="form-group"><label class="form-label">Email Address</label><input class="form-input" type="email" id="invite-email" placeholder="staff@kareindustrial.co.za"></div>
-    <div class="form-row"><div class="form-group"><label class="form-label">Role</label><select class="form-select" id="invite-role"><option value="staff">Staff</option><option value="admin">Admin</option></select></div><div class="form-group"><label class="form-label">Location</label><select class="form-select" id="invite-loc"><option value="">— Select —</option></select></div></div>
-  </div>
-  <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-invite')">Cancel</button><button class="btn btn-primary" onclick="closeModal('modal-invite');showToast('Ask staff to create their account at the app URL, then assign them here','')">Got It</button></div>
-</div></div>
 
 <!-- ADD LOCATION MODAL -->
 <div class="modal-bg" id="modal-add-location"><div class="modal">
@@ -1853,13 +1844,12 @@ function clearLocDetail(){document.getElementById('loc-detail').style.display='n
 async function renderAdminUsers(){
   const el=document.getElementById('users-list');
   const superAdmin=isSuperAdmin();
-  const inviteBtn=document.getElementById('invite-user-btn');
+
   const mgmtCard=document.getElementById('user-mgmt-card');
 
   // Non-super_admin: show only their own profile, no management controls
   if(!superAdmin){
     if(mgmtCard)mgmtCard.style.display='';
-    if(inviteBtn)inviteBtn.style.display='none';
     const cardHeader=mgmtCard?.querySelector('.card-header h3');
     if(cardHeader)cardHeader.textContent='My Account';
     const branch=BRANCHES.find(b=>b.id===currentProfile?.branch_id);
@@ -1883,7 +1873,6 @@ async function renderAdminUsers(){
 
   // Super admin: show the card and invite button
   if(mgmtCard)mgmtCard.style.display='';
-  if(inviteBtn)inviteBtn.style.display='';
 
   const {data:allProfiles}=await sb.from('user_profiles').select('*');
   if(!allProfiles?.length){el.innerHTML='<div class="empty" style="padding:24px;"><div class="empty-icon">👤</div><p>No users yet.</p></div>';return;}
@@ -1953,7 +1942,6 @@ async function removeUser(uid){
   showToast('User removed','success');
   renderAdminUsers();
 }
-function openInviteModal(){document.getElementById('invite-email').value='';document.getElementById('invite-loc').innerHTML='<option value="">— No Location —</option>'+LOCATIONS.map(l=>`<option value="${l.id}">${l.icon||''} ${l.name}</option>`).join('');openModal('modal-invite');}
 
 // ── LIGHTBOX ──────────────────────────────────────────
 function openLightbox(url,name){document.getElementById('lightbox-img').src=url;document.getElementById('lightbox-name').textContent=name||'';document.getElementById('lightbox-bg').classList.add('open');}

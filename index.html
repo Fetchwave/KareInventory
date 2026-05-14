@@ -333,8 +333,7 @@ tr:hover td{background:rgba(0,0,0,0.015);}
   /* ── CHART: hidden on mobile ── */
   .chart-wrap{display:none!important;}
   /* ── OVERFLOW: prevent any element from widening the page ── */
-  *{max-width:100%;}
-  img,svg,canvas{max-width:100%!important;}
+  img,svg,canvas,video,iframe{max-width:100%!important;}
   .card-body{overflow:visible!important;}
   /* ── ALERTS ── */
   .alert{word-break:break-word!important;flex-wrap:wrap!important;}
@@ -356,6 +355,7 @@ tr:hover td{background:rgba(0,0,0,0.015);}
   .card-header{gap:8px!important;}
   .back-btn-row{margin-bottom:10px!important;}
   .mov-row{grid-template-columns:1fr 34px 60px 34px!important;gap:6px;padding:8px!important;}
+  .mov-row-header{grid-template-columns:1fr 34px 60px 34px!important;}
 
   /* ── MODALS ── */
   .modal-bg{padding:0!important;align-items:flex-end!important;}
@@ -447,7 +447,7 @@ tr:hover td{background:rgba(0,0,0,0.015);}
   #mob-account-card{display:block!important;}
 
   /* ── PREVENT iOS ZOOM ON INPUT FOCUS ── */
-  input,select,textarea,.form-input,.form-select,.search-input,.date-input{
+  input,select,textarea,.form-input,.form-select,.search-input,.date-input,.mov-row-qty,.thresh-input{
     font-size:16px!important;
   }
 
@@ -473,6 +473,23 @@ tr:hover td{background:rgba(0,0,0,0.015);}
     </div>
   </div></div>
 </div>
+<!-- BRANCH SELECTION SCREEN -->
+<div id="branch-screen" style="display:none;min-height:100vh;flex-direction:column;background:linear-gradient(135deg,#1a1814 0%,#2c2720 50%,#1a1814 100%);position:relative;overflow:hidden;">
+  <div style="position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.03) 39px,rgba(255,255,255,0.03) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.03) 39px,rgba(255,255,255,0.03) 40px);pointer-events:none;"></div>
+  <div style="padding:24px 32px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="login-logo-mark">KI</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;color:rgba(255,255,255,0.9);letter-spacing:1px;text-transform:uppercase;line-height:1.2;">Kare Industrial<span style="display:block;font-size:0.68rem;font-weight:400;color:rgba(255,255,255,0.4);letter-spacing:2px;margin-top:1px;">Suppliers</span></div>
+    </div>
+    <button class="btn" style="background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.55);border:1px solid rgba(255,255,255,0.12);font-size:0.8rem;" onclick="signOut()">Sign Out</button>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;position:relative;z-index:1;">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:2.2rem;font-weight:800;color:#fff;margin-bottom:6px;letter-spacing:2px;">SELECT BRANCH</div>
+    <div style="font-size:0.85rem;color:rgba(255,255,255,0.35);margin-bottom:40px;font-family:'Barlow Semi Condensed',sans-serif;letter-spacing:1px;">Choose a Kare location to manage</div>
+    <div id="branch-picker-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;justify-content:center;width:100%;max-width:740px;"></div>
+  </div>
+</div>
+
 <button id="hamburger" onclick="toggleSb()">☰</button>
 <div id="sb-overlay" onclick="toggleSb()"></div>
 <div id="app">
@@ -650,7 +667,7 @@ tr:hover td{background:rgba(0,0,0,0.015);}
           <div class="back-btn-row"><button class="btn btn-ghost btn-sm" onclick="clearLocDetail()">← Back</button><div class="topbar-title" id="loc-detail-title">Location Detail</div></div>
           <div class="stats-grid" id="loc-detail-stats"></div>
           <div class="two-col">
-            <div><div class="card"><div class="card-header"><h3 id="loc-inv-title">Inventory</h3><input class="search-input" placeholder="Search…" oninput="filterLocInv(this.value)"></div><table><thead><tr><th>Product</th><th>SKU</th><th>Category</th><th>Qty</th><th>Min Level</th><th>Status</th></tr></thead><tbody id="loc-inv-tbody"></tbody></table></div></div>
+            <div><div class="card"><div class="card-header"><h3 id="loc-inv-title">Inventory</h3><input class="search-input" placeholder="Search…" oninput="filterLocInv(this.value)"></div><div class="table-scroll-wrap"><table><thead><tr><th>Product</th><th>SKU</th><th>Category</th><th>Qty</th><th>Min Level</th><th>Status</th></tr></thead><tbody id="loc-inv-tbody"></tbody></table></div></div></div>
             <div>
               <div class="card"><div class="card-header"><h3>Recent Movements</h3></div><div class="card-body" id="loc-movements" style="padding-top:4px;"></div></div>
               <div class="card"><div class="card-header"><h3>Top Issued</h3></div><div class="card-body" id="loc-top-movers" style="padding-top:4px;"></div></div>
@@ -846,6 +863,12 @@ tr:hover td{background:rgba(0,0,0,0.015);}
 const {createClient}=supabase;
 const sb=createClient('https://xtxogaymkkmfnxhxmcwf.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0eG9nYXlta2ttZm54aHhtY3dmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1OTg0MjEsImV4cCI6MjA5MDE3NDQyMX0.mW-CnlQwimNPwxT_15FldAYzewlKJtQeCTnkkXY9H5w');
 
+const BRANCHES=[
+  {id:'kzn',name:'KZN',fullName:'KwaZulu-Natal',icon:'🏭'},
+  {id:'pe', name:'PE', fullName:'Port Elizabeth', icon:'🏗️'},
+  {id:'ct', name:'Cape Town',fullName:'Cape Town',   icon:'🏬'},
+];
+let currentBranch=null;
 let currentUser=null,currentProfile=null;
 let LOCATIONS=[],INVENTORY=[],MOVEMENTS=[],PRODUCTS=[];
 let currentMovType={label:'Stock Out',dir:'out'};
@@ -890,9 +913,56 @@ function setLoading(msg){document.getElementById('loading-msg').textContent=msg.
 function hideLoading(){document.getElementById('loading-overlay').classList.add('hidden');}
 function showAuth(){hideLoading();document.getElementById('auth-screen').classList.add('visible');}
 function showApp(){
-  hideLoading();document.getElementById('auth-screen').classList.remove('visible');document.getElementById('app').classList.add('visible');
+  hideLoading();
+  document.getElementById('auth-screen').classList.remove('visible');
+  if(isAdmin()){
+    showBranchScreen();
+  } else {
+    // Derive branch from profile or from the location's branch_id
+    const locBranch=currentProfile?.location_id?LOCATIONS.find(l=>l.id===currentProfile.location_id)?.branch_id:null;
+    const bid=currentProfile?.branch_id||locBranch||null;
+    currentBranch=bid?BRANCHES.find(b=>b.id===bid)||null:null;
+    launchApp();
+  }
+}
+function launchApp(){
+  document.getElementById('branch-screen').style.display='none';
+  document.getElementById('app').classList.add('visible');
   buildSidebar();renderPage('dashboard');
   sb.channel('kare').on('postgres_changes',{event:'*',schema:'public',table:'inventory'},()=>refreshInventory()).on('postgres_changes',{event:'*',schema:'public',table:'movements'},()=>refreshMovements()).subscribe();
+}
+function showBranchScreen(){
+  document.getElementById('app').classList.remove('visible');
+  const screen=document.getElementById('branch-screen');
+  screen.style.display='flex';
+  const grid=document.getElementById('branch-picker-grid');
+  grid.innerHTML=BRANCHES.map(b=>{
+    const bLocs=LOCATIONS.filter(l=>l.branch_id===b.id);
+    const bInv=INVENTORY.filter(i=>bLocs.some(l=>l.id===i.loc));
+    const lowCount=bInv.filter(i=>i.qty<=i.thresh).length;
+    const movCount=MOVEMENTS.filter(m=>bLocs.some(l=>l.id===m.loc)).length;
+    return `<div onclick="selectBranch('${b.id}')" style="background:#fff;border-radius:14px;padding:28px 24px;cursor:pointer;transition:box-shadow 0.15s,transform 0.15s;position:relative;" onmouseenter="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 32px rgba(0,0,0,0.18)'" onmouseleave="this.style.transform='';this.style.boxShadow=''">
+      <div style="font-size:2.5rem;margin-bottom:12px;">${b.icon}</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:1.5rem;font-weight:800;margin-bottom:2px;">${b.name}</div>
+      <div style="font-size:0.82rem;color:var(--text2);margin-bottom:20px;">${b.fullName}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div style="background:var(--surface2);border-radius:6px;padding:8px 10px;"><div style="font-family:'Barlow Condensed',sans-serif;font-size:1.3rem;font-weight:700;">${bLocs.length}</div><div style="font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:1px;">Locations</div></div>
+        <div style="background:var(--surface2);border-radius:6px;padding:8px 10px;"><div style="font-family:'Barlow Condensed',sans-serif;font-size:1.3rem;font-weight:700;color:${lowCount>0?'var(--danger)':'var(--success)'};">${lowCount}</div><div style="font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:1px;">Low Stock</div></div>
+        <div style="background:var(--surface2);border-radius:6px;padding:8px 10px;"><div style="font-family:'Barlow Condensed',sans-serif;font-size:1.3rem;font-weight:700;">${bInv.length}</div><div style="font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:1px;">SKUs</div></div>
+        <div style="background:var(--surface2);border-radius:6px;padding:8px 10px;"><div style="font-family:'Barlow Condensed',sans-serif;font-size:1.3rem;font-weight:700;">${movCount}</div><div style="font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:1px;">Movements</div></div>
+      </div>
+      <div style="position:absolute;right:18px;top:24px;color:var(--text3);font-size:1.2rem;">→</div>
+    </div>`;
+  }).join('');
+}
+function selectBranch(branchId){
+  currentBranch=BRANCHES.find(b=>b.id===branchId)||null;
+  launchApp();
+}
+function switchBranch(){
+  if(!isAdmin())return;
+  currentBranch=null;
+  showBranchScreen();
 }
 async function refreshInventory(){
   const {data}=await sb.from('inventory').select('*');
@@ -950,8 +1020,10 @@ async function submitAuth(){
   }
 }
 async function signOut(){
-  await sb.auth.signOut();currentUser=null;currentProfile=null;
-  document.getElementById('app').classList.remove('visible');document.getElementById('auth-screen').classList.add('visible');
+  await sb.auth.signOut();currentUser=null;currentProfile=null;currentBranch=null;
+  document.getElementById('app').classList.remove('visible');
+  document.getElementById('branch-screen').style.display='none';
+  document.getElementById('auth-screen').classList.add('visible');
 }
 
 // ── HELPERS ─────────────────────────────────────────
@@ -960,9 +1032,10 @@ const getLoc=id=>LOCATIONS.find(l=>l.id===id);
 const getInv=(prod,loc)=>INVENTORY.find(i=>i.prod===prod&&i.loc===loc);
 const isAdmin=()=>currentProfile?.role==='admin';
 const myLoc=()=>currentProfile?.location_id;
-function getLowStock(locId){return(locId?INVENTORY.filter(i=>i.loc===locId):INVENTORY).filter(i=>i.qty<=i.thresh);}
-function getLocInv(locId){return locId?INVENTORY.filter(i=>i.loc===locId):INVENTORY;}
-function getLocMovs(locId){return locId?MOVEMENTS.filter(m=>m.loc===locId):MOVEMENTS;}
+function getActiveLocs(){if(!currentBranch)return LOCATIONS;return LOCATIONS.filter(l=>l.branch_id===currentBranch.id);}
+function getLowStock(locId){const inv=locId?INVENTORY.filter(i=>i.loc===locId):INVENTORY.filter(i=>getActiveLocs().some(l=>l.id===i.loc));return inv.filter(i=>i.qty<=i.thresh);}
+function getLocInv(locId){if(locId)return INVENTORY.filter(i=>i.loc===locId);const lids=getActiveLocs().map(l=>l.id);return INVENTORY.filter(i=>lids.includes(i.loc));}
+function getLocMovs(locId){if(locId)return MOVEMENTS.filter(m=>m.loc===locId);const lids=getActiveLocs().map(l=>l.id);return MOVEMENTS.filter(m=>lids.includes(m.loc));}
 function filterByDate(movs,from,to){return movs.filter(m=>m.date&&m.date>=from&&m.date<=to);}
 function levelColor(qty,thresh){return qty<=thresh?'var(--danger)':qty<=thresh*1.5?'var(--warning)':'var(--success)';}
 function levelPct(qty,thresh){return Math.min(100,Math.max(4,(qty/(thresh*4))*100));}
@@ -1024,7 +1097,9 @@ function buildSidebar(){
   document.getElementById('sb-uname').textContent=currentProfile?.name||currentUser?.email?.split('@')[0]||'—';
   document.getElementById('sb-uemail').textContent=currentUser?.email||'—';
   const av=document.getElementById('sb-av');av.textContent=(currentProfile?.name||'?').charAt(0).toUpperCase();av.className='sb-avatar '+(admin?'av-admin':'av-staff');
-  document.getElementById('topbar-loc').innerHTML=admin?`<strong>Admin</strong>&nbsp;· All Locations`:`${loc?.icon||''} <strong>${loc?.name||'No Location'}</strong>`;
+  document.getElementById('topbar-loc').innerHTML=admin
+    ?`${currentBranch?currentBranch.icon+' ':''}<strong>${currentBranch?currentBranch.name:'All Branches'}</strong>&nbsp;· Admin&nbsp;<button onclick="switchBranch()" style="background:var(--accent);color:#fff;border:none;padding:3px 9px;border-radius:4px;font-size:0.72rem;font-family:'Barlow Semi Condensed',sans-serif;font-weight:600;cursor:pointer;margin-left:4px;">Switch</button>`
+    :`${loc?.icon||''} <strong>${loc?.name||'No Location'}</strong>${currentBranch?' · '+currentBranch.name:''}`;
   // Populate mobile account card
   const mobName=document.getElementById('mob-account-name');
   const mobEmail=document.getElementById('mob-account-email');
@@ -1107,14 +1182,14 @@ function renderDashboard(){
     {label:'Units Issued',val:issued,sub:periodLabel,cls:'danger'},
     {label:'Units Received',val:received,sub:periodLabel,cls:'up'},
     {label:'Low Stock',val:low.length,sub:'Need replenishment',cls:low.length>0?'danger':'up'},
-    ...(admin?[{label:'Locations',val:LOCATIONS.length,sub:'Active branches',cls:''}]:[]),
+    ...(admin?[{label:'Locations',val:getActiveLocs().length,sub:currentBranch?currentBranch.name+' branch':'All branches',cls:''}]:[]),
   ].map(s=>`<div class="stat"><div class="stat-label">${s.label}</div><div class="stat-val">${s.val}</div><div class="stat-sub ${s.cls}">${s.sub}</div></div>`).join('');
 
   // Admin branch breakdown
   const branchSection=document.getElementById('dash-branch-section');
   if(admin){
     branchSection.style.display='';
-    document.getElementById('dash-branch-grid').innerHTML=LOCATIONS.map(loc=>{
+    document.getElementById('dash-branch-grid').innerHTML=getActiveLocs().map(loc=>{
       const li=INVENTORY.filter(i=>i.loc===loc.id);const lm=filterByDate(MOVEMENTS.filter(m=>m.loc===loc.id),dashRange.from,dashRange.to);
       const lowC=li.filter(i=>i.qty<=i.thresh).length;const issuedC=lm.filter(m=>m.dir==='out').reduce((a,m)=>a+m.qty,0);
       return `<div class="branch-card" onclick="renderPage('inventory');showInvForLoc('${loc.id}')">
@@ -1159,7 +1234,7 @@ function renderInventoryPage(){
     invLocId=null;
     document.getElementById('inv-main').style.display='none';
     document.getElementById('inv-loc-picker').style.display='';
-    document.getElementById('inv-branch-grid').innerHTML=LOCATIONS.map(loc=>{
+    document.getElementById('inv-branch-grid').innerHTML=getActiveLocs().map(loc=>{
       const li=INVENTORY.filter(i=>i.loc===loc.id);const low=li.filter(i=>i.qty<=i.thresh).length;
       return `<div class="branch-card" onclick="showInvForLoc('${loc.id}')"><div class="branch-card-icon">${loc.icon||'📍'}</div><div class="branch-card-name">${loc.name}</div><div class="branch-card-stats"><div class="bcs"><div class="bcs-val">${li.length}</div><div class="bcs-label">SKUs</div></div><div class="bcs"><div class="bcs-val" style="color:${low>0?'var(--danger)':'var(--success)'}">${low}</div><div class="bcs-label">Low Stock</div></div><div class="bcs"><div class="bcs-val">${li.reduce((a,i)=>a+i.qty,0)}</div><div class="bcs-label">Total Units</div></div><div class="bcs"><div class="bcs-val">${MOVEMENTS.filter(m=>m.loc===loc.id).length}</div><div class="bcs-label">Movements</div></div></div></div>`;
     }).join('');
@@ -1239,7 +1314,7 @@ function openAddStock(){
   document.getElementById('as-barcode').value='';document.getElementById('as-qty').value='1';document.getElementById('as-notes').value='';document.getElementById('as-preview').style.display='none';
   const sel=document.getElementById('as-product');sel.innerHTML='<option value="">— Select product —</option>'+PRODUCTS.map(p=>`<option value="${p.id}">${p.name} (${p.sku})</option>`).join('');
   const lw=document.getElementById('as-loc-wrap'),ls=document.getElementById('as-loc');
-  if(isAdmin()){lw.style.display='';ls.innerHTML=LOCATIONS.map(l=>`<option value="${l.id}" ${l.id===invLocId?'selected':''}>${l.icon||''} ${l.name}</option>`).join('');}
+  if(isAdmin()){lw.style.display='';ls.innerHTML=getActiveLocs().map(l=>`<option value="${l.id}" ${l.id===invLocId?'selected':''}>${l.icon||''} ${l.name}</option>`).join('');}
   else{lw.style.display='none';}
   openModal('modal-add-stock');
 }
@@ -1274,7 +1349,7 @@ function renderMovementPage(){
     :`<button class="btn btn-primary" onclick="setMovType('Stock Out','out',this)">📤 Stock Out</button><button class="btn btn-secondary" onclick="setMovType('Stock In','in',this)">📥 Stock In</button>`;
   currentMovType={label:'Stock Out',dir:'out'};
   const lw=document.getElementById('mov-loc-wrap'),ls=document.getElementById('mov-loc-select');
-  if(admin){lw.style.display='';ls.innerHTML=LOCATIONS.map(l=>`<option value="${l.id}">${l.icon||''} ${l.name}</option>`).join('');}
+  if(admin){lw.style.display='';ls.innerHTML=getActiveLocs().map(l=>`<option value="${l.id}">${l.icon||''} ${l.name}</option>`).join('');}
   else lw.style.display='none';
   movRowCount=0;document.getElementById('mov-rows-container').innerHTML='';addMovRow();renderTodayMovements();
 }
@@ -1443,7 +1518,7 @@ function renderReportsPage(){
     reportLocId=null;
     document.getElementById('report-loc-picker').style.display='';
     document.getElementById('report-main').style.display='none';
-    document.getElementById('report-branch-grid').innerHTML=LOCATIONS.map(loc=>{
+    document.getElementById('report-branch-grid').innerHTML=getActiveLocs().map(loc=>{
       const lm=MOVEMENTS.filter(m=>m.loc===loc.id);
       const issued=lm.filter(m=>m.dir==='out').reduce((a,m)=>a+m.qty,0);
       return `<div class="branch-card" onclick="selectReportLoc('${loc.id}')"><div class="branch-card-icon">${loc.icon||'📍'}</div><div class="branch-card-name">${loc.name}</div><div class="branch-card-stats"><div class="bcs"><div class="bcs-val">${lm.length}</div><div class="bcs-label">All Movements</div></div><div class="bcs"><div class="bcs-val" style="color:var(--danger)">${issued}</div><div class="bcs-label">Units Issued</div></div><div class="bcs"><div class="bcs-val">${lm.filter(m=>m.dir==='in').reduce((a,m)=>a+m.qty,0)}</div><div class="bcs-label">Units Received</div></div><div class="bcs"><div class="bcs-val">${INVENTORY.filter(i=>i.loc===loc.id).length}</div><div class="bcs-label">SKUs</div></div></div></div>`;
@@ -1603,7 +1678,7 @@ function renderLocations(){
     document.getElementById('loc-grid').insertAdjacentElement('beforebegin',addBtnContainer);
   }
   addBtnContainer.innerHTML=isAdmin()?`<button class="btn btn-primary" onclick="openAddLocationModal()">＋ Add Location</button>`:'';
-  grid.innerHTML=LOCATIONS.map(loc=>{
+  grid.innerHTML=getActiveLocs().map(loc=>{
     const inv=INVENTORY.filter(i=>i.loc===loc.id);const low=inv.filter(i=>i.qty<=i.thresh).length;const total=inv.reduce((a,i)=>a+i.qty,0);const movs=MOVEMENTS.filter(m=>m.loc===loc.id);
     const editBtn=isAdmin()?`<div style="display:flex;gap:6px;margin-top:14px;padding-top:12px;border-top:1px solid var(--border);" onclick="event.stopPropagation()"><button class="btn btn-ghost btn-sm" style="flex:1;font-size:0.78rem;" onclick="openEditLocationModal('${loc.id}')">✏️ Edit</button><button class="btn btn-ghost btn-sm" style="flex:1;font-size:0.78rem;color:var(--danger);border-color:rgba(200,65,26,0.3);" onclick="deleteLocation('${loc.id}')">🗑️ Delete</button></div>`:'';
     return `<div class="loc-card" onclick="selectLocation('${loc.id}')"><div class="loc-card-top"><div class="loc-card-icon">${loc.icon||'📍'}</div>${low>0?`<span class="pill pill-red">${low} low</span>`:'<span class="pill pill-green">Healthy</span>'}</div><div class="loc-card-name">${loc.name}</div><div class="loc-card-stats"><div class="lcs"><div class="lcs-val">${inv.length}</div><div class="lcs-label">SKUs</div></div><div class="lcs"><div class="lcs-val">${total}</div><div class="lcs-label">Units</div></div><div class="lcs"><div class="lcs-val">${movs.length}</div><div class="lcs-label">Movements</div></div><div class="lcs"><div class="lcs-val" style="color:${low>0?'var(--danger)':'var(--success)'}">${low}</div><div class="lcs-label">Low Stock</div></div></div>${editBtn}</div>`;
@@ -1628,9 +1703,19 @@ async function renderAdminUsers(){
   const {data:profiles}=await sb.from('user_profiles').select('*');
   const el=document.getElementById('users-list');
   if(!profiles?.length){el.innerHTML='<div class="empty"><div class="empty-icon">👤</div><p>No users yet.</p></div>';return;}
-  el.innerHTML=profiles.map(u=>{const loc=getLoc(u.location_id);return `<div class="movement-item"><div class="mov-icon mov-in-ic" style="font-size:1rem;">👤</div><div class="mov-info"><div class="mov-title">${u.name||'Unnamed'}</div><div class="mov-meta">${u.role}${loc?' · '+loc.name:' · No location assigned'}</div></div><div style="display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;"><select class="form-select" style="font-size:0.78rem;padding:4px 8px;" onchange="updateUserRole('${u.id}',this.value)"><option value="staff" ${u.role==='staff'?'selected':''}>Staff</option><option value="admin" ${u.role==='admin'?'selected':''}>Admin</option></select><select class="form-select" style="font-size:0.78rem;padding:4px 8px;" onchange="updateUserLoc('${u.id}',this.value)"><option value="">No Location</option>${LOCATIONS.map(l=>`<option value="${l.id}" ${u.location_id===l.id?'selected':''}>${l.name}</option>`).join('')}</select></div></div>`;}).join('');
+  el.innerHTML=profiles.map(u=>{
+    const loc=getLoc(u.location_id);
+    const branch=BRANCHES.find(b=>b.id===u.branch_id);
+    const metaParts=[u.role,branch?branch.icon+' '+branch.name:null,loc?loc.name:'No location'].filter(Boolean);
+    return `<div class="movement-item"><div class="mov-icon mov-in-ic" style="font-size:1rem;">👤</div><div class="mov-info"><div class="mov-title">${u.name||'Unnamed'}</div><div class="mov-meta">${metaParts.join(' · ')}</div></div><div style="display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;">
+      <select class="form-select" style="font-size:0.78rem;padding:4px 8px;" onchange="updateUserRole('${u.id}',this.value)"><option value="staff" ${u.role==='staff'?'selected':''}>Staff</option><option value="admin" ${u.role==='admin'?'selected':''}>Admin</option></select>
+      <select class="form-select" style="font-size:0.78rem;padding:4px 8px;" onchange="updateUserBranch('${u.id}',this.value)"><option value="">No Branch</option>${BRANCHES.map(b=>`<option value="${b.id}" ${u.branch_id===b.id?'selected':''}>${b.icon} ${b.name}</option>`).join('')}</select>
+      <select class="form-select" style="font-size:0.78rem;padding:4px 8px;" onchange="updateUserLoc('${u.id}',this.value)"><option value="">No Location</option>${LOCATIONS.map(l=>`<option value="${l.id}" ${u.location_id===l.id?'selected':''}>${l.name}</option>`).join('')}</select>
+    </div></div>`;
+  }).join('');
 }
 async function updateUserRole(uid,role){await sb.from('user_profiles').update({role}).eq('id',uid);showToast('Role updated','success');}
+async function updateUserBranch(uid,bid){await sb.from('user_profiles').update({branch_id:bid||null}).eq('id',uid);showToast('Branch updated','success');}
 async function updateUserLoc(uid,loc){await sb.from('user_profiles').update({location_id:loc||null}).eq('id',uid);showToast('Location updated','success');}
 function openInviteModal(){document.getElementById('invite-email').value='';document.getElementById('invite-loc').innerHTML='<option value="">— No Location —</option>'+LOCATIONS.map(l=>`<option value="${l.id}">${l.icon||''} ${l.name}</option>`).join('');openModal('modal-invite');}
 

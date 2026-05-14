@@ -707,7 +707,7 @@ tr:hover td{background:rgba(0,0,0,0.015);}
       </div>
     </div>
   </div>
-  <div class="card"><div class="card-header"><h3>User Management</h3><button class="btn btn-primary btn-sm" onclick="openInviteModal()">＋ Invite User</button></div><div class="card-body" id="users-list" style="padding-top:4px;"></div></div>
+  <div class="card" id="user-mgmt-card"><div class="card-header"><h3>User Management</h3><button class="btn btn-primary btn-sm" id="invite-user-btn" onclick="openInviteModal()" style="display:none;">＋ Invite User</button></div><div id="users-list" style="padding:0;"></div></div>
 </div>
 
     </div>
@@ -946,8 +946,15 @@ async function boot(){
 }
 async function loadProfile(){
   const {data}=await sb.from('user_profiles').select('*').eq('id',currentUser.id).single();
-  if(data)currentProfile=data;
-  else{const p={id:currentUser.id,name:currentUser.email.split('@')[0],role:'staff',location_id:null};await sb.from('user_profiles').insert(p);currentProfile=p;}
+  if(data){
+    currentProfile=data;
+    // Keep email in sync on each login
+    if(!data.email)await sb.from('user_profiles').update({email:currentUser.email}).eq('id',currentUser.id);
+    if(!data.email)currentProfile={...data,email:currentUser.email};
+  } else {
+    const p={id:currentUser.id,name:currentUser.email.split('@')[0],email:currentUser.email,role:'staff',location_id:null};
+    await sb.from('user_profiles').insert(p);currentProfile=p;
+  }
 }
 async function loadAppData(){
   setLoading('Loading data...');
@@ -1846,47 +1853,94 @@ function clearLocDetail(){document.getElementById('loc-detail').style.display='n
 async function renderAdminUsers(){
   const el=document.getElementById('users-list');
   const superAdmin=isSuperAdmin();
-  // Staff: only show their own profile + sign out
-  if(!isAdmin()){
+  const inviteBtn=document.getElementById('invite-user-btn');
+  const mgmtCard=document.getElementById('user-mgmt-card');
+
+  // Non-super_admin: show only their own profile, no management controls
+  if(!superAdmin){
+    if(mgmtCard)mgmtCard.style.display='';
+    if(inviteBtn)inviteBtn.style.display='none';
+    const cardHeader=mgmtCard?.querySelector('.card-header h3');
+    if(cardHeader)cardHeader.textContent='My Account';
     const branch=BRANCHES.find(b=>b.id===currentProfile?.branch_id);
     const loc=getLoc(currentProfile?.location_id);
-    el.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:4px 0;">
-      <div>
-        <div style="font-weight:600;font-size:0.95rem;">${currentProfile?.name||currentUser?.email?.split('@')[0]||'—'}</div>
-        <div style="font-size:0.78rem;color:var(--text3);margin-top:2px;">${currentUser?.email||'—'}</div>
-        <div style="font-size:0.72rem;color:var(--accent);font-weight:600;margin-top:4px;text-transform:uppercase;letter-spacing:0.5px;">Staff${branch?' · '+branch.icon+' '+branch.name:''}${loc?' · '+loc.name:''}</div>
+    const rColor=currentProfile?.role==='admin'?'#1a5c8a':'#1e7a3c';
+    const rLabel=currentProfile?.role==='admin'?'Admin':'Staff';
+    const initial=(currentProfile?.name||currentUser?.email||'?').charAt(0).toUpperCase();
+    el.innerHTML=`<div style="padding:20px;">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;">
+        <div style="width:52px;height:52px;border-radius:50%;background:${rColor};display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1.4rem;color:#fff;flex-shrink:0;">${initial}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-weight:700;font-size:1.05rem;">${currentProfile?.name||currentUser?.email?.split('@')[0]||'—'}</div>
+          <div style="font-size:0.82rem;color:var(--text3);margin-top:2px;">${currentUser?.email||'—'}</div>
+          <div style="margin-top:6px;"><span style="font-size:0.68rem;font-weight:700;padding:3px 10px;border-radius:20px;background:${rColor}18;color:${rColor};">${rLabel}</span>${branch?`<span style="font-size:0.72rem;color:var(--text2);margin-left:8px;">${branch.icon} ${branch.name}${loc?' · '+loc.name:''}</span>`:''}</div>
+        </div>
       </div>
-      <button class="btn btn-primary" onclick="signOut()">Sign Out</button>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="signOut()">Sign Out</button>
     </div>`;
     return;
   }
+
+  // Super admin: show the card and invite button
+  if(mgmtCard)mgmtCard.style.display='';
+  if(inviteBtn)inviteBtn.style.display='';
+
   const {data:allProfiles}=await sb.from('user_profiles').select('*');
-  if(!allProfiles?.length){el.innerHTML='<div class="empty"><div class="empty-icon">👤</div><p>No users yet.</p></div>';return;}
-  // Branch admin: scope to their branch only; super_admin: all users
-  const profiles=superAdmin
-    ?allProfiles
-    :allProfiles.filter(u=>u.branch_id===currentProfile?.branch_id||u.id===currentUser.id);
-  if(!profiles.length){el.innerHTML='<div class="empty"><div class="empty-icon">👤</div><p>No users in your branch yet.</p></div>';return;}
-  el.innerHTML=profiles.map(u=>{
+  if(!allProfiles?.length){el.innerHTML='<div class="empty" style="padding:24px;"><div class="empty-icon">👤</div><p>No users yet.</p></div>';return;}
+
+  const roleColor={super_admin:'#c8411a',admin:'#1a5c8a',staff:'#1e7a3c'};
+  const roleLabel={super_admin:'Super Admin',admin:'Admin',staff:'Staff'};
+
+  el.innerHTML=allProfiles.map(u=>{
     const loc=getLoc(u.location_id);
     const branch=BRANCHES.find(b=>b.id===u.branch_id);
-    const roleLabel=u.role==='super_admin'?'Super Admin':u.role==='admin'?'Admin':'Staff';
-    const metaParts=[roleLabel,branch?branch.icon+' '+branch.name:null,loc?loc.name:'No location'].filter(Boolean);
     const isSelf=u.id===currentUser.id;
-    const removeBtn=isSelf?'':`<button class="btn btn-ghost btn-sm" onclick="removeUser('${u.id}')" style="color:var(--danger);border-color:rgba(200,65,26,0.3);font-size:0.75rem;min-height:30px;">🗑️ Remove</button>`;
-    const roleSelect=superAdmin
-      ?`<select class="form-select" style="font-size:0.78rem;padding:4px 8px;" onchange="updateUserRole('${u.id}',this.value)"><option value="staff" ${u.role==='staff'?'selected':''}>Staff</option><option value="admin" ${u.role==='admin'?'selected':''}>Admin</option><option value="super_admin" ${u.role==='super_admin'?'selected':''}>Super Admin</option></select>`
-      :`<select class="form-select" style="font-size:0.78rem;padding:4px 8px;" onchange="updateUserRole('${u.id}',this.value)"><option value="staff" ${u.role==='staff'?'selected':''}>Staff</option><option value="admin" ${u.role==='admin'?'selected':''}>Admin</option></select>`;
-    const branchSelect=superAdmin
-      ?`<select class="form-select" style="font-size:0.78rem;padding:4px 8px;" onchange="updateUserBranch('${u.id}',this.value)"><option value="">No Branch</option>${BRANCHES.map(b=>`<option value="${b.id}" ${u.branch_id===b.id?'selected':''}>${b.icon} ${b.name}</option>`).join('')}</select>`
-      :'';
-    const locOptions=superAdmin?LOCATIONS:LOCATIONS.filter(l=>l.branch_id===currentProfile?.branch_id);
-    return `<div class="movement-item"><div class="mov-icon mov-in-ic" style="font-size:1rem;">👤</div><div class="mov-info"><div class="mov-title">${u.name||'Unnamed'}${isSelf?' <span style="font-size:0.65rem;background:var(--surface3);padding:1px 6px;border-radius:3px;color:var(--text2);font-weight:600;">YOU</span>':''}</div><div class="mov-meta">${metaParts.join(' · ')}</div></div><div style="display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;">
-      ${roleSelect}
-      ${branchSelect}
-      <select class="form-select" style="font-size:0.78rem;padding:4px 8px;" onchange="updateUserLoc('${u.id}',this.value)"><option value="">No Location</option>${locOptions.map(l=>`<option value="${l.id}" ${u.location_id===l.id?'selected':''}>${l.name}</option>`).join('')}</select>
-      ${removeBtn}
-    </div></div>`;
+    const initial=(u.name||u.email||'?').charAt(0).toUpperCase();
+    const rColor=roleColor[u.role]||roleColor.staff;
+    const rLabel=roleLabel[u.role]||'Staff';
+    const locOptions=LOCATIONS;
+
+    return `<div style="padding:16px 20px;border-bottom:1px solid var(--border);last-child:border-bottom:none;">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:${isSelf?'0':'14px'};">
+        <div style="width:44px;height:44px;border-radius:50%;background:${rColor};display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1.2rem;color:#fff;flex-shrink:0;">${initial}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-weight:600;font-size:0.95rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+            <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${u.name||'Unnamed'}</span>
+            ${isSelf?'<span style="font-size:0.62rem;background:var(--surface3);padding:2px 7px;border-radius:3px;color:var(--text2);font-weight:700;letter-spacing:0.5px;flex-shrink:0;">YOU</span>':''}
+            <span style="font-size:0.68rem;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:0.5px;background:${rColor}18;color:${rColor};flex-shrink:0;">${rLabel}</span>
+          </div>
+          <div style="font-size:0.78rem;color:var(--text3);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${u.email||currentUser.email||'—'}</div>
+          <div style="font-size:0.72rem;color:var(--text2);margin-top:3px;">${branch?branch.icon+' '+branch.name:'No branch'}${loc?' · '+loc.name:''}</div>
+        </div>
+      </div>
+      ${isSelf?'':`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div>
+          <div style="font-size:0.62rem;font-weight:600;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">Role</div>
+          <select class="form-select" style="width:100%;font-size:0.82rem;" onchange="updateUserRole('${u.id}',this.value)">
+            <option value="staff" ${u.role==='staff'?'selected':''}>Staff</option>
+            <option value="admin" ${u.role==='admin'?'selected':''}>Admin</option>
+            <option value="super_admin" ${u.role==='super_admin'?'selected':''}>Super Admin</option>
+          </select>
+        </div>
+        <div>
+          <div style="font-size:0.62rem;font-weight:600;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">Branch</div>
+          <select class="form-select" style="width:100%;font-size:0.82rem;" onchange="updateUserBranch('${u.id}',this.value)">
+            <option value="">No Branch</option>
+            ${BRANCHES.map(b=>`<option value="${b.id}" ${u.branch_id===b.id?'selected':''}>${b.icon} ${b.name}</option>`).join('')}
+          </select>
+        </div>
+        <div>
+          <div style="font-size:0.62rem;font-weight:600;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">Location</div>
+          <select class="form-select" style="width:100%;font-size:0.82rem;" onchange="updateUserLoc('${u.id}',this.value)">
+            <option value="">No Location</option>
+            ${locOptions.map(l=>`<option value="${l.id}" ${u.location_id===l.id?'selected':''}>${l.name}</option>`).join('')}
+          </select>
+        </div>
+        <div style="display:flex;align-items:flex-end;">
+          <button class="btn btn-ghost btn-sm" onclick="removeUser('${u.id}')" style="width:100%;color:var(--danger);border-color:rgba(200,65,26,0.3);font-size:0.82rem;">🗑️ Remove</button>
+        </div>
+      </div>`}
+    </div>`;
   }).join('');
 }
 async function updateUserRole(uid,role){await sb.from('user_profiles').update({role}).eq('id',uid);showToast('Role updated','success');}

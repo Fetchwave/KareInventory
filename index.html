@@ -588,7 +588,7 @@ tr:hover td{background:rgba(0,0,0,0.015);}
           <div class="card">
             <div class="card-header">
               <h3 id="inv-card-title">Inventory</h3>
-              <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;"><input class="search-input" placeholder="Search product, SKU, barcode…" oninput="filterInv(this.value)"><button class="btn btn-primary" onclick="openAddStock()">＋ Add Stock</button></div>
+              <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;"><input class="search-input" placeholder="Search product, SKU, barcode…" oninput="filterInv(this.value)"></div>
             </div>
             <div class="table-scroll-wrap"><table><thead><tr><th>Product</th><th class="col-sku">SKU</th><th class="col-bc">Barcode</th><th class="col-cat">Category</th><th>Qty on Hand</th><th class="col-thresh">Min Level</th><th>Status</th><th class="col-actions">Actions</th></tr></thead><tbody id="inv-tbody"></tbody></table></div>
           </div>
@@ -751,17 +751,6 @@ tr:hover td{background:rgba(0,0,0,0.015);}
 </div>
 
 <!-- ADD STOCK MODAL -->
-<div class="modal-bg" id="modal-add-stock"><div class="modal">
-  <div class="modal-head"><h3>Add Stock</h3><button class="modal-close" onclick="closeModal('modal-add-stock')">✕</button></div>
-  <div class="modal-body">
-    <div class="form-group"><label class="form-label">Barcode</label><div class="barcode-wrap"><input class="form-input" id="as-barcode" placeholder="Scan or type barcode…" oninput="asBarcodeLookup(this.value)" style="font-family:'Barlow Condensed',sans-serif;letter-spacing:1.5px;"><button class="scan-trigger" onclick="openScanner('addstock')">📷</button></div></div>
-    <div class="form-group"><label class="form-label">Product</label><select class="form-select" id="as-product" onchange="asProductSelected()"><option value="">— Select product —</option></select></div>
-    <div class="form-row"><div class="form-group"><label class="form-label">Quantity to Add</label><input class="form-input" type="number" id="as-qty" value="1" min="1"></div><div class="form-group" id="as-loc-wrap"><label class="form-label">Location</label><select class="form-select" id="as-loc"></select></div></div>
-    <div class="form-group"><label class="form-label">Notes</label><input class="form-input" id="as-notes" placeholder="e.g. PO #, delivery note…"></div>
-    <div id="as-preview" style="display:none;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-top:4px;align-items:center;gap:12px;"><div class="prod-thumb" style="width:44px;height:44px;" id="as-prev-thumb"></div><div><div style="font-weight:600;font-size:0.9rem;" id="as-prev-name">—</div><div style="font-size:0.75rem;color:var(--text3);font-family:'Barlow Condensed',monospace;" id="as-prev-sku">—</div></div></div>
-  </div>
-  <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-add-stock')">Cancel</button><button class="btn btn-primary" id="as-submit-btn" onclick="submitAddStock()">Add Stock</button></div>
-</div></div>
 
 <!-- ADD PRODUCT MODAL -->
 <div class="modal-bg" id="modal-add-product"><div class="modal">
@@ -1385,36 +1374,6 @@ async function submitEditThresh(){
 }
 
 // ── ADD STOCK MODAL ──────────────────────────────────
-function openAddStock(){
-  document.getElementById('as-barcode').value='';document.getElementById('as-qty').value='1';document.getElementById('as-notes').value='';document.getElementById('as-preview').style.display='none';
-  const sel=document.getElementById('as-product');sel.innerHTML='<option value="">— Select product —</option>'+PRODUCTS.map(p=>`<option value="${p.id}">${p.name} (${p.sku})</option>`).join('');
-  const lw=document.getElementById('as-loc-wrap'),ls=document.getElementById('as-loc');
-  if(isAdmin()){lw.style.display='';ls.innerHTML=getActiveLocs().map(l=>`<option value="${l.id}" ${l.id===invLocId?'selected':''}>${l.icon||''} ${l.name}</option>`).join('');}
-  else{lw.style.display='none';}
-  openModal('modal-add-stock');
-}
-function asBarcodeLookup(val){const p=PRODUCTS.find(x=>x.barcode===val.trim());if(!p)return;const sel=document.getElementById('as-product');for(let i=0;i<sel.options.length;i++){if(sel.options[i].value===p.id){sel.selectedIndex=i;break;}}asShowPreview(p);}
-function asProductSelected(){const p=getProd(document.getElementById('as-product').value);if(p){asShowPreview(p);document.getElementById('as-barcode').value=p.barcode||'';}else document.getElementById('as-preview').style.display='none';}
-function asShowPreview(p){document.getElementById('as-prev-thumb').innerHTML=p.imageUrl?`<img src="${p.imageUrl}" style="width:100%;height:100%;object-fit:contain;border-radius:6px;">`:`<span style="font-size:1.2rem;">${p.emoji}</span>`;document.getElementById('as-prev-name').textContent=p.name;document.getElementById('as-prev-sku').textContent=p.sku+' · '+(p.barcode||'');document.getElementById('as-preview').style.display='flex';}
-async function submitAddStock(){
-  const prodId=document.getElementById('as-product').value;if(!prodId){showToast('Select a product','error');return;}
-  const qty=parseInt(document.getElementById('as-qty').value)||1;
-  const locId=isAdmin()?document.getElementById('as-loc').value:myLoc();
-  if(!locId){showToast('Select a location','error');return;}
-  const notes=document.getElementById('as-notes').value;
-  const btn=document.getElementById('as-submit-btn');btn.textContent='Saving...';btn.disabled=true;
-  const existing=getInv(prodId,locId);
-  if(existing)await sb.from('inventory').update({qty:existing.qty+qty}).eq('id',existing.id);
-  else {
-    const newId=crypto.randomUUID();
-    const {error:ierr}=await sb.from('inventory').insert({id:newId,product_id:prodId,location_id:locId,qty,thresh:getProd(prodId)?.thresh||10});
-    if(ierr){showToast('Error adding to inventory: '+ierr.message,'error');btn.textContent='Add Stock';btn.disabled=false;return;}
-  }
-  await sb.from('movements').insert({type:'Stock In',dir:'in',product_id:prodId,location_id:locId,qty,notes,recorded_by:currentUser.id});
-  closeModal('modal-add-stock');showToast(`${qty} units added`,'success');btn.textContent='Add Stock';btn.disabled=false;
-  await refreshInventory();
-  await refreshMovements();
-}
 
 // ── RECORD MOVEMENT ──────────────────────────────────
 function renderMovementPage(){
@@ -2000,8 +1959,7 @@ function onBarcodeScanned(barcode){
 }
 
 function deliverScan(barcode,name,prodId){
-  if(scanTarget==='addstock'){document.getElementById('as-barcode').value=barcode;asBarcodeLookup(barcode);showToast('📷 Scanned: '+name,'success');}
-  else if(scanTarget==='editprod'){document.getElementById('ep-barcode').value=barcode;showToast('📷 Barcode captured','success');}
+  if(scanTarget==='editprod'){document.getElementById('ep-barcode').value=barcode;showToast('📷 Barcode captured','success');}
   else if(scanTarget==='newprod'){document.getElementById('np-barcode').value=barcode;showToast('📷 Barcode captured','success');}
   else if(scanTarget==='movement'){
     const sel=document.getElementById('mov-prod-'+scanTargetRowIdx);

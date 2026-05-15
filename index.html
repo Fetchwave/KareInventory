@@ -603,7 +603,7 @@ tr:hover td{background:rgba(0,0,0,0.015);}
             <div class="card-body">
               <div class="form-group"><label class="form-label">Movement Type</label><div style="display:flex;gap:8px;flex-wrap:wrap;" id="mov-type-btns"></div></div>
               <div class="form-group" id="mov-loc-wrap" style="display:none;"><label class="form-label">Location</label><select class="form-select" id="mov-loc-select" onchange="onMovLocChange()"></select></div>
-              <div class="form-group"><label class="form-label">Notes (optional)</label><input class="form-input" id="mov-notes" placeholder="e.g. Job card #, customer name…"></div>
+              <div class="form-group"><label class="form-label">Job Site / Location <span style="color:var(--danger);">*</span></label><input class="form-input" id="mov-notes" placeholder="e.g. Site 42 - Durban, Job Card #123…" required></div>
               <div class="mov-row-header" style="grid-template-columns:1fr 34px 80px 34px;"><span>Product</span><span></span><span style="text-align:center;">Qty</span><span></span></div>
               <div class="mov-rows-container" id="mov-rows-container"></div>
               <button class="add-row-btn" onclick="addMovRow()">＋ Add Another Product</button>
@@ -841,22 +841,6 @@ tr:hover td{background:rgba(0,0,0,0.015);}
 </div></div>
 
 <!-- ADJUST QUANTITY MODAL -->
-<div class="modal-bg" id="modal-adjust-qty"><div class="modal">
-  <div class="modal-head"><h3>Adjust Quantity</h3><button class="modal-close" onclick="closeModal('modal-adjust-qty')">✕</button></div>
-  <div class="modal-body">
-    <div id="aq-product-name" style="font-weight:600;font-size:1rem;margin-bottom:4px;"></div>
-    <div id="aq-location-name" style="font-size:0.8rem;color:var(--text2);margin-bottom:18px;"></div>
-    <div class="form-group">
-      <label class="form-label">New Quantity</label>
-      <input class="form-input" type="number" id="aq-qty" min="0" placeholder="Enter quantity" style="font-size:1.1rem;">
-      <div id="aq-current" style="font-size:0.78rem;color:var(--text3);margin-top:6px;"></div>
-    </div>
-  </div>
-  <div class="modal-footer">
-    <button class="btn btn-secondary" onclick="closeModal('modal-adjust-qty')">Cancel</button>
-    <button class="btn btn-primary" id="aq-submit-btn" onclick="submitAdjustQty()">Save</button>
-  </div>
-</div></div>
 
 <!-- EDIT THRESHOLD MODAL -->
 <div class="modal-bg" id="modal-edit-thresh"><div class="modal">
@@ -1128,11 +1112,11 @@ function filterByDate(movs,from,to){return movs.filter(m=>m.date&&m.date>=from&&
 function levelColor(qty,thresh){return qty<=thresh?'var(--danger)':qty<=thresh*1.5?'var(--warning)':'var(--success)';}
 function levelPct(qty,thresh){return Math.min(100,Math.max(4,(qty/(thresh*4))*100));}
 function qtySign(dir){return dir==='out'?'−':'+';}
-function movPill(t){const m={'Stock Out':'pill-red','Stock In':'pill-green','Adjustment':'pill-grey'};return `<span class="pill ${m[t]||'pill-grey'}">${t}</span>`;}
-function movIcon(dir){if(dir==='out')return '<div class="mov-icon mov-out-ic">📤</div>';if(dir==='in')return '<div class="mov-icon mov-in-ic">📥</div>';return '<div class="mov-icon mov-adj-ic">⚖️</div>';}
-function movItemHTML(m){const p=getProd(m.prod);const loc=getLoc(m.loc);return `<div class="movement-item">${movIcon(m.dir)}<div class="mov-info"><div class="mov-title">${p?.emoji||'📦'} ${p?.name||m.prod}</div><div class="mov-meta">${m.type} · ${m.date||'—'}${isAdmin()&&loc?' · '+loc.name:''}${m.notes?' · '+m.notes:''}</div></div><div class="mov-qty ${m.dir==='out'?'out':'inn'}">${qtySign(m.dir)}${m.qty}</div></div>`;}
+function movPill(t){const m={'Stock Out':'pill-red','Stock In':'pill-green','Site Return':'pill-blue'};return `<span class="pill ${m[t]||'pill-grey'}">${t}</span>`;}
+function movIcon(type){if(type==='Stock Out')return '<div class="mov-icon mov-out-ic">📤</div>';if(type==='Site Return')return '<div class="mov-icon" style="width:36px;height:36px;border-radius:50%;background:var(--info-bg);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;">🔄</div>';return '<div class="mov-icon mov-in-ic">📥</div>';}
+function movItemHTML(m){const p=getProd(m.prod);const loc=getLoc(m.loc);return `<div class="movement-item">${movIcon(m.type)}<div class="mov-info"><div class="mov-title">${p?.emoji||'📦'} ${p?.name||m.prod}</div><div class="mov-meta">${m.type} · ${m.date||'—'}${isAdmin()&&loc?' · '+loc.name:''}${m.notes?' · <em>'+m.notes+'</em>':''}</div></div><div class="mov-qty ${m.dir==='out'?'out':'inn'}">${qtySign(m.dir)}${m.qty}</div></div>`;}
 function topIssued(movs,n=10){const a={};movs.filter(m=>m.dir==='out').forEach(m=>{a[m.prod]=(a[m.prod]||0)+m.qty;});return Object.entries(a).sort((x,y)=>y[1]-x[1]).slice(0,n).map(([prod,total])=>({prod,total}));}
-function topReceived(movs,n=10){const a={};movs.filter(m=>m.dir==='in').forEach(m=>{a[m.prod]=(a[m.prod]||0)+m.qty;});return Object.entries(a).sort((x,y)=>y[1]-x[1]).slice(0,n).map(([prod,total])=>({prod,total}));}
+function topReceived(movs,n=10){const a={};movs.filter(m=>m.type==='Stock In').forEach(m=>{a[m.prod]=(a[m.prod]||0)+m.qty;});return Object.entries(a).sort((x,y)=>y[1]-x[1]).slice(0,n).map(([prod,total])=>({prod,total}));}
 function rankRow(i,t,cls){const p=getProd(t.prod);return `<div class="movement-item"><div style="width:22px;height:22px;border-radius:4px;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;color:var(--text2);flex-shrink:0;">${i+1}</div><div class="mov-icon ${cls==='out'?'mov-out-ic':'mov-in-ic'}" style="width:30px;height:30px;font-size:0.9rem;">${p?.imageUrl?`<img src="${p.imageUrl}" style="width:100%;height:100%;object-fit:contain;border-radius:6px;" onerror="this.style.display='none'">`:p?.emoji||'📦'}</div><div class="mov-info"><div class="mov-title" style="font-size:0.85rem;">${p?.name||t.prod}</div></div><div class="mov-qty ${cls}">${t.total}</div></div>`;}
 
 function buildChart(containerId, yAxisId, bars, maxVal){
@@ -1374,7 +1358,7 @@ function renderInvTable(locId){
       +'<td><div class="level-wrap"><div class="level-track"><div class="level-fill" style="width:'+levelPct(inv.qty,inv.thresh)+'%;background:'+col+';"></div></div><span class="level-qty" style="color:'+col+';">'+inv.qty+'</span></div></td>'
       +'<td class="inv-thresh-col col-thresh">'+threshCell+'</td>'
       +'<td>'+(isLow?'<span class="pill pill-red">Low Stock</span>':'<span class="pill pill-green">In Stock</span>')+'</td>'
-      +'<td class="inv-actions-col col-actions"><button class="btn btn-ghost btn-sm" onclick="quickAdjust(\''+inv.id+'\')">Adjust</button></td>'
+      +'<td class="inv-actions-col col-actions"></td>'
       +'</tr>';
   }).join('');
 }
@@ -1398,27 +1382,6 @@ async function submitEditThresh(){
   const idx=INVENTORY.findIndex(i=>i.id===_adjustInvId);if(idx>-1)INVENTORY[idx].thresh=t;
   const el=document.getElementById('tv-'+_adjustInvId);if(el)el.textContent=t;
   closeModal('modal-edit-thresh');showToast(`Minimum level set to ${t}`,'success');
-}
-function quickAdjust(invId){
-  const inv=INVENTORY.find(i=>i.id===invId);const p=getProd(inv?.prod);
-  _adjustInvId=invId;
-  document.getElementById('aq-product-name').textContent=p?.name||'Item';
-  document.getElementById('aq-location-name').textContent=getLoc(inv?.loc)?.name||'';
-  document.getElementById('aq-current').textContent='Current quantity: '+inv?.qty;
-  document.getElementById('aq-qty').value=inv?.qty??'';
-  openModal('modal-adjust-qty');
-  setTimeout(()=>document.getElementById('aq-qty').focus(),100);
-}
-async function submitAdjustQty(){
-  const inv=INVENTORY.find(i=>i.id===_adjustInvId);
-  const q=parseInt(document.getElementById('aq-qty').value);
-  if(isNaN(q)||q<0){showToast('Invalid quantity','error');return;}
-  const diff=q-(inv?.qty||0);
-  const btn=document.getElementById('aq-submit-btn');btn.textContent='Saving...';btn.disabled=true;
-  await sb.from('inventory').update({qty:q}).eq('id',_adjustInvId);
-  if(diff!==0)await sb.from('movements').insert({type:'Adjustment',dir:diff>=0?'in':'out',product_id:inv.prod,location_id:inv.loc,qty:Math.abs(diff),notes:'Manual adjustment',recorded_by:currentUser.id});
-  closeModal('modal-adjust-qty');btn.textContent='Save';btn.disabled=false;
-  showToast(`Adjusted to ${q}`,'success');
 }
 
 // ── ADD STOCK MODAL ──────────────────────────────────
@@ -1456,9 +1419,7 @@ async function submitAddStock(){
 // ── RECORD MOVEMENT ──────────────────────────────────
 function renderMovementPage(){
   const admin=isAdmin();
-  document.getElementById('mov-type-btns').innerHTML=admin
-    ?`<button class="btn btn-primary" onclick="setMovType('Stock Out','out',this)">📤 Stock Out</button><button class="btn btn-secondary" onclick="setMovType('Stock In','in',this)">📥 Stock In</button><button class="btn btn-secondary" onclick="setMovType('Adjustment','adj',this)">⚖️ Adjustment</button>`
-    :`<button class="btn btn-primary" onclick="setMovType('Stock Out','out',this)">📤 Stock Out</button><button class="btn btn-secondary" onclick="setMovType('Stock In','in',this)">📥 Stock In</button>`;
+  document.getElementById('mov-type-btns').innerHTML=`<button class="btn btn-primary" onclick="setMovType('Stock Out','out',this)">📤 Stock Out</button><button class="btn btn-secondary" onclick="setMovType('Stock In','in',this)">📥 Stock In</button><button class="btn btn-secondary" onclick="setMovType('Site Return','in',this)">🔄 Site Return</button>`;
   currentMovType={label:'Stock Out',dir:'out'};
   const lw=document.getElementById('mov-loc-wrap'),ls=document.getElementById('mov-loc-select');
   if(admin){lw.style.display='';ls.innerHTML=getActiveLocs().map(l=>`<option value="${l.id}">${l.icon||''} ${l.name}</option>`).join('');}
@@ -1494,7 +1455,8 @@ function populateMovSel(sel,dir){
 }
 async function recordMovements(){
   const locId=getMovLocId();if(!locId){showToast('No location selected','error');return;}
-  const {label,dir}=currentMovType;const notes=document.getElementById('mov-notes').value;
+  const {label,dir}=currentMovType;const notes=document.getElementById('mov-notes').value.trim();
+  if(!notes){showToast('Job Site / Location is required','error');document.getElementById('mov-notes').focus();return;}
   const rows=Array.from(document.querySelectorAll('.mov-row'));
   const items=[];rows.forEach(row=>{const ps=row.querySelector('.mov-row-product');const qs=row.querySelector('.mov-row-qty');if(ps&&ps.value)items.push({prodId:ps.value,qty:parseInt(qs?.value)||1});});
   if(!items.length){showToast('Select at least one product','error');return;}
@@ -1503,7 +1465,7 @@ async function recordMovements(){
     for(const item of items){const inv=getInv(item.prodId,locId);if(!inv||inv.qty<item.qty){const p=getProd(item.prodId);showToast(`Insufficient stock: ${p?.name||item.prodId} (have ${inv?.qty||0}, need ${item.qty})`,'error');btn.textContent='✓ Record Movement';btn.disabled=false;return;}}
   }
   for(const item of items){
-    const inv=getInv(item.prodId,locId);const actualDir=dir==='adj'?'in':dir;
+    const inv=getInv(item.prodId,locId);
     if(dir==='out'){
       const {error:uerr}=await sb.from('inventory').update({qty:Math.max(0,inv.qty-item.qty)}).eq('id',inv.id);
       if(uerr){console.error('Inventory update error:',uerr);showToast('Error updating inventory: '+uerr.message,'error');btn.textContent='✓ Record Movement';btn.disabled=false;return;}
@@ -1519,7 +1481,7 @@ async function recordMovements(){
         if(newInv)INVENTORY.push({...newInv,prod:newInv.product_id,loc:newInv.location_id});
       }
     }
-    const {error:merr}=await sb.from('movements').insert({type:label,dir:actualDir,product_id:item.prodId,location_id:locId,qty:item.qty,notes,recorded_by:currentUser.id});
+    const {error:merr}=await sb.from('movements').insert({type:label,dir,product_id:item.prodId,location_id:locId,qty:item.qty,notes,recorded_by:currentUser.id});
     if(merr){console.error('Movement insert error:',merr);}
   }
   showToast(`${label} recorded — ${items.length} product${items.length>1?'s':''}` ,'success');
@@ -1694,18 +1656,20 @@ function renderReportMain(){
   const locId=reportLocId;
   const allMovs=getLocMovs(locId);
   const movs=filterByDate(allMovs,reportRange.from,reportRange.to);
-  const totalOut=movs.filter(m=>m.dir==='out').reduce((a,m)=>a+m.qty,0);
-  const totalIn=movs.filter(m=>m.dir==='in').reduce((a,m)=>a+m.qty,0);
+  const totalOut=movs.filter(m=>m.type==='Stock Out').reduce((a,m)=>a+m.qty,0);
+  const totalIn=movs.filter(m=>m.type==='Stock In').reduce((a,m)=>a+m.qty,0);
+  const totalReturned=movs.filter(m=>m.type==='Site Return').reduce((a,m)=>a+m.qty,0);
+  const netIssued=Math.max(0,totalOut-totalReturned);
   const periodLabel=reportRange.from===reportRange.to?fmtDate(reportRange.from):fmtDate(reportRange.from)+' → '+fmtDate(reportRange.to);
   const loc=getLoc(locId);
   document.getElementById('report-chart-title').textContent=`Daily Movements — ${loc?loc.name+' · ':'' }${periodLabel}`;
   document.getElementById('report-stats').innerHTML=[
-    {label:'Units Issued',val:totalOut,sub:periodLabel,cls:'danger'},
-    {label:'Units Received',val:totalIn,sub:periodLabel,cls:'up'},
-    {label:'Adjustments',val:movs.filter(m=>m.type==='Adjustment').length,sub:'Manual corrections',cls:''},
+    {label:'Units Issued',val:totalOut,sub:'Stock Out movements',cls:'danger'},
+    {label:'Site Returns',val:totalReturned,sub:'Returned from sites',cls:'up'},
+    {label:'Net Issued',val:netIssued,sub:'Issued minus returns',cls:'danger'},
+    {label:'Units Received',val:totalIn,sub:'Stock In from suppliers',cls:'up'},
     {label:'Total Transactions',val:movs.length,sub:'Logged movements',cls:''},
     {label:'Products Moved',val:new Set(movs.map(m=>m.prod)).size,sub:'Unique SKUs',cls:''},
-    {label:'Avg per Day',val:movs.length?Math.round(movs.length/Math.max(1,Math.round((new Date(reportRange.to)-new Date(reportRange.from))/86400000)+1)):0,sub:'Movements/day',cls:''},
   ].map(s=>`<div class="stat"><div class="stat-label">${s.label}</div><div class="stat-val">${s.val}</div><div class="stat-sub ${s.cls}">${s.sub}</div></div>`).join('');
 
   // Chart
